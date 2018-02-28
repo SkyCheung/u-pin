@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>修改商品分类</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>修改商品分类</span></div>
+		</div>
+       <div class="maincon base">
+			<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+				<div class="row"><label class="row-name">分类名称：</label>
+					<div class="column">
+						<input type="hidden" id="id" name="id" value="{$row[id]}"/>
+						<input name="cat_name" type="text" id="cat_name" value="{$row[name]}" size="50" maxlength="50" /><span></span></div>
+				</div>
+				<div class="row"><label class="row-name">上级分类：</label>
+					<div class="column" style="position: relative;">
+						<input type="text" id="pid" value="{if $row[pid] ==0}顶级分类{else}{$row[parent_name]}{/if}" size="50" maxlength="200" />
+						<input name="pid" type="hidden" value="{$row[pid]}"  maxlength="10" readonly="readonly"  class="selectable"/>
+						<input name="level" type="hidden" value="{$row[level]}"  maxlength="5" />
+						<span>选择这个分类的上一级分类</span>
+						<div id="catlist" class="winlayer">
+							<div>
+								<div class="it" id="c1"  style="width: 130px;">
+								  	<ul>
+										<li class="on {if $row[pid] ==0}selected{/if}"><a href="javascript:void(0);" data-id = "0" onclick="selectCat(0,this);" style="min-width: 80px;">顶级分类</a></li>
+									</ul>
+								</div>
+								<div class="it" id="c2">
+									<ul>
+										<!--{loop $cat1 $p}-->
+								    	<li class="{if $pid2==$p[id]}on{/if} {if {$p[id]}==$row[pid]}selected{/if}"><a href="javascript:void(0);" data-id="{$p[id]}" onclick="selectCat({$p[id]},this);">{$p[name]}</a></li>
+								    	<!--{/loop}-->
+									</ul>
+								</div>
+								<div class="it" id="c3">
+									<ul>
+										<!--{loop $cat2 $p}-->
+								    	<li class="{if $pid3==$p[id]}on{/if} {if {$p[id]}==$row[pid]}selected{/if}"><a href="javascript:void(0);" data-id="{$p[id]}" onclick="selectCat({$p[id]},this);">{$p[name]}</a></li>
+								    	<!--{/loop}-->
+									</ul>
+								</div>
+								<div class="it" id="c4">
+									<ul>
+										<!--{loop $cat3 $p}-->
+								    	<li class="{if $pid4==$p[id]}on{/if} {if {$p[id]}==$row[pid]}selected{/if}"><a href="javascript:void(0);" data-id="{$p[id]}" onclick="selectCat({$p[id]},this);">{$p[name]}</a></li>
+								    	<!--{/loop}-->
+									</ul>
+								</div>
+							</div>
+							<div style="text-align: center;"><input type="button" class="sub back" value="关闭" id="close"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row"><label class="row-name">分类图标：</label>
+					<div class="column"><input name="img" type="file" id="img" value="10" size="50" /><span>用于分类树上显示</span>
+						<input name="oldimg" type="hidden" value="{$row[img]}"/>
+						<img src="{$row[img]}"  style="width: 100px;height: auto;max-height: 60px;vertical-align: middle;border: solid 1px #DDDDDD;" alt="未上传"/>
+					</div>
+				</div>
+				<div class="row"><label class="row-name">商品类型：</label>
+					<div class="column" style="position: relative;">
+						<input readonly="readonly" type="text" id="goods_type" size="50" value="{$row[type_name]}"  class="selectable"/>
+						<input name="goods_type" type="hidden" value="{$row[type_id]}" />
+						<span>用于前台筛选</span>
+						<div class="winlayer">
+							<div class="datalist">
+								<div>
+									<!--{loop $types $p}-->
+								    <a href="javascript:void(0);" data-id="{$p[id]}" {if $p[id]==$row[type_id]}class="selected"{/if}>{$p[name]}</a>
+								    <!--{/loop}-->								    
+								</div>
+								<div style="width: 100%; height: 50px;z-index: 2;background-color: #fff; position: absolute;bottom: 0px;left: 0px;text-align: center;">
+								 <a href="javascript:void(0);" data-id="0">无商品类型</a>
+							   </div>
+							</div>							
+						</div>
+					</div>
+				</div>
+				<div class="row"><label class="row-name">文件名称：</label>
+					<div class="column">
+						<input name="urlname" type="text" size="50" maxlength="50" value="{$row[urlname]}" /> <input type="text" value=".html" size="4" readonly="readonly"/>
+						<input name="old_urlname" type="hidden" value="{$row[urlname]}" />
+						<span>url上显示的名称，只能使用英文和数字</span></div>
+				</div>
+				<div class="row"><label class="row-name">模板文件：</label>
+					<div class="column">
+						<select id="tpls">
+							<option value="list" selected="selected">list.html</option>
+							{$tpls}
+						</select>
+						<input type="text" value="{$row['tpl']}" name="tpl" id="tpl" maxlength="50" size="30"/> <input type="text" value=".html" size="4" readonly="readonly"/>
+						<span>该分类要使用的模板文件，打造不同风格分类，以 list_ 开头的html。</span></div>
+				</div>
+                <div class="row"><label class="row-name">链接url：</label>
+					<div class="column"><input name="link" type="text" id="url" size="50" value="{if $row[link]}{$row[link]}{else}http://{/if}" />
+						<span>前台需要固定跳转时使用</span></div>
+				</div>
+				<div class="row"><label class="row-name">是否显示：</label>
+					<div class="column"><label><input name="status" type="radio" {if $row[status]==1}checked="checked"{/if} value="1" />显示 </label>
+						<label><input name="status" type="radio" value="0" {if $row[status]==0}checked="checked"{/if}/>不显示 </label>
+						<span>设置是否在分类树上显示</span></div>
+				</div>
+				<div class="row"><label class="row-name">价格区间：</label>
+					<div class="column">
+						<textarea name="grade" id="grade" maxlength="150" style="width: 389px;height: 100px;">{$row[grade]}</textarea><span>可用于价格筛选，格式如2000-3000，每行一个</span></div>
+				</div>
+				<div class="row"><label class="row-name">关键词：</label>
+					<div class="column"><input name="c_keywords" type="text" id="c_keywords" value="{$row[keywords]}" size="50" maxlength="150" /><span>用于SEO，多个关键字请用英文逗号分隔</span></div>
+				</div>
+				<div class="row"><label class="row-name">描述：</label>
+					<div class="column">
+						<textarea name="c_description" id="description" value="" maxlength="150" style="width: 389px;height: 100px;">{$row[description]}</textarea><span>用于SEO</span></div>
+				</div>
+				<div class="row"><label class="row-name">备注：</label>
+					<div class="column"><input name="remark" type="text" id="remark" value="{$row[remark]}" size="50" maxlength="200" /><span></span></div>
+				</div>
+				<div class="row"><label class="row-name">显示数量：</label>
+					<div class="column"><input name="num" type="number" min="0" max="255" id="num" value="{$row['num']}" size="50" maxlength="5" /><span>商品列表页显示商品的数量</span></div>
+				</div>
+				<div class="row"><label class="row-name">排序：</label>
+					<div class="column"><input name="cat_sort" type="number" min="0" max="255" id="cat_sort" value="{$row[sort]}" size="50" maxlength="5" /><span>数字越小越靠前</span></div>
+				</div>
+				<div class="row"><label class="row-name"></label>
+					<div class="column">
+						<input type="submit" class="sub" value="提交 " />
+						<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=category'"/>
+						<input name="action" type="hidden" id="action" value="category">
+						<input name="act" type="hidden" id="act" value="edit">
+					</div>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript"> 
+		    $(document).ready(function () {
+		    	if ($("#c2 li").size()>9) {
+		    		$("#c2").css("overflow-y","scroll");
+		    	}
+		    	var catname="";	
+		    	$("#catlist .it .on").each(function() {
+					catname += " 》 "+$(this).children("a").html();				 
+				});				
+				$("#pid").val($.trim(catname).substr(2, $.trim(catname).length));
+				
+				$("#tpls").change(function() {
+					$("#tpl").val($(this).val());
+				});
+		    });
+            
+		    function check () {
+		     	if ($.trim($("#cat_name").val())=='') {
+		     		error("请填写分类名称");
+		     		return false;
+		     	}
+		     	toTop();
+		        return true;
+		    }
+		     //上级分类
+			$("#pid").click(function (e) {
+				$(this).siblings(".winlayer").slideDown(200);
+				setTimeout(function() {
+					if ($(".catlist .it").innerHeight()>=345) {
+						$(".catlist .it").css({"overflow-y":"scroll"});
+			       	}				  
+				},200);
+								 			
+				e.stopPropagation();
+			});
+			//选择分类
+			function selectCat(v,t) {
+				var th = $(t);
+				$("#catlist .selected").removeClass("selected");
+				th.parents("li").addClass("on selected").siblings().removeClass("on selected");
+				$("input[name='pid']").val(th.data("id"));
+				
+				var catname="";				
+				var n = th.parents(".it").attr("id");				
+				n = n.substring(1, n.length);
+				var i = parseInt(n);//当前层级
+				$("input[name='level']").val(i);
+				while (n < $("#catlist .it").length){
+					n++;
+					$("#c"+n).each(function () {						
+						if (n>i+1) {
+							$(this).children("ul").html("");
+						}
+						else
+						{
+							$(this).find("li.on").removeClass("on");
+						}
+					});				
+				}
+	
+				$("#catlist .it .on").each(function() {
+					catname += " 》 "+$(this).children("a").html();				 
+				});
+				
+				$("#pid").val($.trim(catname).substr(2, $.trim(catname).length));
+				$son ="";
+				$.ajax({
+					type:"post",
+					url:"./admin.html?do=ajax",
+					data:{act: "getCats", pid:th.data("id")},
+					dataType: "json",
+					success:function(data)
+					{
+						if (data.err=='') {
+							var m=0;
+							$.each(data.data, function(k,v) {
+								$son +='<li><a href="javascript:void(0);" data-id="'+v.id+'" onclick="selectCat('+v.id+',this);">'+v.name+'</a></li>';
+							    m++;
+							});
+							if (m>9) {
+								$("#c"+(i+1)+" ul").css("overflow-y","scroll");
+							}
+							$("#c"+(i+1)+" ul").html($son);
+						} else{
+							alert(data.err);
+						}
+					},
+					complete: function(XMLHttpRequest, textStatus){             			
+          			}
+				});		      
+			};
+			$("#catlist").click(function(e) {
+				e.stopPropagation();
+			});
+			$("#close").click(function  () {
+				$(this).parents(".winlayer").hide();
+			});
+		     
+		     //商品类型
+			$("#goods_type").click(function (e) {
+				$(this).siblings(".winlayer").slideDown(200);
+				setTimeout(function() {
+					$(".datalist").css({"height":$(".datalist>div").eq(0).innerHeight()});
+					if ($(".datalist>div").eq(0).innerHeight()>=345) {
+						$(".datalist").css({"height":"345px","overflow-y":"scroll"});
+			       	}				  
+				},200);
+								 			
+				e.stopPropagation();
+			});
+			$(".datalist").click(function(e) {
+				e.stopPropagation();
+			});
+			$(".datalist a").click(function () {
+				$(".datalist a").removeClass("selected");
+				$(this).addClass("selected");
+				$("#goods_type").val($(this).html()=="无商品类型"?"":$(this).html());
+				$("input[name='goods_type']").val($(this).data("id"));
+				$(".winlayer").hide();
+			});
+						
+			$(document).click(function () {
+				$(".winlayer").hide();
+			});
+		</script>
+	</body>
+
+</html>

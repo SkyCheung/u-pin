@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>资金管理</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>资金管理</span></div>
+		</div>
+		<div id="mainnav">
+			<form method="get" id="order" name="form1">
+			<div class="tb-form">
+				<p><span class="tb-lbl">用户余额：</span><span class="tb-val">{$balance}</span>
+					<input name="uname" type="text" value="{$uname}" class="input wp110" id="uname" placeholder="完整的会员账号" />
+					时间 <input type="text" name="start_date" value="{$start_date}" maxlength="10" readonly="readonly" class="time input wp120"/>-<input type="text" name="end_date" value="{$end_date}" readonly="readonly" maxlength="10" class="time input wp120"/>
+				<input name="do" type="hidden" id="do" value="money" />
+				<input name="is_search" type="hidden" value="1" />
+				<input type="submit" value="搜索" class="sub" style="width: 84px;"/>
+				</p>
+				<p style="display: none;"><span class="tb-lbl">：</span><span class="tb-val">562222</span><span class="tb-lbl">提现金额：</span><span>562222</span></p>
+			</div>
+			</form>
+		</div>
+		<div class="maintab list auto-height-list ajaxedit" style="min-height: 600px;">			
+				<ul class="rowtit">
+					<li class="w15"><strong>会名</strong></li>
+					<li class="w5"><strong>类型</strong></li>
+					<li class="w10"><strong>变动值</strong></li>
+					<li class="w40"><strong>明细</strong></li>
+					<li class="w15"><strong>时间</strong></li>
+					<li class="w15" style="display: none;"><strong>操作</strong></li>
+				</ul>
+				<!--{loop $row $p}-->
+				<ul>
+					<li class="w15">{$p['uname']}</li>
+					<li class="w5">{$lang_asset_type[$p['type']]}&nbsp;</li>
+					<li class="w10">{$p['val']}</li>
+					<li class="w40">{$p['description']}</li>
+					<li class="w15">{$p[addtime]}</li>
+					<li class="w15" style="display: none;"><a href="javascript:void(0);" onclick="isdel('','/admin.html?do=money.delete&id={$p[id]}');" class="del">删除</a></li>
+				</ul>
+				<!--{/loop}-->
+				<div class="page" style="">{$pages['pages']}</div>			
+		</div>
+		<link rel="stylesheet" type="text/css" href="./static/datepicker/css/jquery-ui.css" />
+		<script src="./static/datepicker/js/jquery-ui-1.10.4.custom.min.js"></script>
+		<script src="./static/datepicker/js/jquery.ui.datepicker-zh-CN.js"></script>
+		
+		
+        <script type="text/javascript">
+       		$(function () {
+	      		$("input[name='start_date'],input[name='end_date']" ).datetimepicker();	 			
+	 		});
+	 	</script>	
+  </body>
+
+</html>

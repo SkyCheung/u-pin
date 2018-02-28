@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>用户管理</title>
+	<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+	<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+	<script src="{adm_tpl}/js/api.js"></script>
+</head>
+
+<body>
+<div id="maintop"><div>你的位置：<span>用户管理</span></div></div>
+<div id="mainnav"> 	
+	<a class="button" href="./admin.html?do=user&act=add"><span>新建用户</span></a>
+	<a class="button" href="./admin.html?do=user"><span>用户列表</span></a>	
+</div>
+<div class="maintab ajaxedit">
+<form method="post" id="form1" name="form1">
+  <ul>
+  	  <li class="w5">编号</li>
+	  <li class="w40">用户名称</li> 
+	  <li>状态</li>
+	  <li>添加时间</li>
+	  <li>操作</li>
+  </ul>
+<!--{loop $row $p}-->
+  <ul>
+  	  <li class="w5">{$p[id]}</li>
+	  <li class="w40">{$p[username]}</li> 
+	  <li><a href="javascript:void(0);" class="ajax i-status{if $p['status']=='1'} i-status-on{/if}"  data-orival="{$p[status]}" data-id="{$p[id]}" data-do="user" data-val="{$p[status]}" data-act="edit_status"></a></li>
+	  <li>{$p[addtime]}</li>
+	  <li><a href="./admin.html?do=user&act=edit&id={$p[id]}" class="edit">编辑</a><a href="javascript:void(0);" onclick="isdel('{$p[name]}','/admin.html?do=user&act=delete&id={$p[id]}');" class="del">删除</a>
+	  </li>
+  </ul>
+<!--{/loop}-->
+<div class="page" style="">{$pages['pages']}</div>
+
+</form>
+</div>
+
+</body>
+</html>

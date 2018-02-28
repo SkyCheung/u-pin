@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>我的积分 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style>
+			.mui-table-view{background:none;}
+			.mui-slider{margin-top:60px}
+			.mui-bar .mui-icon-more{font-size: 36px;padding:4px;}
+			#topPopover{height: 130px;width: 110px;}
+			#topPopover .mui-table-view{text-align: center;}
+			.mui-table-view-cell:after{left: 0;}
+			.jumpout .mui-table-view-cell{padding:10px;}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{color:#007cc3;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" class="mui-pull-left mui-icon mui-icon-left-nav" onclick='history.go(-1);'></a>
+			<h1 class="mui-title" id="mytitle">积分明细</h1>
+			<a href="#topPopover" class="mui-pull-right mui-icon mui-icon-more icon-full"></a>
+		</header>
+		<div class="mui-content integral">
+			<div class="integral-top fix-integral"><!--样式滑动class效果-->
+				<p class="w-num"><span>我的积分</span><span class="num">{$user['point']}</span></p>
+				<p class="word">{$expire_point}积分将于<span>{$year}.12.31</span>过期</p>
+			</div>
+			<div id="slider" class="mui-slider order integral-bottom">
+					<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted bgw">
+						<a class="mui-control-item mui-active" href="#item1mobile">全部</a>
+						<a class="mui-control-item" href="#item2mobile">收入</a>
+						<a class="mui-control-item" href="#item3mobile">支出</a>
+					</div>
+					<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>
+					<div class="mui-slider-group">
+						<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+							<div id="scroll1" class="mui-scroll-wrapper">
+								<div class="mui-scroll" id="0">
+									<ul class="list-more  mui-table-view">
+									<!--{loop $row $p}-->
+										<li class="mui-table-view-cell">
+											<div class="order-nr">
+												<div class="order-word" style="width: calc(100% - 25px);">
+													<div class="order-top" style="width:100%">
+														<a class="title" style="height: 27px;">{$p['description']}</a>
+													</div>
+													<div class="pwtxt" style="width:100%">
+														<p class="font12" style="float:left;line-height:26px">{$p['addtime']}</p>
+														<span style="float:right;margin-top: 0;line-height:26px">{if $p['val']>0}+{/if}{$p['val']}</span>
+													</div>
+												</div>
+											</div>
+										</li>
+									<!--{/loop}-->
+									</ul>
+									<!--test-->
+								</div>
+							</div>
+						</div>
+						<div id="item2mobile" class="mui-slider-item mui-control-content">
+							<div id="scroll2" class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<div class="mui-loading" id="1">
+										<div class="mui-spinner">
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+						<div id="item3mobile" class="mui-slider-item mui-control-content">
+							<div id="scroll3" class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<div class="mui-loading" id="2">
+										<div class="mui-spinner">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+		<!--右上角弹出菜单-->
+		<div id="topPopover" class="mui-popover jumpout">
+			<div class="mui-popover-arrow"></div>
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell"><a href="index.html">首页</a></li>
+						<li class="mui-table-view-cell"><a href="list.html">商品</a></li>
+						<li class="mui-table-view-cell"><a href="cart.html">购物车</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" id="page0" value="2">
+		<input type="hidden" id="page1" value="2">
+		<input type="hidden" id="page2" value="2">
+		<input type="hidden" id="endall0" value="0">
+		<input type="hidden" id="endall1" value="0">
+		<input type="hidden" id="endall2" value="0">
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script>
+			mui.init({
+				swipeBack: false
+			});
+			mui('#topPopover').on('tap','a',function(){
+					var href = this.href;
+					window.location.href = href;
+			});
+			(function($) {
+				$('.mui-scroll-wrapper').scroll({
+					indicators: true //是否显示滚动条
+				});
+				
+				var item2 = document.getElementById('item2mobile');
+				var item3 = document.getElementById('item3mobile');
+				
+				document.getElementById('slider').addEventListener('slide', function(e) {
+					if (e.detail.slideNumber === 1) {
+						if (item2.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								$.getJSON("/mypoint.html",{act: "get_point", t: 1}, function(res) {
+									if(res.url){
+										mui.toast(res.err);
+										window.location.href=res.url;
+									}else if(res.data==''){
+										var html2 = '<div class="no-order"><i class="icon-no-order"></i><h3>你还没有相关积分记录</h3><a href="index.html" class="lookbtn">去逛逛~</a></div>';
+										item2.querySelector('.mui-scroll').innerHTML = html2;
+									}else{
+									  var html2 = '<ul class="list-more  mui-table-view">';
+									  for(var o in res.data){
+										html2 = html2 + '<li class="mui-table-view-cell"><div class="order-nr"><div class="order-word" style="width: calc(100% - 25px);"><div class="order-top" style="width:100%"><a class="title" style="height: 27px;">' + res.data[o].description + '</a></div><div class="pwtxt" style="width:100%"><p class="font12" style="float:left;line-height:26px">' + res.data[o].addtime + '</p><span style="float:right;margin-top: 0;line-height:26px">';
+										if(res.data[o].val>0){
+											html2 = html2 + '+';
+										}
+										html2 = html2 + res.data[o].val + '</span></div></div></div></li>';
+									  } 
+									  html2 = html2 + '</ul>';
+									  item2.querySelector('.mui-loading').innerHTML = html2;
+									}
+								});
+							}, 500);
+						}
+					} else if (e.detail.slideNumber === 2) {
+						if (item3.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								$.getJSON("/mypoint.html",{act: "get_point", t: 2}, function(res) {
+									if(res.url){
+										alert(res.err);
+										window.location.href=res.url;
+									}else if(res.data==''){
+										var html3 = '<div class="no-order"><i class="icon-no-order"></i><h3>你还没有相关积分记录</h3><a href="index.html" class="lookbtn">去逛逛~</a></div>';
+										item3.querySelector('.mui-scroll').innerHTML = html3;
+									}else{
+									  var html3 = '<ul class="list-more  mui-table-view">';
+									  for(var o in res.data){
+										html3 = html3 + '<li class="mui-table-view-cell"><div class="order-nr"><div class="order-word" style="width: calc(100% - 25px);"><div class="order-top" style="width:100%"><a class="title" style="height: 27px;">' + res.data[o].description + '</a></div><div class="pwtxt" style="width:100%"><p class="font12" style="float:left;line-height:26px">' + res.data[o].addtime + '</p><span style="float:right;margin-top: 0;line-height:26px">';
+										if(res.data[o].val>0){
+											html3 = html3 + '+';
+										}
+										html3 = html3 + res.data[o].val + '</span></div></div></div></li>';
+									  } 
+									  html3 = html3 + '</ul>';
+									  item3.querySelector('.mui-loading').innerHTML = html3;
+									}
+								});
+							}, 500);
+						}
+					} 
+				});
+				var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
+				$('.mui-input-group').on('change', 'input', function() {
+					if (this.checked) {
+						sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-' + this.value;
+						//force repaint
+						sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
+					}
+				});
+				
+				
+				
+				//刷新页面
+				$.ready(function() {
+					//循环初始化所有下拉刷新，上拉加载。
+					$.each(document.querySelectorAll('.mui-scroll-wrapper'), function(index, pullRefreshEl) {
+						$(pullRefreshEl).pullRefresh({
+							down: {
+							},
+							up: {
+								contentrefresh: '正在加载...',
+								contentnomore:'没有更多积分记录了',
+								callback: pullupRefresh
+							}
+						});
+					});
+					/**
+					 * 上拉加载具体业务实现
+					 */
+					function pullupRefresh() {
+						var self = this;
+						setTimeout(function() {
+							var ul = self.element.querySelector('.mui-table-view');
+							var idname = ul.parentNode.parentNode.id;
+							if(idname.length<2){
+								var idname = ul.parentNode.parentNode.parentNode.id;
+							}
+							var idval = ul.parentNode.id;
+							setTimeout(function() {
+								var endall = document.getElementById('endall'+idval).value;
+								mui("#"+idname).pullRefresh().endPullupToRefresh((endall > 0)); //参数为true代表没有更多数据了。
+							}, 100);
+
+							var pagenumname = 'page' + idval;
+							var pagenum = document.getElementById(pagenumname).value;
+							var fragment = document.createDocumentFragment();
+							var li;
+							$.getJSON("/mypoint.html",{act: "get_point", t:idval, page:pagenum}, function(res) {
+								if(res.url){
+									mui.toast(res.err);
+									window.location.href=res.url;
+								}else if(res.data==''){
+									document.getElementById('endall'+idval).value='1';
+								}else{
+								  for(var o in res.data){
+										li = document.createElement('li');
+										li.className = 'mui-table-view-cell';
+										var htmlss = '';
+										htmlss = htmlss + '<div class="order-nr"><div class="order-word" style="width: calc(100% - 25px);"><div class="order-top" style="width:100%"><a class="title" style="height: 27px;">' + res.data[o].description + '</a></div><div class="pwtxt" style="width:100%"><p class="font12" style="float:left;line-height:26px">' + res.data[o].addtime + '</p><span style="float:right;margin-top: 0;line-height:26px">';
+										if(res.data[o].val>0){
+											htmlss = htmlss + '+';
+										}
+										htmlss = htmlss + res.data[o].val + '</span></div></div></div>';
+										li.innerHTML = htmlss;
+										fragment.appendChild(li);
+								  } 
+								  ul.appendChild(fragment);
+								  pagenum++;
+								  document.getElementById('page'+idval).value = pagenum;
+								}
+							});
+						}, 100);
+					}
+				});
+
+			})(mui);
+
+		$(function(){
+			H_setmove();
+			$(window).resize(function(){
+				H_setmove();
+			});
+			function H_setmove(){
+				$(".mui-control-content").css("min-height",$(window).height()-144);
+			}
+		})
+//		$(window).scroll(function(){
+//			if($(".mui-scroll").scrollTop()>0){
+//				$(".integral-top").addClass("fix-integral");
+//				$("#slider").css("top","60px");
+//			}
+//		});
+		</script>
+		<script>
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			mui('.mui-scroll-wrapper').scroll();
+			mui('body').on('shown', '.mui-popover', function(e) {
+				//console.log('shown', e.detail.id);//detail为当前popover元素
+			});
+			mui('body').on('hidden', '.mui-popover', function(e) {
+				//console.log('hidden', e.detail.id);//detail为当前popover元素
+			});
+		</script>
+	</body>
+</html>

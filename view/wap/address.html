@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>地址管理 - {$ym_title}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.picker.min.css" />
+		<link rel="stylesheet" href="css/mui.poppicker.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style type="text/css">
+			#cityResult3{margin-left: 3%;display: inline-block;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" class="mui-pull-left mui-icon mui-icon-left-nav" onclick="history.go(-1);"></a>
+			<h1 class="mui-title">地址管理</h1>
+			<a href="javascript:void(0);" class="closeadd btn-arrow-behind" style="display: none;">关闭</a>
+		</header>
+		<div class="mui-content-top add-control yec-con-single-btn-bot">
+			<ul class="list-word" id="confirmBtn">
+				<!--{loop $consignee $p}-->
+				<li class="other-add{if $p['is_default']==1} default-add{/if}" id="{$p['id']}" data-cityid="{$p[city]}" {if $p['is_default']==1}style="background-color:#fff;float: none;display: block;"{/if}>
+					<div class="username-phonen">
+						<div class="up">
+							<p class="username" id="cadd-names">{$p['name']}</p>
+							<p class="phonen" id="cadd-tels">{$p['mobile']}</p>
+						</div>
+						<div class="add-detail">
+							{$p['addr']}
+						</div>
+						<input type="hidden" id="districts" value="{$p['province']}-{$p['city']}-{$p['area']}-{$p['town']}">
+						<input type="hidden" id="addressids" value="{$p['address']}">
+						<input type="hidden" id="ids" value="{$p['id']}">
+					</div>
+					<div class="btn-editadd">
+					<!--{if $p['is_default']==1}-->
+						<button class="default-add setdefault word-yellow">默认地址</button>
+					<!--{else}-->	
+						<button class="default-add setdefault">设为默认</button>
+					<!--{/if}-->
+						<div class="btn-edit-dele">
+							<button class=" mui-btn edit-btn" onclick="editAddr({$p['id']});">编辑</button>
+							<button value="{$p['id']}" type="button" class="mui-btn mui-btn-blue mui-btn-outlined dele">删除</button>
+						</div>
+					</div>
+				</li>
+				<!--{/loop}-->
+				<div class="add-add"></div>
+			</ul>
+			<div class="single-all-btn fix-btn-bot-single">
+				<a href="javascript:void(0);" class="fix-btn" id="addadd">添加新地址</a>
+			</div>
+		</div>
+		<!--添加编辑地址-->
+		<div class="edit-add fix bgw" style="display: none;">
+			<ul class="mui-table-view mui-table-view-chevron hasword-bdbox" id="editiaddress">
+				<li class="mui-table-view-cell">
+					<p class="">收货人姓名<input type="text" class="mui-pull-right hasword-inp" value="" id="cadd-name" maxlength="20"></p>
+				</li>
+				<li class="mui-table-view-cell">
+					<p class="">手机号码<input type="tel" class="mui-pull-right hasword-inp" value="" id="cadd-tel" maxlength="11"></p>
+				</li>
+				<li class="mui-table-view-cell" id="showCityPicker3">
+					<div class="mui-navigate-right">
+						<span>市、省、区</span>
+						<div id="cityResult3" class="ui-alert  mui-pull-right" style="margin-right: 26px;"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<p>详细地址<input type="text" class="mui-pull-right hasword-inp" value=""  id="cadd-add" maxlength="30"></p>
+				</li>
+			</ul>
+			<div class="single-all-btn">
+				<input type="hidden" id="id" value="">
+				<input type="hidden" id="isdefault" value="1">
+				<input type="hidden" id="addressid" value="">
+				<input type="submit" value="保存" id="cadd-btn-sub" class="fix-btn" onclick="saveconsignee();">
+			</div>
+		</div>
+		<div class="mask" style="display: none;"></div>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/mui.picker.js" ></script>
+		<script type="text/javascript" src="js/mui.poppicker.js" ></script>
+		<script type="text/javascript" src="js/city.data.js" ></script>
+		<script type="text/javascript" src="js/city.data-3.js" ></script>
+		<script type="text/javascript" src="js/cart.js" ></script>
+		<script type="text/javascript" src="js/location.js"></script>
+		<script>
+		mui.init();
+		//设置收货地址是否删除
+			$(".dele").each(function() {
+				$(this)[0].addEventListener('tap', function() {
+					a = $(this).val();
+					aa = $(this).parents('.btn-editadd').children('.setdefault').html();
+					var btnArray = ['否', '是'];
+					mui.confirm('确定要删除收货地址吗？', '信息提示', btnArray, function(e) {
+						if (e.index == 1) {
+							var ca = $(".list-word li").eq(0).find('.setdefault').html();
+							if((aa=="默认地址")&&(ca!="默认地址")){
+								addr = $(".list-word li").eq(0);
+								addr.find('.setdefault').html("默认地址").addClass("word-yellow");
+								id = $.trim(addr.find("#ids").val());
+								name = $.trim(addr.find("#cadd-names").html());
+								mobile = $.trim(addr.find("#cadd-tels").html());
+								tel = $.trim(addr.find("#cadd-tels").html());
+								district = $.trim(addr.find("#addressids").val());
+								address = $.trim(addr.find("#cadd-adds").val());
+								isdefaults="1";
+								saveconsignees();
+							}else{
+								addr = $(".list-word li").eq(1);
+								addr.find('.setdefault').html("默认地址").addClass("word-yellow");
+								id = $.trim(addr.find("#ids").val());
+								name = $.trim(addr.find("#cadd-names").html());
+								mobile = $.trim(addr.find("#cadd-tels").html());
+								tel = $.trim(addr.find("#cadd-tels").html());
+								district = $.trim(addr.find("#addressids").val());
+								address = $.trim(addr.find("#cadd-adds").val());
+								isdefaults="1";
+								saveconsignees();
+							}
+							
+							removeAddr(a);
+						}
+	//					} else {
+	//						info.innerText = '取消删'
+	//					}
+					})
+				});
+			});
+		//设置默认地址
+			$(function(){	
+				$(".list-word li .setdefault").each(function(){
+					$(this).click(function(){
+						if($(this).html()!="默认地址"){
+							li = $(this).parents('li');
+							id = $.trim(li.find("#ids").val());
+							name = $.trim(li.find("#cadd-names").html());
+							mobile = $.trim(li.find("#cadd-tels").html());
+							tel = $.trim(li.find("#cadd-tels").html());
+							district = $.trim(li.find("#districts").val());
+							address = $.trim(li.find("#addressids").val());
+							isdefaults="1";
+							saveconsignees();							
+						}
+						else
+						{
+							window.location.href="order.html";
+						}
+					});
+				});
+			});
+		</script>
+		<script>
+		(function($, doc) {
+				$.init();
+				$.ready(function() {
+			var cityPicker3 = new $.PopPicker({
+						layer: 4
+					});
+					cityPicker3.setData(cityData3);
+					var showCityPickerButton = doc.getElementById('showCityPicker3');
+					var cityResult3 = doc.getElementById('cityResult3');
+					showCityPickerButton.addEventListener('tap', function(event) {
+						cityPicker3.show(function(items) {
+							cityResult3.innerText = (items[0].text || '') + " " + (items[1].text || '') + " " + (items[2].text || '') + " " + (items[3].text || '');
+							a = (items[0].value || '') + "-" + (items[1].value || '')  + (items[2].value ? "-" + items[2].value : '') + (items[3].value ? "-" + items[3].value : '');
+							//返回 false 可以阻止选择框的关闭
+							//return false;
+							doc.getElementById('addressid').value = a;
+						});
+					}, false);
+				});
+			})(mui, document);
+			//软键盘苹果blur
+			$("#showCityPicker3").click(function(){
+				setTimeout(function(){
+					$("#editiaddress input").blur();
+				},300);
+				
+			});
+			//判断是否为苹果
+			var isIPHONE = navigator.userAgent.toUpperCase().indexOf('IPHONE')!= -1;
+			// 元素失去焦点隐藏iphone的软键盘
+			function objBlur(id,time){
+			    if(typeof id != 'string') throw new Error('objBlur()参数错误');
+			    var obj = document.getElementById(id),
+			        time = time || 300,
+			        docTouchend = function(event){
+			            if(event.target!= obj){
+			                setTimeout(function(){
+			                     obj.blur();
+			                    document.removeEventListener('touchend', docTouchend,false);
+			                },time);
+			            }
+			        };
+			    if(obj){
+			        obj.addEventListener('focus', function(){
+			            document.addEventListener('touchend', docTouchend,false);
+			        },false);
+			    }else{
+			        throw new Error('objBlur()没有找到元素');
+			    }
+			}
+			if(isIPHONE){
+			    var input = new objBlur("cadd-name");
+			    var input1 = new objBlur("cadd-tel");
+			    var input2= new objBlur("cadd-add");
+			    input=null;
+			    input1=null;
+			    input2=null;
+			}
+		</script>
+		<script>
+			function setadd(){
+				$(".edit-add").fadeToggle(300);$(".mask").fadeToggle(0);
+				$(".mui-title").html("修改地址");
+				$(".closeadd").fadeToggle();
+			}
+			function setadd2(){
+				$(".edit-add").fadeToggle(300);$(".mask").fadeToggle(0);
+				$(".mui-title").html("修改地址");
+				$(".closeadd").show();
+			}
+			$("#addadd").click(function(){
+				setadd();
+				addAddr();
+			});
+			$(".edit-btn").each(function(){
+				$(this).click(function(){
+					setadd2();
+				});
+			});
+			$(".closeadd").click(function(){
+				$(".edit-add").fadeOut(300);
+				$(".mask").fadeOut();
+				$(this).hide();
+			});
+			
+			$(".username-phonen").click(function() {
+				$(".setdefault").trigger("click");				
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>会员注册机</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script type="text/javascript" src="{adm_tpl}/js/main.js"></script>
+	</head>
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>会员注册机</span></div>
+		</div>
+		 <div class="maincon">
+				<br />
+				<div class="list" >
+					<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+					<div class="row"><label class="row-name"></label>
+						<div class="column">已有机器会员数：<label class="co-orange">{$robot_count}</label><span>个</span></div>
+					</div>
+					<div class="row"><label class="row-name">会员名列表：</label>
+						<div class="column">
+							<textarea name="name_list" id="name_list" style="width: 400px;height: 350px;padding: 5px;"></textarea><span style="line-height: 24px;">用于生成会员的名称，一个一行。</span></div>
+					</div>
+					<div class="row"><label class="row-name"></label>
+						<div class="column">
+							<input type="submit" class="sub" value="提交 " />	
+							<input type="button" class="sub" value="返回" onclick="javascript:history.go(-1);"/>	
+							<input name="action" type="hidden" value="plugin">
+							<input name="plugin_code" type="hidden" value="robotuser">
+							<input name="act" type="hidden" id="act" value="create_user">
+						</div>
+					</div>
+					</form>
+				</div>
+				
+		</div>
+		<style type="text/css">.maincon .row .row-name{width: 200px;}</style>
+		<script type="text/javascript"> 	 
+ 
+		    function check () {
+		     	if ($.trim($("#name_list").val())=='') {
+		     		msg("先填写要生成的会员名");return false;
+		     	}
+		        return true;
+		    }		   
+			 
+		</script>
+	</body>
+</html>

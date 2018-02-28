@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商品发布</title>
+<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+{$tttss}
+<style>
+body{margin-right:0px;}
+#mainnav{width:auto}
+</style>
+
+</head>
+
+<body>
+<div id="maintop" style="width:100%"><div>你的位置：<span>网站工具-> 批量缩略图</span></div></div>
+<div id="mainnav"></div>
+<div class="maincon" style="width:95%">
+<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
+
+  <div class="row">
+    <div class="column">
+   
+    <span>{$txt}</span></div>
+  </div>
+
+
+  <div class="row">
+  <label class="row-name" style="width:120px;">剪裁模式：(居中)</label>
+  <div class="column">
+    <a class="sub" href="javascript:void(0);" onclick="javascript:location.href='/admin.html?do=batch.pic.sm&type=goods&xxm=1'">商品模块数据</a> <a class="sub" href="javascript:void(0);" onclick="javascript:location.href='/admin.html?do=batch.pic.sm&type=news&xxm=1'">文章模块数据</a>
+    <span></span></div>
+  </div>
+
+  <div class="row">
+  <label class="row-name" style="width:120px;">剪裁模式：(左上)</label>
+  <div class="column">
+    <a class="sub" href="javascript:void(0);" onclick="javascript:location.href='/admin.html?do=batch.pic.sm&type=goods&xxm=2'">商品模块数据</a> <a class="sub" href="javascript:void(0);" onclick="javascript:location.href='/admin.html?do=batch.pic.sm&type=news&xxm=2'">文章模块数据</a>
+    <span></span></div>
+  </div>
+
+
+  <div class="row">
+  <label class="row-name" style="width:120px;">比例模式：</label>
+  <div class="column">
+    <a class="sub" href="javascript:void(0);" onclick="javascript:location.href='/admin.html?do=batch.pic.sm&type=goods&xxm=0'">商品模块数据</a> <a class="sub" href="javascript:void(0);" onclick="javascript:location.href='/admin.html?do=batch.pic.sm&type=news&xxm=0'">文章模块数据</a>
+    <span></span></div>
+  </div>
+
+  <!--
+    <div class="row">
+      <label class="row-name">是否推荐：</label><div class="column"> <label><input name="c_is" type="radio" id="radio" value="1" checked="checked" /> 是 </label> <label><input type="radio" name="c_is" id="radio" value="0" /> 否</label>
+      </div></div>
+      -->
+</form>
+  
+</div>
+
+
+
+
+
+
+</body>
+
+</html>

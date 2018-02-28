@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>我的余额 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style type="text/css">
+			.mui-navigate-right:after, .mui-push-right:after{font-size: 20px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav bar-opacity">
+			<a href="javascript:void(0);" class="mui-pull-left mui-icon mui-icon-left-nav" onclick='history.go(-1);'></a>
+			<h1 class="mui-title">我的钱包</h1>
+			<a href="moneylog.html" class="mui-pull-right mui-btn-link">明细</a>
+		</header>
+		<div class="mui-content wallet">
+			<div class="wallet-top">
+				<p>账户余额(元)</p>
+				<div class="money-card">
+					<span class="money">{$user['balance']}</span>
+					<!--<a href="my_card.html" class="card-a right"><em class="icon-card"></em>银行卡</a>-->
+				</div>
+			</div>
+			<div class="wallet-bottom">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<!--<li class="mui-table-view-cell">
+						<a class="mui-navigate-right" href="withdrawals.html">
+							<span class="icon-banfun"><img src="images/wallect_icon_money.png" alt=""></span>
+							<span class="wallet-word">提现</span>
+						</a>
+					</li>-->
+					<li class="mui-table-view-cell">
+						<a class="mui-navigate-right" href="pay.html?order_type=1">
+							<span class="icon-banfun"><img src="images/wallect_icon_recharge.png" alt=""></span>
+							<span class="wallet-word">充值</span>
+						</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						<a class="mui-navigate-right" href="updatepwd.html?act=pay">
+							<span class="icon-banfun"><img src="images/wallet_icon_lock.png" alt=""/></span>
+							<span class="wallet-word">修改支付密码</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

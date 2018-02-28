@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>设置 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style>
+			.mui-switch.mui-active{background-color:#007cc3;border-color:#007cc3;}
+			.mui-switch.mui-active:before{color:#fff;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav" onclick="history.go(-1);" href="javascript:void(0);"></a>
+			<h1 class="mui-center mui-title">设置</h1>
+		</header>
+		<div class="mui-content setting">
+			<ul class="mui-table-view marb10">
+				<li class="mui-table-view-cell">
+					<span>消息提醒</span>
+					<div class="mui-switch mui-active">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<!--<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="#">分享给好友</a>
+				</li>-->
+			</ul>
+			<ul class="mui-table-view marb10">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="/agreement.html">小白有品用户协议</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="/about.html">关于小白有品</a>
+				</li>
+			</ul>
+			<div class="btn-box">
+				<a href="/user.html?act=logout" class="btn">退出登录</a>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+	</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>第三方登录</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 第三方登录</span></div>
+		</div>
+		<div id="mainnav" class="tabhd">
+			<ul>
+				{loop $row $i $p}
+				<li {if $i==0}class="cur"{/if}><a href="javascript:void(0);" title="">{$p['name']}</a></li>
+				{/loop}
+			</ul>
+		</div>
+		<div class="tabbd" style="min-height: 200px;">
+			{loop $row $i $p}
+			 <div class="maincon tabit tpl-theme" style="{if $i==0}display: block;{else}display: none;{/if}">
+				<br />
+				<div class="list">
+					<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+					<div class="row"><label class="row-name">名称：</label>
+						<div class="column"><input name="name" id="name" type="text" value="{$p['name']}" size="50" maxlength="50" /><span>第三方登录名称</span></div>
+					</div>
+					<div class="row"><label class="row-name">appid：</label>
+						<div class="column"><input name="appid" id="appid" type="text" value="{$p['appid']}" size="50" maxlength="50" /><span>应用APPID</span></div>
+					</div>
+					<div class="row"><label class="row-name">appsecret：</label>
+						<div class="column">
+							<input name="appsecret" id="appsecret" type="text" value="{$p['appsecret']}" size="50" maxlength="50" /><span>应用密钥</span>
+						</div>
+					</div>
+					<div class="row"><label class="row-name">是否启用：</label>
+						<div class="column">
+							<label><input name="status" type="radio" {if $p['status']==1}checked="checked"{/if} value="1" />是</label>
+							<label><input name="status" type="radio" {if $p['status']==0}checked="checked"{/if}  value="0" />否 </label><span></span>
+						</div>
+					</div>
+					<div class="row"><label class="row-name">说明：</label>
+						<div class="column">
+							 <label style="vertical-align: text-bottom;">{$p['memo']}</label>
+						</div>
+					</div>
+					<div class="row"><label class="row-name"></label>
+						<div class="column">
+							<input type="submit" class="sub" value="提交 " />	
+							<input name="action" type="hidden" id="action" value="oauth">
+							<input name="code" type="hidden" value="{$p['code']}">
+							<input name="act" type="hidden" id="act" value="config">
+						</div>
+					</div>
+					</form>
+				</div>
+			</div>
+			{/loop}
+		</div>
+		<style type="text/css">.maincon .row .row-name{width: 300px;}</style>
+ 
+		<script type="text/javascript"> 	 
+ 
+		    function check () {
+		     	if ($.trim($("#name").val())=='') {
+		     		msg("先填写名称");return false;
+		     	}
+		        return true;
+		    }		   
+			 
+		</script>
+	</body>
+
+</html>

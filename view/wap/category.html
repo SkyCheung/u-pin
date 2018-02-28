@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>分类大全</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/phone.css" />
+		<style type="text/css">
+			.clearfix{clear: both;*zoom:1 ;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" class="mui-pull-left mui-icon mui-icon-left-nav" onclick="javascript:history.go(-1);"></a>
+			<h1 class="mui-title">分类大全</h1>
+		</header>
+		<div class="mui-content-top all-brand mui-content-bot">
+			<div class="brand-lside">
+			<!--{loop $cats $p}-->
+				<a {if (!$i)&&($i='1')}class="on"{/if}>{$p[name]}</a>
+			<!--{/loop}-->
+			</div>
+			<div class="brand-rside">
+			<!--{loop $cats $p}-->
+				<div class="box hide">
+					<h2><i class="ico-tit"></i><a href="{$p[url]}">{$p[name]}</a></h2>
+					<div class="brand-navson "></div>
+					<!--{loop $p[child] $s}-->
+					<h3><a href="{$s[url]}">{$s[name]} &gt;</a></h3>
+					<div class="brand-navson ">
+						<!--{loop $s[child] $v}-->
+						<div class="fen"><a href="{$v[url]}">{$v[name]}</a></div>
+						<!--{/loop}-->
+					</div>
+					<!--{/loop}-->
+				</div>
+			<!--{/loop}-->
+			</div>
+		</div>
+		<!--{tpl fixnavbar}-->
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script>
+		$(".navbar_b2").parents('li').addClass("on");
+		$('.all-brand .brand-rside .box').eq(0).removeClass('hide');
+		setH();
+		function setH(){
+			$(".brand-lside,.brand-rside").css("height",$(window).height()-44);
+		}
+		$(window).resize(function(){
+			setH();
+		});
+		$(".brand-lside a").each(function(){
+			$(this).click(function(){
+				$(".brand-rside .box").eq($(this).index()).fadeIn(400).removeClass("hide").siblings().fadeOut(100).addClass("hide");
+				$(this).addClass("on").siblings().removeClass("on");
+			});
+		});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" class="feedback">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>退货详情 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/feedback-page.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style type="text/css">
+			.feedback .image-list{overflow: visible;height: auto;}
+			.feedback p{padding:0;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" onclick="history.go(-1);" class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title">退货详情</h1>
+		</header>
+		<div class="mui-content-top">
+			<div class="back-box-view view-bbv">
+				<div class="bbv-top">
+					<h3><span><i class="icon-status"></i><b>订单状态：{$row['status_name']}</b></span>{if $row['status']!=service_cancel && $row['status']!=service_finish && $row['status']!=service_failed}<a href="javascript:void(0);" onclick="cancel_service({$row[id]},this);" class="bbv-btn">撤销申请</a>{/if}</h3>
+					<div class="apply-time">申请时间：{$row['addtime']}</div>
+					<div class="apply-result">
+						处理结果：{$row['remark']}
+					</div>
+				</div>
+			</div>
+			<div class="back-box-view order">
+				<ul class="list-more">
+					<li>
+						<div class="order-nr">
+							<a href="{$row['url']}" class="picbox">
+								<img src="{$row['goods_thumb']}" alt="110*110" width="60" height="60"/>
+							</a>
+							<div class="order-word">
+								<a class="order-top" href="{$row['url']}">
+									<p class="single-elli">{$row['name']}</p>
+									<p class="style">
+									{if $row['speclist']}[<!--{loop $row['speclist'] $s}-->
+									{$s['name']}：<span>{$s['val']}</span>
+									<!--{/loop}-->]{/if}
+									</p>
+								</a>
+								<div class="pwtxt">
+									<p class="money">￥<span>{$row['price']}</span></p>
+									<span class="buy-num">x{$row['num']}</span>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="back-box-view">
+				<ul class="yec-table-view">
+					<li class="yec-table-view-cell">
+						<div class="bbv-div"><p class="left">申请原因</p> <p>{$row['content']}</p></div>
+					</li>
+					<li class="yec-table-view-cell">
+						<div class="bbv-div">
+							<p class="left">申请数量</p> 
+							<p>1</p>
+						</div>
+					</li>
+					<li class="yec-table-view-cell">
+						<div class="bbv-div"><p class="left">收货地址</p> <p>{$row['address']}</p></div>
+					</li>
+					<li class="yec-table-view-cell">
+						<div class="bbv-div"><p class="left">姓名</p><p>{$row['uname']}</p></div>
+					</li>
+					<li class="yec-table-view-cell">
+						<div class="bbv-div"><p class="left">手机号码</p><p>{$row['mobile']}</p></div>
+					</li>
+					<li  class="yec-table-view-cell bbv-picbox">
+						<div class="bbv-div">
+							<p class="left">凭证图片</p>
+							<div id='image-list' class="row image-list">
+							<!--{loop $row['thumb'] $p}-->
+							<a href="{$p}" target="_blank"><img src="{$p}" width="80" height="80"/></a>
+							<!--{/loop}-->
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/mui.view.js" ></script>
+        <script type="text/javascript" src="js/users.js" ></script>
+	</body>
+</html>

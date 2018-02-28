@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>&lt;后台管理!&gt; - 云迈互联!</title>
+<meta name="author" content="www.yunmai.net" />
+<STYLE type=text/css>
+*{
+	padding:0px;
+	margin:0px;
+	font-family:Verdana, arial, Helvetica, sans-serif;
+}
+body{
+	font-size:12px;
+}
+ul{
+	list-style:none;
+}
+img{
+	border:0px;
+}
+a{
+	color:#333333;
+}
+a:hover{
+	color:#FF3300;
+	text-decoration:none;
+}
+input,select,img{
+	vertical-align:middle;
+}
+.top{
+	width:600px;;
+	height:55px;
+	background:url($images/logo.png) 1px 1px no-repeat;
+	border-bottom:2px solid #ddD;
+	overflow:hidden;
+	margin:110px auto 0px;
+}
+.top .title{
+	float:left;
+	display:block;
+	font-size:24px;
+	font-weight:bold;
+	line-height:55px;
+	text-indent:260px;
+}
+.top *{
+	float:left;
+	display:block;
+	margin-left:10px;
+	font-weight:bold;
+	letter-spacing:1px;
+	overflow:hidden;
+	float:right;
+}
+.top a{
+	height:15px;
+	line-height:15px;
+	display:block;
+	float:left;
+	color:#FF6600;
+	margin-left:-1px;
+	border-left:1px solid #CCC;
+	padding-left:10px;
+	padding-right:10px;
+	margin-top:25px;
+	white-space:nowrap;
+}
+.main{
+	width:550px;
+	margin:10px auto;
+	padding-bottom:5px;
+}
+.main dl{
+	
+}
+.main dl dd{
+	
+	color:#FF6600;
+	font-size:14px;
+	font-weight:bold;
+	margin:20px;
+}
+.main dl dd .input{
+	margin-left:10px;
+	border:1px solid #CCC;
+	background:#F7F7F7;
+	padding:4px 0px 4px 7px;
+	margin-right:20px;
+}
+.msgbox{
+	text-indent:22px;
+	color:#999999;
+	line-height:50px;
+}
+.submit .sbut{
+	width:88px;
+	height:31px;
+	border:1px solid #006633;
+	background:#9C0 url($images/top_bg_hr.jpg) 1px -10px repeat-x;
+	margin-top:6px;
+	margin-left:86px;
+	font-size:16px;
+	font-weight:bold;
+	letter-spacing:4px;
+	color:#FFC;
+}
+.style1 {
+	color: #666666;
+	font-size: 12px;
+	font-weight:normal;
+}
+#mx{float:right;margin-right:210px;display:none;}
+-->
+</STYLE>
+<script language="javascript" type="text/javascript">
+if (top.location != location) top.location.href = location.href;
+</script>
+<script src="/view/css/jquery.js" type="text/javascript"></script>
+
+<script src="/static/js/layer/layer.min.js"></script>
+<script src="/view/css/form.js" type="text/javascript"></script>
+<script>
+layer.config({
+    extend: ['skin/moon/style.css'], 
+    skin: 'layer-ext-moon' 
+});
+
+$(function(){
+	$.Tipmsg.r=null;
+		
+	var showmsg=function(msg){
+		layer.msg(msg, {icon: 2,offset: '1%',});
+	}
+	
+	$(".vform1").Validform({
+		tiptype:function(msg){
+			showmsg(msg);
+		},
+		tipSweep:true,
+	});
+})
+</script>
+</head>
+
+<body>
+
+<div class="top"> <div class="right"><a href="/">返回首页</a> <a href="http://www.yunmai.net/" target="_blank">帮助中心</a></div></div>
+<div class="main">
+
+<form name="vform1" class="vform1" action="" target="mxt_do" method="post">
+<dl>
+<dd><span>用户名：</span><input name="c_user" class="input" id="c_user" value="{$login_name}" size=30 datatype="s2-60" nullmsg="请输入用户名！" errormsg="请输入用户名！" > 
+      <label>
+      <input name="login_yes" type="checkbox" id="login_yes" value="1" {$checked}> <span class="style1">记住用户名</span>
+      </label>
+      </dd>
+<dd><span>密 &nbsp;&nbsp;码：</span><input name="c_pwd" type="password" class="input" id="c_pwd" value="" size=30 datatype="*2-60" nullmsg="请输入密码！" errormsg="请输入密码！"> 
+</dd>
+<dd><span>验证码：</span><input name="vcode" type="text" class="input" id="vcode" size="6" maxlength="4" onclick="showvode();"  onfocus="showvode();" autocomplete="off" datatype="s4-4" nullmsg="请输入验证码！" errormsg="请输入验证码！">
+ <img id="mx" style="cursor:pointer;" src="" alt="看不清？点击更换另一个验证码。" border="1" onClick="refreshimage(this)" title="看不清？点击更换另一个验证码。" ><input name="action" type="hidden" id="action" value="login"></dd>
+</dl>
+<div class=submit><input name="" type="submit" class="sbut" value="登录"></div>
+<div class=msgbox>本系统需要 Javascript 与 Cookies，IE6.0、分辨率1024*768或者以上。</div>
+</form></div><script>
+function refreshimage(clickidimg)
+{
+  clickidimg.src='/vcode-M.html'+'?'+Date.parse(new Date());
+}
+function showvode()
+{
+  document.getElementById('mx').style.display='block';
+}
+document.getElementById('mx').src='/vcode-M.html'+'?'+Date.parse(new Date());
+</script>
+<iframe src="" name="mxt_do" id="mxt_do" scrolling="no" marginheight="0" marginwidth="0" frameborder="0" width="0" height="0">
+</body>
+</html>

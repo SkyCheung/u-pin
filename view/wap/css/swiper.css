@@ -1,0 +1,38 @@
+/*common*/
+.swiper-container {margin-left: auto;margin-right: auto;position: relative;overflow: hidden;z-index: 1;}
+.swiper-slide {-webkit-flex-shrink: 0;-ms-flex: 0 0 auto;flex-shrink: 0;width: 100%;height: 100%;position: relative;}
+.swiper-wrapper {position: relative;width: 100%;height: 100%;z-index: 1;display: -webkit-box;display: -moz-box;display: -ms-flexbox;display: -webkit-flex;display: flex;-webkit-transition-property: -webkit-transform;-moz-transition-property: -moz-transform;-o-transition-property: -o-transform;-ms-transition-property: -ms-transform;transition-property: transform;-webkit-box-sizing: content-box;-moz-box-sizing: content-box;box-sizing: content-box;}
+.swiper-pagination {
+    position: absolute;
+    text-align: center;
+    -webkit-transition: .3s;
+    -moz-transition: .3s;
+    -o-transition: .3s;
+    transition: .3s;
+    -webkit-transform: translate3d(0,0,0);
+    -ms-transform: translate3d(0,0,0);
+    -o-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+    z-index: 10;
+    bottom:10px;left: 0;width: 100%;text-align: center;
+}
+.swiper-pagination-bullet.swiper-pagination-bullet-active{background-color:#fff;}
+.swiper-pagination-clickable .swiper-pagination-bullet {
+    cursor: pointer;
+}
+.swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 100%;
+   	border:1px solid #fff;margin:0 4px;
+}
+/*banner*/
+.swiper-container {width: 100%;height: 100%;}
+.swiper-slide {text-align: center;background: #fff;display: -webkit-box;display: -ms-flexbox;display: -webkit-flex;display: flex;-webkit-box-pack: center;-ms-flex-pack: center;-webkit-justify-content: center;justify-content: center;-webkit-box-align: center;-ms-flex-align: center;-webkit-align-items: center;align-items: center;}
+    
+.banner img{width: 100%;}
+.swiperimgauto img{width: 100%;}
+/*item*/
+.slide-detail-pic .swiper-pagination-bullet{border-color:#1b1b1b;}
+.slide-detail-pic .swiper-pagination-bullet.swiper-pagination-bullet-active{background-color:#1b1b1b;}

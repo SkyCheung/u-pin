@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>收货地址 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<link rel="stylesheet" type="text/css" href="css/cart.css"/>
+		<style>
+		body{background-color:#f8f8f8}
+			.nav nav ul li a.ahover {
+				border-bottom-color: #de342f;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<div class="center-body">
+			<div class="nb">
+				<div class="center-lside">
+					<!--{tpl usermenu}-->
+				</div>
+				<div class="center-rside pages-style">
+					<div class="center5 center-title-sig">
+						   <h3>地址管理<a href="javascript:void(0);" class="vivi-blue add-addbtn" onclick="addAddr();">添加新地址</a></h3>
+					</div>
+					<div class="add-deliver">
+						<div class="sh-address">
+						<ul>
+							<!--{loop $consignee $p}-->
+							<li class="other-add{if $p['is_default']==1} default-add{/if}" id="{$p['id']}" data-cityid="{$p[city]}" >
+								<div class="add-box ">
+									<span class="remove vivi-blue" onclick="removeAddr({$p['id']});">X</span>
+									<div class="name-add"><span class="name">{$p['name']}</span><span class="add-rside"></span></div>
+									<div class="elli add-detail">
+										<p title="{$p['addr']}">{$p['addr']}</p>
+									</div>
+									<div><span class="moblie">{$p['mobile']}</span><span style="margin-left: 30px;">{if $p['is_default']==1}默认地址{/if}</span>
+										<a href="javascript:void(0);" onclick="editAddr({$p['id']});" class="chang-default change vivi-blue">修改</a>
+									</div>																			
+								</div>
+								<i class="icon-check"></i>
+							</li>
+							<!--{/loop}-->
+							
+							<li class="add-add">
+								<div class="add-box add-box-center" onclick="addAddr();">
+									<a href="#">
+									<i class="icon-add-add"></i>
+									添加新地址
+									</a>
+								</div>
+							</li>
+						</ul>						
+					</div>
+					</div>										
+				</div>
+			</div>
+		</div>
+		
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		<div class="edit-address modbox">
+			<div class="edit-box">
+				<h3>新增配送信息<i class="close-modbox"></i></h3>
+				<div class="edit-form">
+						<ul>
+							<li>
+								<label><i>*</i>收货人：</label>
+								<input type="text" id="sh-name" maxlength="20" class="s-length" />
+							</li>
+							<li>
+								<label><i>*</i>手机号码：</label>
+								<input type="text" id="sh-phone" maxlength="11" class="s-length"/>
+							</li>
+							<li>
+								<label>固定电话：</label>
+								<input type="text" id="sh-tel" maxlength="20" class="s-length"/>
+							</li>
+							<li style="min-height: 25px;">
+								<label style="width: 75px; float: left;"><i>*</i>所在地区：</label>
+								<div class="deliver" style="float: left;">								
+									<div id="store-selector">
+										<div class="text"><div title="请选择">- 请选择 -</div><b></b><input type="hidden" id="district"></div>                 
+										<div onclick="$('#store-selector').removeClass('hover')" class="close"></div>
+									</div>
+									<div id="store-prompt"><strong></strong></div>
+								</div>
+								 
+							</li>
+							<li style="clear: both;">
+								<label><i>*</i>详细地址：</label>
+								<input type="text" id="sh-address" maxlength="30" class="l-length" />
+							</li>
+						</ul>
+						<div class="setting">
+					        <input type="checkbox" value="1" id="isdefault"/>&nbsp;&nbsp;设为默认地址
+				         </div>
+				         <input type="hidden" id="id" value="">
+				         <button class="btn-save" id="saveconsignee" onclick="saveconsignee();">保存</button>
+				</div>							
+			</div>
+		</div>
+		<div id="mask"></div>
+		
+		<link rel="stylesheet" href="css/location.css" />
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script type="text/javascript" src="js/cart.js" ></script>
+		<script type="text/javascript" src="js/location.js" ></script>
+      <script type="text/javascript">
+     	$(function(){
+			loadLayer();		
+		});
+      </script>
+
+	</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>{$name} - {$ym_endtitle}</title>
+		<meta name="keywords" content="{$web_keyword}" />
+		<meta name="description" content="{$web_description}" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/news.css" />
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<div class="problem-body">
+			<div class="nb">
+				<div class="problem-lside">
+					<h3>{$channel_name}</h3>
+					<ul>
+						<!--{loop $cat $p}-->
+						<li>
+							<a href="{if $p['son']}javascript:void(0);{else}{$p['url']}{/if}" class="nli">{$p['name']}<b  class="arrow"></b></a>
+							<ul class="ulson" style="display: block;">
+								<!--{loop $p['son'] $v}-->
+								<li><a href="{$v['url']}" {if $v['code']==$code}class="cur"{/if}>{$v['name']}</a></li>
+								<!--{/loop}-->	
+							</ul>
+						</li>
+						<!--{/loop}-->
+					</ul>
+				</div>
+				<div class="problem-rside">
+					<div class="probar">
+						{$crumbs_nav}
+					</div>
+					<div class="problemcon">
+						<h3 class="title">{$title}</h3>
+						<div class="pnr">
+							{$body}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+      <script type="text/javascript">
+      	$(".problem-lside a.nli").each(function(){
+      		$(this).click(function(){
+      			$(this).next("ul.ulson").slideToggle(300);
+      			$(this).children("b").toggleClass("arrow");
+      		})
+      	});
+		$(function () {
+			loadLayer();
+		});
+      </script>
+
+	</body>
+
+</html>

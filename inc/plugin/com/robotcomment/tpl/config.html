@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>评论机器人</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script type="text/javascript" src="{adm_tpl}/js/main.js"></script>
+	</head>
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>评价机器人</span></div>
+		</div>
+		 <div class="maincon">
+				<br />
+				<div class="list" >
+					<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+					<div class="row"><label class="row-name">商品：</label>
+						<div class="column"><input type="button"  size="6" maxlength="5" value="选择商品" class="sub" onclick="openGoodsMod();"/><span>已选择 <b id="ids_count" style="color: #E01C2C;font-size: 14px;">{if $row['goods_count']}{$row['goods_count']}{else}0{/if}</b> 个商品</span></div>
+					</div>	
+					<div class="row"><label class="row-name">评价模板：</label>
+						<div class="column">
+							<div style="width: 800px; height: 500px;overflow-y: scroll;border-bottom: solid 1px #ddd;">
+							<p id="selectedcat">
+								{loop $row $p}
+								<a href="javascript:void(0);"><i class="i-del" data-id="{$p['id']}"></i><b>{$p['content']}</b></a>
+								{/loop}
+							</p>
+							</div>
+							<p id="addbtn"><a href="javascript:void(0);" class="add"><i class="i-add">+</i>增加模板</a></p>
+							<p id="addct">
+								<textarea id="txtcat" style="width: 600px;height: 50px;padding: 5px;vertical-align: middle;"></textarea>
+								<input type="button" value="保存" id="addcat"> <input type="button" value="取消" id="addcancel"></p>
+						</div>
+					</div>
+					<div class="row"><label class="row-name">评价内容：</label>
+						<div class="column">
+							<textarea name="content" id="content" style="width: 750px;height: 50px;padding: 5px;"></textarea><span style="line-height: 24px;color: #E01C2C;"></span></div>
+					</div>
+					<div class="row">
+						<label class="row-name">晒单：</label>
+						<div class="upimg imglist">
+							<ul>
+								<li class="picker">
+									<div class="fileListPicker addimgbefore" id="picker_{$p['goods_id']}" data-uploaddir="comment" data-isthumb="1" data-suffix="{$p['goods_id']}" data-numlimit='{$ym_comment_imglimit}'><a href="javascript:void(0);">+</a></div>												
+								</li>											
+							</ul>
+							<span class="tip" style="display: inline-block;margin-top: 10px;">最多可上传<b class="co-orange"> {$ym_comment_imglimit} </b>张图片(张数在 [站点设置] 里可配置)</span>
+						</div>
+					</div>
+					<div class="row"><label class="row-name"></label>
+						<div class="column">
+							<input type="submit" class="sub" value="提交 " />	
+							<input type="button" class="sub" value="返回" onclick="javascript:history.go(-1);"/>	
+							<input name="action" type="hidden" value="plugin">
+							<input name="goods_ids" type="hidden" id="ids" value="{$row['goods_ids']}">
+							<input name="plugin_code" type="hidden" value="{$code}">
+							<input name="act" type="hidden" id="act" value="create_comment">
+						</div>
+					</div>
+					</form>
+				</div>
+				
+		</div>
+		<style type="text/css">
+			.maincon .row .row-name{width: 200px;}
+			.comcat{list-style-type: none;} 
+			ul.comcat li{float: left;border-bottom: none;padding-right: 10px;cursor: pointer;}
+			#selectedcat a{display: block;}
+			#selectedcat a b{font-weight: normal;}
+			#selectedcat .i-del{padding-right: 10px;}
+			#addct{display: none;clear: both;}
+			#addbtn{clear: both;}
+			.maincon{padding-bottom: 50px;}			
+		</style>
+		
+		<script type="text/javascript" src="./static/webuploader/webuploader.js"></script>
+		<script type="text/javascript" src="./static/webuploader/uploader.js"></script>
+		<script type="text/javascript"> 
+			$(function() {
+				var imgNumLimit = {$ym_comment_imglimit};
+				$(".fileListPicker").each(function() {
+					upFileList($(this),68,68,imgNumLimit);
+				});	
+			});
+			
+			$("#addbtn a").click(function () {
+				$(this).parent().hide();
+				$("#addct").show();
+			});
+			
+			$("#addcancel").click(function () {
+				$(this).parent().hide();
+				$("#addbtn").show();
+			});
+			
+			//添加模板
+ 			$("#addcat").click(function () {
+ 				var tpl= $.trim($("#txtcat").val());
+ 				if (tpl == '') {
+ 					msg("请填写内容");
+ 					$("#txtcat").focus();
+ 					return false;
+ 				}
+ 				$.getJSON("admin.html?do=plugin", {isajax:1, act:'add_tpl', plugin_code:'robotcomment', tpl:tpl}, function(res) {
+ 					if (res.res !='') {
+ 						$("#selectedcat").append('<a href="javascript:void(0);"><i class="i-del" data-id="'+res.res+'"></i> <b>'+tpl+'</b></a>');
+ 						$("#txtcat").val("");
+						$("#addcancel").trigger("click");
+						$("#selectedcat").parent().scrollTop($("#selectedcat").parent().scrollTop() + $("#selectedcat").last().height()); //动态高度
+						msg("添加成功");
+ 					}
+ 					else
+ 					{
+ 						msg("添加失败");
+ 					}
+ 				}); 				
+			});
+			
+			//选择模板
+			$("#selectedcat").on("click","a",function(e) {
+				if ($(e.target).hasClass('i-del')) {
+					return;
+				}
+				$("#content").val($(this).children("b").html());
+			});
+			
+			//删除模板
+			$("#selectedcat").on("click","i.i-del",function() {
+				var t = $(this);
+				var id = t.data("id");
+				top.layer.confirm("是否要删除",function() {					
+					$.getJSON("admin.html?do=plugin", {isajax:1, act:'del_tpl', plugin_code:'robotcomment', id:id}, function(res) {
+	 					if (res.err =='') {
+	 						t.parent().remove();
+	 						msg("删除成功");
+	 					}
+	 					else
+	 					{
+	 						msg("删除失败");
+	 					}
+	 				});
+					
+				});				
+			});
+			
+		    function check () {
+		     	if ($.trim($("#ids").val())=='') {
+		     		msg("先选择商品");return false;
+		     	}
+		     	if ($.trim($("#content").val())=='') {
+		     		msg("先填写评价内容");return false;
+		     	}
+		        return true;
+		    }		   
+			 
+			 //编辑区域
+		    function openGoodsMod() {
+		    	var ii = top.layer.open({
+					type: 2,
+					title: '选择商品',
+					closeBtn: 1,
+					shift: 2,
+					fix:true,
+					shadeClose: false,
+					area: ['1000px', '590px'],
+					content: ['./admin.html?do=goods_select'],
+					end: function() {
+
+					}
+                 });
+		    } 
+		</script>
+	</body>
+</html>

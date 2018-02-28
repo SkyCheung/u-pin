@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>设置支付密码 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style>
+			.vcodebox .inp-vcode .entercode{width: 100%;}
+			.paymentcode input{margin-bottom:0;}
+			.btn-box{margin:10px;}
+			.vcodebox .inp-vcode .getcode{background-color:#007cc3;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" onclick='history.go(-1);' class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title">设置支付密码</h1>
+		</header>
+		<div class="mui-content-top payment">
+			<input type="hidden" id="mobile" class="input" readonly="readonly" value="{$user['mobile']}" style="width: 85px; border: none;"/>
+			<div class="paymentcode">
+				<input type="password" name="" id="paypwd" value="" maxlength="16" placeholder="请设置密码"/>
+			</div>
+			<div class="paymentcode">
+				<input type="password" name="" id="repaypwd" value="" maxlength="16" placeholder="再次输入支付密码"/>
+			</div>
+			<div class="vcodebox">
+				<div class="inp-vcode">
+					<input type="text" name="" id="authcode" value="" placeholder="输入短信验证码" class="entercode" maxlength="8"/>
+					<input class="getcode" id="getcode" type="button"  data-mobileid="mobile" value="获取验证码" onclick="sendSms(this, 'sms_setpaypwd','{$user['mobile']}');">
+				</div>
+			</div>
+			<div class="btn-box">
+				<input type="submit" class="btn btn-grey btn-single-click" id="save-btn" value="下一步" onclick="javascript:editPaypwd();"/>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+        <script type="text/javascript" src="js/users.js" ></script>
+		<script src="js/mui.min.js"></script>
+		<script>
+			//判断验证码
+			$(function () {	
+				$("#paypwd").keyup(function(){
+					if (check()) {
+						$("#save-btn").removeClass("btn-grey");
+					}
+					else{
+						$("#save-btn").addClass("btn-grey");
+					}
+		       	});    		
+				$("#authcode").keyup(function(){
+					if (check()) {
+						$("#save-btn").removeClass("btn-grey");
+					}
+					else{
+						$("#save-btn").addClass("btn-grey");
+					}
+		        });
+			});
+			function check() {
+				var is=true;
+				if ($("#paypwd").val()=="") {
+					is=false;
+					return false;
+				}
+				if ($("#authcode").val()=='') {
+					return false;
+				}
+				return is;
+			}
+			$("#getcode").click(function(){
+			    daoshu("#getcode");
+	        });
+		</script>
+		
+	</body>
+</html>

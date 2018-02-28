@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新建组图</title>
+
+<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+
+<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div id="maintop">
+  <div>你的位置：<span>网站设置 -> 编辑组图</span></div></div>
+<div id="mainnav"> 	<a class="button" href="./admin.html?do=banner.add"><span>新建组图</span></a><a class="button" href="./admin.html?do=banner"><span>组图列表</span></a></div>
+
+<div class="maincon">
+<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1"><input name="action" type="hidden" id="action" value="banner.edit" />
+  <div class="row">
+    <label class="row-name">组图名称：</label><div class="column"><input name="c_title" type="text" id="c_title" value="{$row[c_title]}" size="30" /><span></span></div></div>
+    
+<div class="row">
+    <label class="row-name">变量名称：</label>
+    <div class="column"><input name="c_name" type="text" id="c_name" value="{$row[c_name]}" size="30" /><span>仅以英文命名</span></div></div>
+    
+  <div class="row">
+    <label class="row-name">缩略图宽：</label><div class="column" ><input name="c_width" type="text" id="c_width" value="{$row[c_width]}" size="3" maxlength="4" /><span></span></div>
+  <label class="row-name" style="padding:0;margin:0;width:30px;">高：</label>
+  <div class="column"><input name="c_height" type="text" id="c_height" value="{$row[c_height]}" size="3" maxlength="4" /><span></span></div>
+
+  <div class="column"><span>0为不生成缩略图</span></div>
+</div>
+<div class="row"><label class="row-name"></label><div class="column"><input type="submit" class="sub" value=" 提交 " /></div></div>
+</form>
+  
+</div>
+
+
+
+
+
+
+</body>
+
+</html>

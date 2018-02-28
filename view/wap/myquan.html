@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>我的优惠券 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<link rel="stylesheet" href="css/phone.css" />
+		<style>
+			.mui-scroll-wrapper{margin-top: 8px;}
+			.mui-table-view{background:none;}
+			.mui-bar .mui-icon-more{font-size: 36px;padding:4px;}
+			#topPopover{height: 130px;width: 110px;}
+			#topPopover .mui-table-view{text-align: center;}
+			.mui-table-view-cell:after{left: 0;}
+			.jumpout .mui-table-view-cell{padding:10px;}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{color:#007cc3;}
+			.order .list-more>li{padding: 0px;line-height: inherit;height: 140px;}
+			.quan-ul .quannow .txt{line-height: 22px;}
+			.quan-ul .rside{background-size: 100% 100%;}
+			.quan-ul .btn{padding-top: 50px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="user.html" class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title" id="mytitle">我的优惠券</h1>
+			<a href="#topPopover" class="mui-pull-right mui-icon mui-icon-more icon-full"></a>
+		</header>
+		<div class="mui-content integral">
+			<div id="slider" class="mui-slider order integral-bottom">
+					<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted bgw">
+						<a class="mui-control-item mui-active" href="#item1mobile">未使用（<b id="status-0">0</b>）</a>
+						<a class="mui-control-item" href="#item2mobile">已使用（<b id="status-1">0</b>）</a>
+						<a class="mui-control-item" href="#item3mobile">已过期（<b id="status-2">0</b>）</a>
+					</div>
+					<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>
+					<div class="mui-slider-group">
+						<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+							<div class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul class="list-more mui-table-view quan-ul" id="0" isend="0" page="1"></ul>
+								</div>
+							</div>
+						</div>
+						<div id="item2mobile" class="mui-slider-item mui-control-content">
+							<div class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul class="list-more  mui-table-view quan-ul" id="1" isend="0" page="1"></ul>
+								</div>
+							</div>
+						</div>
+						<div id="item3mobile" class="mui-slider-item mui-control-content">
+							<div class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul class="list-more  mui-table-view quan-ul" id="2" isend="0" page="1"></ul>
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
+			<div><a href="quan.html" class="btn simple-btn">去领券</a></div>
+		</div>
+		<!--右上角弹出菜单-->
+		<div id="topPopover" class="mui-popover jumpout">
+			<div class="mui-popover-arrow"></div>
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell"><a href="index.html">首页</a></li>
+						<li class="mui-table-view-cell"><a href="list.html">商品</a></li>
+						<li class="mui-table-view-cell"><a href="cart.html">购物车</a></li>
+						<li class="mui-table-view-cell"><a href="user.html">会员中心</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script>
+			mui.init({
+				swipeBack: false
+			});
+			mui('#topPopover,.mui-table-view').on('tap','a',function(){
+					var href = this.href;
+					window.location.href = href;
+			});
+			(function($) {
+				$('.mui-scroll-wrapper').scroll({
+					indicators: true //是否显示滚动条
+				});
+										
+				//刷新页面
+				$.ready(function() {
+					//循环初始化所有下拉刷新，上拉加载。
+					$.each(document.querySelectorAll('.mui-scroll-wrapper'), function(index, pullRefreshEl) {
+						$(pullRefreshEl).pullRefresh({
+							down: {
+							},
+							up: {
+								auto: true,
+								contentrefresh: '正在拼命加载...',
+								contentnomore:'没有更多优惠券了',
+								callback: pullupRefresh
+							}
+						});
+					});
+					/**
+					 * 上拉加载具体业务实现
+					 */
+					function pullupRefresh() {
+						var self = this;
+						setTimeout(function() {
+							var ul = self.element.querySelector('.mui-table-view');							
+							get_coupon_list(ul, self);							
+						}, 10);
+					}				
+				});
+
+			})(mui);
+			
+			//加载优惠券
+			var is_count=1;//各状态数量
+ 			function get_coupon_list(ul, puller) {
+					page = ul.getAttribute("page"); //第几页										
+					$.getJSON("myquan.html", {act: "get_coupon", page:page, is_count:is_count,type:ul.getAttribute("id")}, function(res) {
+						
+						if(res.err) {
+							msg("加载失败");return;
+						}
+						var html ='';
+						$.each(res.data, function(k, v) {
+							html +='<li class="quannow" id="'+v.id+'"><div class="lside">';
+							html +='<div class="title">￥<b>'+v.amount+'</b>';
+							html +='<span>满'+v.amount_reached+'元可用</span></div>';
+							html +='<div class="txt">'+v.date_start+'-'+v.date_end+'</div>';
+							html +='<div class="txt">限品类：'+v.name+'</div>';
+							html +='<div class="txt">限平台：'+v.client_name+'</div>';
+							html +='<div class="txt">券编号：'+v.code+'</div>';
+							html +='</div><div class="rside opbtn">';
+							if(v.status_code == 'unused') {
+								html +='<a href="list.html?qid='+v.cid+'" class="btn">去使用</a>';
+							}
+							else
+							{
+								html +='<i class="quan-ico quan-'+ v.status_code +'"></i>';
+							}
+						    html +='</div></li>';
+						});
+						
+						if(is_count ==1) //显示数量
+						{
+							is_count=0;
+							$.each(res.count, function(k, v){
+								$("#status-"+k).html(v);
+							});	
+						}
+						if (res.data.length==0) {
+							ul.setAttribute("isend", '1');
+						}
+						else{
+							$(ul).append(html);
+							ul.setAttribute("page", parseInt(ul.getAttribute("page"))+1);
+						}
+												
+						puller.endPullupToRefresh((parseInt(ul.getAttribute("isend")) > 0)); //参数为true代表没有更多数据了。
+					});	
+			}
+				
+
+		$(function(){
+			H_setmove();
+			$(window).resize(function(){
+				H_setmove();
+			});
+			function H_setmove(){
+				$(".mui-control-content").css("min-height",$(window).height()-144);
+			}
+		})
+ 	
+		</script>
+		<script>
+			mui('.mui-scroll-wrapper').scroll();
+			mui('body').on('shown', '.mui-popover', function(e) {
+				//console.log('shown', e.detail.id);//detail为当前popover元素
+			});
+			mui('body').on('hidden', '.mui-popover', function(e) {
+				//console.log('hidden', e.detail.id);//detail为当前popover元素
+			});
+		</script>
+	</body>
+</html>

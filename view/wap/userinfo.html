@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>个人信息 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<link rel="stylesheet" href="css/userphoto.css" />
+		
+		<style>
+			.mui-table-view-chevron .mui-table-view-cell>a:not(.mui-btn){margin-right: 0;}
+			.mui-table-view-cell{padding:15px 15px;}
+			.mui-table-view-cell>a:not(.mui-btn){margin:-15px;}
+			.mui-pull-bottom-tips{margin-left: 48px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="user.html" class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title">我的资料</h1>
+			
+		</header>
+		<div class="mui-content-top">
+			<ul class="hasword-bdbox my-infor">
+				<li class="mui-table-view-cell mui-media">
+					<div class="yec-text-align-cen" id="head"><span class="word-heade mui-pull-right">更换头像</span>
+						<span class=" head">
+						<!--{if $user['img']!=''}-->
+							<img class="head-img mui-action-preview" src="{$user['img']}" alt="{$user['uname']}" width="50" height="50">
+						<!--{else}-->
+							<img class="head-img mui-action-preview"  src="images/avatar.jpg">
+						<!--{/if}-->
+						<input type="hidden" value="{if $user['img']}{$user['img']}{/if}" data-fileName="{$filename}" id="img">							
+						</span>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>用户名<input type="text" class="mui-pull-right hasword-inp" id="username" value="{$user['uname']}"></span>
+				</li>	
+				<input type="hidden" id="username" value="{$user['uname']}">
+				<li class="mui-table-view-cell">
+					<span class="mui-inline">性别 </span>
+					<ul class="mui-table-view mui-table-view-radio checksex">
+						<li class="mui-table-view-cell sex {if $user['sex']==1}mui-selected{/if}" value="1">
+							<span class="mui-navigate-right">男</span>
+						</li>
+						<li class="mui-table-view-cell sex {if $user['sex']==2}mui-selected{/if}" value="2">
+							<span class="mui-navigate-right">女</span>
+						</li>
+					</ul>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="javascript:void(0);">生日 <input type="text" class="mui-pull-right hasword-inp"  id="birthday" data-options='{"type":"date","value":"1990-06-06 10:10","beginYear":1930}' value="{$user['birthday']}"></a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="user.html?act=updatemobile">手机号 <span class="mui-pull-bottom-tips" id="mobile">{$user['mobile']}</span></a>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>邮箱<input type="text" class="mui-pull-right hasword-inp" id="email" value="{$user['email']}"></span>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>真实姓名<input type="text" class="mui-pull-right hasword-inp" id="realname" value="{$user['realname']}"></span>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="updatepwd.html" class="mui-navigate-right">修改密码 </a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="address.html" class="mui-navigate-right">地址管理 </a>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>个人简介 <input type="text" class="mui-pull-right hasword-inp" placeholder="填写简介" id='memo' value="{$user['memo']}"></span>
+				</li>
+			</ul>
+			<br />
+			<a href="javascript:void(0);" class="btn" id="btnEditUser">保 存</a>
+			<br />
+		</div>
+		<!--上传头像-->
+		<div id="showpic" class="hide">
+		 	<div class="lazy_tip" id="lazy_tip"><span>1%</span><br>	载入中....</div>
+			<div class="lazy_cover"></div>
+			<div class="resource_lazy hide"></div>
+			<div class="pic_edit">
+				<!--<h2>可用双指旋转和缩放</h2>-->
+				<div id="clipArea"></div>
+				<button id="upload2">选择图片</button>
+			    <button id="clipBtn">保存头像</button>
+			    <button id="deletebtn">取消上传</button>
+				<input type="file" id="file">
+			    <div id="plan" style="display:none">比例剪切后尺寸<canvas id="myCanvas"></canvas><h2 onClick="Close();" style="cursor:pointer; display:inline-block">关闭</h2></div>
+			</div>
+			<img src="" fileName="" id="hit" style="display:none;z-index: 9;">	
+			<div id="cover"></div>
+		</div>
+		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css" />
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/mui.picker.min.js"></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script type="text/javascript" src="js/users.js" ></script>
+		<script src="js/headpic/sonic.js"></script>
+		<script src="js/headpic/photocomm.js"></script>
+		<script src="js/headpic/hammer.js"></script>
+		<script src="js/headpic/iscroll-zoom.js"></script>
+		<script src="js/headpic/jquery.photoClip.js?v=1"></script>
+		<style type="text/css">
+			#file{left: 0 !important;bottom:initial !important;opacity: 0;bottom:10px !important;width: 30%;}
+		</style>
+		<script>
+		$("#head").click(function(){
+			$("#showpic ").removeClass("hide").show();
+		});
+		$("#deletebtn").click(function(){
+			$("#showpic ").addClass("hide").hide();
+			$(".photo-clip-moveLayer").children().empty();
+		});
+		
+		$("#clipArea").css("height",$(window).height()-100);
+			var hammer = '';
+			var currentIndex = 0;
+			var body_width = $('body').width();
+			var body_height = $('body').height();
+			$("#clipArea").photoClip({
+				width: 160,
+				height: 160,
+				file: "#file",
+				view: "#hit",
+				ok: "#clipBtn",
+				loadStart: function() {
+					//console.log("照片读取中");
+					$('.lazy_tip span').text('');
+					$('.lazy_cover,.lazy_tip').show();
+				},
+				loadComplete: function() {
+					//console.log("照片读取完成");
+					$('.lazy_cover,.lazy_tip').hide();
+				},
+				clipFinish: function(dataURL) {
+					$('#hit').attr('src', dataURL);
+					saveImageInfo();
+				}
+			});
+		
+		//图片上传
+		function saveImageInfo() {
+			var filename = $('#img').attr('fileName');
+			var img_data = $('#hit').attr('src');
+			/*if(img_data == "") {
+				mui.toast('上传失败');
+			}*/
+			//alert(filename+'|'+img_data);
+			render(img_data);
+			$.post("upload_img.html", {img: img_data,is_h5: 1,uploadDir:'avatar', filename : filename}, function (data) {
+				if (data.err && data.err !='') {
+					mui.toast("上传失败");return
+				}
+				else
+				{
+					username = $("#username").val();
+					$.getJSON("/user.html", {act:'edit_userinfo', img:data.data.img}, function (res) {
+						if(res.err && res.err != '') {
+							mui.toast('更新失败，' + res.err);return;
+						}
+						if(res.url && res.url != '') {
+							window.location.href = res.url; return;
+						}
+						else
+						{	
+							location.reload(); return;
+							mui.toast('更新成功');
+						}
+					});
+				}
+			}, 'json');
+					
+		}
+		 
+		/*获取文件拓展名*/
+		function getFileExt(str) {
+			var d = /\.[^\.]+$/.exec(str);
+			return d;
+		}
+		//图片上传结束
+		$(function() {
+			$('#upload2').on('tap', function() {
+				//图片上传按钮
+				$('#file').click();
+			});
+		})
+		function Close() {
+			$('#plan').hide();
+		}
+		// 渲染 Image 缩放尺寸  
+		function render(src) {
+			var MAX_HEIGHT = 256; //Image 缩放尺寸 
+			// 创建一个 Image 对象  
+			var image = new Image();
+			// 绑定 load 事件处理器，加载完成后执行  
+			image.onload = function() {
+				// 获取 canvas DOM 对象  
+				var canvas = document.getElementById("myCanvas");
+				// 如果高度超标  
+				if(image.height > MAX_HEIGHT) {
+					// 宽度等比例缩放 *=  
+					image.width *= MAX_HEIGHT / image.height;
+					image.height = MAX_HEIGHT;
+				}
+				// 获取 canvas的 2d 环境对象,  
+				// 可以理解Context是管理员，canvas是房子  
+				var ctx = canvas.getContext("2d");
+				// canvas清屏  
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				canvas.width = image.width; // 重置canvas宽高  
+				canvas.height = image.height;
+				// 将图像绘制到canvas上  
+				ctx.drawImage(image, 0, 0, image.width, image.height);
+				// !!! 注意，image 没有加入到 dom之中  
+				var dataurl = canvas.toDataURL("image/jpeg");
+				var imagedata = encodeURIComponent(dataurl);
+				$('#plan').attr('data-src', dataurl);
+				//$('#plan').show();
+			};
+			// 设置src属性，浏览器会自动加载。  
+			// 记住必须先绑定render()事件，才能设置src属性，否则会出同步问题。  
+			image.src = src;
+		};
+	</script>
+	<script>
+		mui.init();
+		mui('body').on('tap', 'a', function() {document.location.href = this.href;});
+		mui('body').on('tap', '#btnEditUser', function() {
+			edit_userinfo();
+		});
+		 
+		//生日 
+		$("#birthday")[0].addEventListener('tap', function() {
+			var optionsJson = this.getAttribute('data-options') || '{}';
+			var options = JSON.parse(optionsJson);
+			var curdate = new Date();
+			options.endYear = curdate.getFullYear();
+			var picker = new mui.DtPicker(options);
+			picker.show(function(rs) {
+				$("#birthday").val(rs.text);
+			    picker.dispose();
+			});
+		});
+ 
+	</script>
+	</body>
+</html>

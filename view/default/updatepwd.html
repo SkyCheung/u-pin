@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>账户安全 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="js/main.js" ></script>
+        <script type="text/javascript" src="js/users.js" ></script>
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<div class="center-body">
+			<div class="nb">
+				<div class="center-lside">
+					<!--{tpl usermenu}-->
+				</div>
+				<div class="center-rside pages-style">
+					<div class="center-title-sig">
+						<h3 class="tab"><span class="on">手机绑定</span> | <span>登录密码</span> | <span>支付密码</span></h3>						   
+					</div>
+					<div class="set-password">
+						<div class="set-pass-box">
+								<ul class="checkold">
+									<li><label>手机：</label><input type="text" id="mobile" data-old="{$user['mobile']}" {if $user['mobile']}class="input unedit" readonly="readonly"{else} class="input"{/if} value="{$user['mobile']}" />
+									{if $user['mobile']}<a href="javascript:void(0);" class="btn-pure" id="showedit">更换手机</a>{/if}
+									</li>
+									<li {if $user['mobile']}style="display: none;"{/if} class="checkold"><label>短信验证码：</label><input type="text" value="" id="smscode-mobile" maxlength="8" class="input" onkeyup="onlyNum(this);" style="width: 90px;"/>
+									<input type="button" value="获取验证码"  class="btn-pure" data-mobileid="mobile"  id="sendcode" onclick="send_sms(this, {if $user['mobile']}'sms_oldmobile'{else}'sms_changemobile'{/if});"/>
+									</li>									
+								</ul>
+								
+								{if $user['mobile']}								
+								<ul class="checknew" style="display: none;">
+									<li><h3 style="padding-left: 100px;">需要验证新手机</h3></li>
+									<li><label>新手机号码：</label><input type="text" id="newmobile" class="input" maxlength="11" value=""/>
+									</li>
+									<li><label>短信验证码：</label><input type="text" value="" id="newsmscode" maxlength="8" class="input" onkeyup="onlyNum(this);" style="width: 90px;"/>
+									<input type="button" value="获取验证码"  class="btn-pure" data-mobileid="newmobile" id="sendcode" onclick="send_sms(this,'sms_changemobile');"/>		
+									</li>
+								</ul>								
+								<input type="button" value="下一步" class="btn checkold" onclick="javascript:check_curMobile('{$user['mobile']}');" style="display: none;"/>	 	
+								{/if}	
+								<input type="button" value="绑定" class="btn checknew" onclick="javascript:bindMobile();" {if $user['mobile']}style="display: none;"{/if}/>
+						</div>
+					</div>
+					<div class="set-password" style="display: none;">
+						<div class="set-pass-box">
+								<p style="margin-left: 50px;">验证方式：
+								<label><input type="radio" value="taptype0" name="taptype" checked="checked"/>旧密码</label>
+								<label style="margin-left: 20px;"><input type="radio" value="taptype1" name="taptype"/>手机验证码</label></p>
+								<br />
+								<br />
+								<ul>
+									<li class="taptype taptype0"><label>旧密码：</label><input type="password" name="oldpwd" id="oldpwd" class="input" maxlength="20" autocomplete="off"/></li>
+									<li class="taptype taptype1" style="display: none;"><label>手机：</label><input type="text" id="uppwd-mobile" class="input" readonly="readonly" value="{$user['mobile']}" style="width: 110px; border: none;"/>
+									<input type="button" value="获取验证码" id="sendcode" class="btn" data-mobileid="uppwd-mobile" onclick="sendSms(this, 'sms_updatepwd');" style="margin-left: 0px;"/></li>
+									<li class="taptype taptype1" style="display: none;"><label>手机验证码：</label><input type="text" value="" id="smscode" maxlength="8" class="input" onkeyup="onlyNum(this);"/></li>
+									<li><label>新密码：</label><input type="password" name="password" id="password" class="input" maxlength="20" autocomplete="off"/></li>
+									<li><label>确认密码：</label><input type="password" name="repassword" id="repassword" class="input" maxlength="20" autocomplete="off"/></li>
+								</ul>
+								<input type="button" value="提交" class="btn" id="btnUpdatePwd"/>
+						</div>
+					</div>
+					<div class="set-password" style="display: none;">
+						<div class="set-pass-box">
+								<ul>
+									<li><label>手机：</label><input type="text" id="mobile" class="input" readonly="readonly" value="{$user['mobile']}" style="width: 110px; border: none;"/>
+									<input type="button" value="获取验证码" id="sendcode" data-mobileid="mobile" class="btn" onclick="sendSms(this, 'sms_setpaypwd');" style="margin-left: 0px;"/>
+									</li>
+									<li><label>手机验证码：</label><input type="text" value="" id="authcode" maxlength="8" class="input" onkeyup="onlyNum(this);"/></li>
+									<li><label>新支付密码：</label><input type="password" value="" id="paypwd" maxlength="16" class="input" autocomplete="off"/><span class="tip">限数字和字母，6到16个字符</span></li>
+									<li><label>再输支付密码：</label><input type="password" value="" id="repaypwd" maxlength="16" class="input" autocomplete="off"/></li>
+								</ul>
+								<input type="button" value="提交" class="btn" onclick="javascript:editPaypwd();"/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		
+		
+        <script type="text/javascript">
+        	$(function () {
+
+      		 	$("#btnUpdatePwd").click(function() {
+      		 		var f = $("input[name='taptype']:checked").val() =='taptype0' ? 0:1;
+      		 		updatePwd(f);
+      		 	});
+      		 	
+      		 	$("input[name='taptype']").click(function() {
+      		 		$(".taptype").hide();
+      		 		$("."+ $(this).val()).show();
+      		 	})
+      		 	
+      		 	$(".center-title-sig  .tab").children().click(function() {
+      		 		$(this).addClass("on").siblings().removeClass("on");
+      		 		$(".set-password").eq($(this).index()).show().siblings(".set-password").hide();
+      		 	});
+      		 	
+      		 	$("#showedit").click(function() {
+      		 		$(".checkold").show();
+      		 		$(this).hide();
+      		 	});
+      		 	
+      		 	var isChange = getParam('change');
+      		 	if(isChange == 1) {
+      		 		$("#showedit").trigger("click");
+      		 	}     		 	
+ 			});
+ 			
+ 			function bindMobile() {
+ 				var mobile, smscode;
+ 				if($("ul.checknew").length ==0)
+ 				{
+ 					mobile = $.trim($("#mobile").val()),
+ 					smscode = $.trim($("#smscode-mobile").val()) ;
+ 				}
+ 				else
+ 				{
+ 					mobile = $.trim($("#newmobile").val()),
+ 					smscode = $.trim($("#newsmscode").val()) ;
+ 				}
+ 				
+ 				bind_mobile(mobile, smscode); 				
+ 			}
+ 			
+ 			function send_sms(el, sms_type) {
+ 				var	ipt_mobile = $("#"+$(el).data("mobileid"));
+ 				var mobile = $.trim(ipt_mobile.val());
+ 				var oldMobile = ipt_mobile.data("old");
+			    if (mobile == '') {
+			        msg("请输入手机号码"); return;
+			    } else if (!is_mobile(mobile)) {
+			        msg("手机号码不正确");return;
+			    } 
+
+ 				countDown(el);
+ 				sendSms(el, sms_type);
+ 			}
+ 			
+ 			function check_curMobile(mobile) {
+ 				var smscode = $.trim($("#smscode-mobile").val());
+ 				check_cur_mobile(mobile,smscode,res_checkMobile);
+ 			}
+ 			 		
+ 			function res_checkMobile(res) {
+ 				if(res.err !='')
+ 				{
+ 					msg("操作失败：" + res.err);return;
+ 				}
+ 				$(".checkold").hide();
+ 				$(".checknew").show();
+ 			} 		
+        	
+        </script>
+
+	</body>
+
+</html>

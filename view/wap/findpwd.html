@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>忘记密码 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/logreg.css" />
+		<style type="text/css">
+			body{background-color:#fff;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="" class="mui-pull-left mui-icon mui-icon-left-nav" onclick="history.go(-1)"></a>
+			<h1 class="mui-title" id="mytitle">忘记密码</h1>
+		</header>
+		<div class="mui-content register">
+			<div class="step1">
+				<div class="form-bd bd-container" style="padding:10px;">
+					<div class="mui-input-row">
+						<input id='tel' type="tel" class="mui-input-clear contact inpbor-bot" placeholder="手机号号码" onkeyup="onlyNum(this);" maxlength="11"/>
+					</div>
+					<div class="mui-input-row regvocde">
+						<div class="enter-vcode">
+							<input id='vcode' type="text" class="mui-input-clear contact inpbor-bot" placeholder="验证码" />
+						</div>
+						<div class="codebox">
+							<img src="images/pic-vcode.jpg" alt="232*87"  id="mx" style="cursor:pointer;" src="" alt="看不清？点击更换另一个验证码" border="1" onClick="refreshimage(this)" title="看不清？点击更换另一个验证码"/>
+						</div>
+					</div>
+				</div>
+				<div class="btn-box">
+					<a class="btn btn-grey" id="step1">下一步</a>
+				</div>
+			</div>
+			<div class="step2 hide">
+				<div class="bgw vcodebox">
+					<div class="inp-vcode">
+						<input type="text" name="" id="vcodetxt" value="" placeholder="输入短信验证码" class="entercode" maxlength="8"/>
+						<input class="getcode" id="getcode" type="button" value="获取验证码" style="background-color:#f5cb02;color:#323232;border-color:#f5cb02;">
+					</div>
+				</div>
+				<div class="btn-box">
+					<a href="#" class="btn btn-grey" id="step2">下一步</a>
+				</div>
+			</div>
+			<div class="step3 hide">
+				<ul class="mui-table-view inplab">
+					<li class="mui-table-view-cell mui-input-row">
+						<input type="password" name="password" id="password" value="" placeholder="新密码" class="phoneinp mui-input-password" maxlength="20"/>
+					</li>
+					<li class="mui-table-view-cell mui-input-row">
+						<input type="password" name="repassword" id="repassword" value="" placeholder="确认新密码" class="phoneinp mui-input-password" maxlength="20" />
+					</li>
+				</ul>
+				<div class="btn-box">
+					<a href="#" class="btn btn-grey" id="step3">完成</a>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script type="text/javascript" src="js/users.js" ></script>
+		<script>
+			$(function(){
+				$("#getcode").click(function(){
+		            daoshu("#getcode");
+		            $("#vcodetxt").focus();
+					$.getJSON("user_api.html", {act:'sms_findpwd'}, function(res){
+						if(res.err && res.err !='')
+						{
+							mui.toast("发送失败，" + res.err);
+						}
+						else
+						{
+							mui.toast('短信已发送，请查看手机，60秒之后可重新发送。');
+						}
+						InterValObj = window.setInterval(daoshu("#getcode"), 1000); //间隔函数，1秒执行 
+					});
+        		});
+			});
+			$("#step1").click(function(){
+				var e_tel=$("#tel");
+				if(e_tel.val==""){
+					mui.toast("请输入手机号码");
+					e_tel.focus();
+					return false;
+				}
+				if(!is_tel(e_tel.val())){
+					mui.toast("手机格式有误");
+					e_tel.focus();
+					return false;
+				}
+				if($("#vcode").val()==""){
+					mui.toast("请输入验证码");
+					return false;
+				}else{
+					var uname = $.trim($("#tel").val());
+					var checkcode =	$.trim($("#vcode").val());
+					check_uname(uname,checkcode);
+				}
+			});
+			$("#step2").click(function(){
+				if($("#vcodetxt").val()==""){
+					mui.toast("请输入验证码");
+					return false;
+				}else{
+					var authtype= 1;
+					var smscode = $.trim($("#vcodetxt").val());
+					$(this).attr("disabled","disabled");
+					if (authtype==1) {
+						$.getJSON("user.html", {act:'findpwd_checkcode',smscode:smscode}, function(res){
+							if(res.err && res.err !='')
+							{
+								mui.toast("操作失败，" + res.err);
+							}
+							else
+							{
+								$(".step2").addClass("hide");
+								$(".step3").removeClass("hide");
+							}
+							$(this).removeAttr("disabled");
+						});
+					}
+				}
+			});
+			$("#step3").click(function(){
+				var v_password=$("#password").val();
+				var v_repassword=$("#repassword").val();
+				if(v_password==""){
+					mui.toast("请输入密码");
+					$("#password").focus();
+					return false;
+				}if(v_repassword==""){
+					mui.toast("请再次输入密码");
+					$("#repassword").focus();
+					return false;
+				}if(v_password!=v_repassword){
+					mui.toast("两次输入密码不一致");
+					$("#repassword").focus();
+					return false;
+				}
+				updatePwd(1);
+			});
+			$(".step1 input").each(function(){
+				$(this).keyup(function(){ 
+					var is=true;
+					$(".step1 input").each(function(){
+						if($(this).val()==""){
+							is=false;
+							return false;
+						}
+				    });
+				    if (is) {
+				    	$("#step1").removeClass("btn-grey");
+				    }else{
+				    	$("#step1").addClass("btn-grey");
+				    }
+				});
+			});
+			$("#vcodetxt").keyup(function(){
+				if($(this).val()!=""){
+					$("#step2").removeClass("btn-grey");
+				}else{
+					$("#step2").addClass("btn-grey");
+				}
+			});
+			$(".step3 input").each(function(){
+				$(this).keyup(function(){ 
+					var is=true;
+					$(".step3 input").each(function(){
+						if($(this).val()==""){
+							is=false;
+							return false;
+						}
+				    });
+				    if (is) {
+				    	$("#step3").removeClass("btn-grey");
+				    }else{
+				    	$("#step3").addClass("btn-grey");
+				    }
+				});
+			});
+			function check_uname(uname,checkcode) {
+				$.getJSON("user.html", {
+					uname: uname,
+					checkcode: checkcode,
+					act: 'check_uname'
+				}, function(res) {
+					if(res.err && res.err != '') {
+						mui.toast(res.err);
+						return;
+					} else {
+						$(".step1").addClass("hide");
+						$(".step2").removeClass("hide");
+						$.getJSON("findpwd.html", {
+							step:'2'
+						}, function(res) {
+						});
+						phone = uname.substring(0,3) + '****' + uname.substring(7,11);
+						var pho = "已验证手机号码：" + phone;
+						$('.vcodebox p').html(pho);
+					}
+				});
+			}
+			function refreshimage(clickidimg) {
+				//var cap =document.getElementById("captcha");
+				clickidimg.src = '/vcode-M.html' + '?' + Date.parse(new Date());
+			}
+
+			function showvode() {
+				document.getElementById('mx').style.display = 'block';
+			}
+			document.getElementById('mx').src = '/vcode-M.html' + '?' + Date.parse(new Date());
+
+			function refreshimage(clickidimg) {
+				//var cap =document.getElementById("captcha");
+				clickidimg.src = clickidimg.src + '?' + Date.parse(new Date());
+			}
+		</script>
+	</body>
+</html>

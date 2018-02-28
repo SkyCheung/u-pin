@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>会员等级</title>
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+		<script src="{adm_tpl}/js/api.js"></script>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<style>.maincon .row .row-name{width: 88px;}</style>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>会员管理 -> 会员等级</span></div>
+		</div>
+		<div id="mainnav"> <a class="button" href="./admin.html?do=member.add"><span>增加会员</span></a><a class="button" href="./admin.html?do=member"><span>会员列表</span></a>			
+		</div>
+		<div class="maincon">
+			<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
+				<div class="row row-noborder">
+					<label class="row-name">等级名称：</label>
+					<div class="column"><input name="grade_name" type="text" id="grade_name" value="" size="15"  maxlength="50"/></div>			
+					<label class="row-name">所需积分：</label>
+					<div class="column"><input name="point_require" type="text" id="point_require" value="" size="5" maxlength="8" />						
+					</div>	
+					<label class="row-name">会员折扣：</label>
+					<div class="column">
+						<input name="discount" type="text" value="0" size="5"  maxlength="2"/>
+						<input name="action" type="hidden" id="action" value="member.grade" />
+						<input name="act" type="hidden" id="act" value="add" />
+						<input type="submit" class="sub" value="新增等级" />
+					</div>	
+					<div class="column">
+						<span>所需积分：0表示不用积分，-1表示不升级<br>
+						会员折扣：0-99整数，如85表示八五折，0表示无折扣
+						</span>
+					</div>
+				</div>
+			</form>			
+		</div>
+		<div class="maintab list auto-height-list ajaxedit">			
+				<ul class="rowtit">
+					<li class="w30 center">等级名称</li>
+					<li class="w10">所需积分</li>
+					<li class="w10">会员折扣</li>
+					<li class="w10">默认等级</li>
+					<li class="w5">排序</li>
+					<li class="w20">操作</li>
+				</ul>
+				<!--{loop $row $p}-->
+				<ul>
+					<li class="w30"><input type="text" value="{$p[grade_name]}" class="ajax w60" data-orival="{$p[grade_name]}" data-id="{$p[grade_id]}" data-do="member.grade" data-act="edit_grade_name"/></li>
+					<li class="w10"><input type="text" value="{$p[point_require]}" size="3" class="ajax" data-orival="{$p[point_require]}" data-id="{$p[grade_id]}" data-do="member.grade" data-act="edit_point_require"/></li>	
+					<li class="w10"><input type="text" value="{$p[discount]}" size="3" class="ajax" data-orival="{$p[discount]}" data-id="{$p[grade_id]}" data-do="member.grade" data-act="edit_discount" maxlength="2"/></li>
+					<li class="w10"><a href="javascript:void(0);" class="ajax i-status{if $p['is_default']=='1'} i-status-on{/if}"  data-orival="{$p[is_default]}" data-id="{$p[grade_id]}" data-do="member.grade" data-val="{$p[is_default]}" data-act="edit_is_default" data-callback="callback"></a></li>
+					<li class="w5"><input name="c_sort[]" type="text" id="c_sort[]" value="{$p[sort]}" size="3" maxlength="5" class="ajax" data-orival="{$p[sort]}" data-id="{$p[grade_id]}" data-do="member.grade" data-act="edit_sort"/></li>
+					<li class="w20"><a href="javascript:void(0);" onclick="isdel('','/admin.html?do=member.grade&act=delete&id={$p[grade_id]}');" class="del">删除</a></li>
+				</ul>
+				<!--{/loop}-->
+				<div class="page" style="">{$pages['pages']}</div>
+			
+		</div>
+		<script type="text/javascript">
+			
+			function callback(t, res) {
+				if(t.data("val") ==1) {
+					$(".i-status").each(function() {
+						if ($(this).data("id") != t.data("id")) {
+							$(this).removeClass("i-status-on").data('val', '0');
+						}
+					})
+				}
+			}
+		</script>
+	</body>
+</html>

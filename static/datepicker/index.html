@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>支持时、分的日历时间插件效果</title>
+<script src="http://www.lanrenzhijia.com/ajaxjs/1.11.0/jquery-1.11.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+<script src="js/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="js/jquery.ui.datepicker-zh-CN.js"></script>
+<script src="js/jquery-ui-timepicker-addon.js"></script>
+<script src="js/jquery-ui-timepicker-zh-CN.js"></script>
+</head>
+<body>
+
+<!--代码部分begin-->
+<div class="wrap">
+<ul class="sub-nav">
+    <li ><a href="javascript:void(0);">基础信息</a></li>																																					
+    </ul>		
+    <ul class="doc-set">
+    <li>
+        <div class="doc-dt">
+            <p>活动时间</p>
+        </div>
+        <div class="doc-dd">
+            <input name="act_start_time" type="text" class="text-box" value="" placeholder="开始时间≥当前时间" title="开始时间≥当前时间" readonly="readonly" style="cursor:pointer;"/>
+            <input name="act_stop_time" type="text" class="text-box" value="" placeholder="结束时间>开始时间" title="结束时间>开始时间" readonly="readonly" style="cursor:pointer;"/>
+        </div>
+    </li>			
+</ul>
+</div>
+<script >
+	$( "input[name='act_start_time'],input[name='act_stop_time']" ).datetimepicker();
+</script>
+<!--代码部分ed-->
+
+</body>
+</html>

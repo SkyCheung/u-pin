@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>支付方式管理</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+		<script src="{adm_tpl}/js/api.js"></script>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>支付方式管理</span></div>
+		</div>
+		<div class="maintab list auto-height-list ajaxedit" style="border-top: none;margin-top: 10px;">			
+				<ul class="rowtit">
+					<li class="w20"><strong>支付方式</strong></li>
+					<li class="w40"><strong>描述</strong></li>
+					<li class="w10 center"><strong>状态</strong></li>
+					<li class="w10"><strong>排序</strong></li>
+					<li class="w15"><strong>操作</strong></li>
+				</ul>
+				<!--{loop $row $p}-->
+				<ul>
+					<li class="w20"><span class="img w60" style="width: 50px;height: 50px;border: none;"><img src="{upload_img}/payment/{$p[pay_code]}.png" style="width: 50px;height: 50px;"/></span>{$p[pay_name]}&nbsp;<br></li>
+					<li class="w40"><div style="line-height: 25px;">{if $p[pay_desc]}{$p[pay_desc]}{else}&nbsp;{/if}</div></li>
+					<li class="w10 center"><a href="javascript:void(0);" class="ajax i-status{if $p['status']=='1'} i-status-on{/if}"  data-orival="{$p[status]}" data-id="{$p[pay_code]}" data-do="pay" data-val="{$p[status]}" data-act="edit_status"></a></li>
+					<li class="w10"><input name="c_sort[]" type="text" id="c_sort[]" value="{$p[sort]}" size="3" maxlength="5" class="ajax" data-orival="{$p[sort]}" data-id="{$p[pay_code]}" data-do="pay" data-act="edit_sort"/></li>
+					<li class="w15"><a href="./admin.html?do=pay.config&id={$p[pay_code]}" class="edit">配置</a></li>
+				</ul>
+				<!--{/loop}-->
+				<div class="page" style="">{$pages['pages']}</div>
+			
+		</div>
+    
+	</body>
+
+</html>

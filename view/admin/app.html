@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>APP管理</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+		<script src="{adm_tpl}/js/api.js"></script>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>APP管理</span></div>
+		</div>
+       <form method="post" id="app" name="form1">
+		<div id="mainnav">
+			<a href="./admin.html?do=app&type=1" class="button"><span>安卓</span></a>
+			<a href="./admin.html?do=app&type=2" class="button"><span>苹果IOS</span></a>
+			<a class="button" href="./admin.html?do=app&act=add"><span>添加版本</span></a>
+		</div>
+
+		<div class="maintab list ajaxedit">			
+				<ul class="rowtit">
+					<li class="w5"><strong>版本</strong></li>
+					<li class="w15"><strong>版本</strong></li>
+					<li class="w15"><strong>url地址</strong></li>
+					<li class="w30"><strong>备注</strong></li>
+					<li class="w12"><strong>发布时间</strong></li>
+					<li class="w10"><strong>操作</strong></li>
+				</ul>
+				<!--{loop $row $p}-->
+				<ul>
+					<li class="w5">{if $p['type']==1}安卓{elseif $p['type']==2}苹果{else}未知类型{/if}</li>
+					<li class="w15">{$p['version']}&nbsp;</li>
+					<li class="w15">{$p['url']}&nbsp;</li>
+					<li class="w30"><div style="overflow: hidden;white-space: nowrap;">{$p['memo']}</div>&nbsp;</li>
+					<li class="w12">{$p['addtime']}&nbsp;</li>
+					<li class="w10"><a href="./admin.html?do=app&act=edit&id={$p[id]}" class="edit">修改</a><a href="javascript:void(0);" onclick="isdel('{$p[version]}','/admin.html?do=app&act=delete&id={$p[id]}');" class="del">删除</a></li>
+				</ul>
+				<!--{/loop}-->
+				<div class="page" style="">{$pages['pages']}</div>
+			
+		</div>
+       </form>
+       
+	</body>
+
+</html>

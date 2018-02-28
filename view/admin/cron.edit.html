@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>计划任务设置</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>计划任务设置</span></div>
+		</div>
+
+		<div class="maincon base" style="min-height: 800px;">
+			<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+				<div class="row">
+					<label class="row-name">任务名称：</label>
+					<div class="column">
+						<input name="name" id="name" type="text" value="{$row['name']}" size="50" maxlength="50"/>&nbsp;
+						<span></span></div>
+				</div>
+				<div class="row">
+					<label class="row-name">任务文件：</label>
+					<div class="column">
+						<input name="filename" id="filename" type="text" value="{$row['filename']}" size="50" maxlength="50"/>&nbsp;
+						<span>如order_log.php，不含路径。任务文件位于 inc/plugin/cron目录中</span></div>
+				</div>
+				<div class="row"><label class="row-name">执行时间：</label>
+					<div class="column" style="width: 80%; margin-left: 5px;">
+					<div>
+						<label class="lbl"><input type="radio" value="week" name="timetype" id="timetype-week"/>每周</label>
+						<div class="ladder-mod" data-ismult="1" id="week">
+							<input type="hidden" name="week" value="{$row['week']}">
+							<div class="it-list">
+								<span data-id="-1" class="all">*</span>
+								<span data-id="1">一</span>
+								<span data-id="2">二</span>
+								<span data-id="3">三</span>
+								<span data-id="4">四</span>
+								<span data-id="5">五</span>
+								<span data-id="6">六</span>
+								<span data-id="7">日</span>
+							</div>					
+						</div>
+					</div>
+					<br />
+					<div>
+						<label class="lbl"><input type="radio" value="day" name="timetype" id="timetype-day" checked="checked"/>每月</label>
+						<div class="ladder-mod" data-ismult="1" id="day" style="width: 760px;">
+							<input type="hidden" name="day" value="{$row['day']}">
+							<div class="it-list">
+								<span data-id="-1" class="all">*</span>
+								<span data-id="1">1</span>
+								<span data-id="2">2</span>
+								<span data-id="3">3</span>
+								<span data-id="4">4</span>
+								<span data-id="5">5</span>
+								<span data-id="6">6</span>
+								<span data-id="7">7</span>
+								<span data-id="8">8</span>
+								<span data-id="9">9</span>
+								<span data-id="10">10</span>
+								<span data-id="11">11</span>
+								<span data-id="12">12</span>
+								<span data-id="13">13</span>
+								<span data-id="14">14</span>
+								<span data-id="15">15</span>
+							</div>	
+							<div class="it-list" style="border-top:none;">
+								<span data-id="16">16</span>
+								<span data-id="17">17</span>
+								<span data-id="18">18</span>
+								<span data-id="19">19</span>
+								<span data-id="20">20</span>
+								<span data-id="21">21</span>
+								<span data-id="22">22</span>
+								<span data-id="23">23</span>
+								<span data-id="24">24</span>
+								<span data-id="25">25</span>
+								<span data-id="26">26</span>
+								<span data-id="27">27</span>
+								<span data-id="28">28</span>
+								<span data-id="29">29</span>
+								<span data-id="30">30</span>
+								<span data-id="31">31</span>
+							</div>	
+							<div class="clear"></div>
+						</div>
+					</div>
+					<br />
+					<div>
+						<label class="lbl" style="padding-left: 18px;">小时</label>
+						<div class="ladder-mod" data-ismult="1" id="hour" style="width: 760px;">
+							<input type="hidden" name="hour" value="{$row['hour']}">
+							<div class="it-list">
+								<span data-id="-1" class="all">*</span>
+								<span data-id="0">0</span>
+								<span data-id="1">1</span>
+								<span data-id="2">2</span>
+								<span data-id="3">3</span>
+								<span data-id="4">4</span>
+								<span data-id="5">5</span>
+								<span data-id="6">6</span>
+								<span data-id="7">7</span>
+								<span data-id="8">8</span>
+								<span data-id="9">9</span>
+								<span data-id="10">10</span>
+								<span data-id="11">11</span>
+							</div>	
+							<div class="it-list" style="border-top:none;">
+								<span data-id="12">12</span>
+								<span data-id="13">13</span>
+								<span data-id="14">14</span>
+								<span data-id="15">15</span>															
+								<span data-id="16">16</span>
+								<span data-id="17">17</span>
+								<span data-id="18">18</span>
+								<span data-id="19">19</span>
+								<span data-id="20">20</span>
+								<span data-id="21">21</span>
+								<span data-id="22">22</span>
+								<span data-id="23">23</span>
+							</div>	
+							<div class="clear"></div>
+						</div>
+					</div>
+					<br />
+					<div>
+						<label class="lbl" style="padding-left: 18px;">分钟</label>
+						<div class="ladder-mod" data-ismult="1" id="minute" style="width: 780px;">
+							<input type="hidden" name="minute" value="{$row['minute']}">
+							<div class="it-list">
+								<span data-id="-1" class="all">*</span>
+								<span data-id="0">0</span>
+								<span data-id="1">1</span>
+								<span data-id="2">2</span>
+								<span data-id="3">3</span>
+								<span data-id="4">4</span>
+								<span data-id="5">5</span>
+								<span data-id="6">6</span>
+								<span data-id="7">7</span>
+								<span data-id="8">8</span>
+								<span data-id="9">9</span>
+								<span data-id="10">10</span>
+								<span data-id="11">11</span>							
+								<span data-id="12">12</span>							
+								<span data-id="13">13</span>
+								<span data-id="14">14</span>								
+							</div>	
+							<div class="it-list" style="border-top:none;">
+								<span data-id="15">15</span>
+								<span data-id="16">16</span>
+								<span data-id="17">17</span>
+								<span data-id="18">18</span>
+								<span data-id="19">19</span>
+								<span data-id="20">20</span>
+								<span data-id="21">21</span>
+								<span data-id="22">22</span>
+								<span data-id="23">23</span>
+								<span data-id="24">24</span>
+								<span data-id="25">25</span>
+								<span data-id="26">26</span>
+								<span data-id="27">27</span>
+								<span data-id="28">28</span>
+								<span data-id="29">29</span>	
+								<span data-id="30">30</span>
+							</div>	
+							<div class="it-list" style="border-top:none;">									
+								<span data-id="31">31</span>
+								<span data-id="32">32</span>
+								<span data-id="33">33</span>
+								<span data-id="34">34</span>
+								<span data-id="35">35</span>
+								<span data-id="36">36</span>
+								<span data-id="37">37</span>
+								<span data-id="38">38</span>
+								<span data-id="39">39</span>
+								<span data-id="40">40</span>
+								<span data-id="41">41</span>
+								<span data-id="42">42</span>
+								<span data-id="43">43</span>
+								<span data-id="44">44</span>	
+								<span data-id="45">45</span>
+								<span data-id="46">46</span>
+							</div>	
+							<div class="it-list" style="border-top:none;">	
+								<span data-id="47">47</span>
+								<span data-id="48">48</span>
+								<span data-id="49">49</span>
+								<span data-id="50">50</span>
+								<span data-id="51">51</span>
+								<span data-id="52">52</span>
+								<span data-id="53">53</span>
+								<span data-id="54">54</span>
+								<span data-id="55">55</span>
+								<span data-id="56">56</span>
+								<span data-id="57">57</span>
+								<span data-id="58">58</span>
+								<span data-id="59">59</span>							
+							</div>	
+							<div class="clear"></div>
+						</div>
+						
+					</div>	
+					<span>设置哪些时间执行本任务，* 表示所有。分钟建议不要设置所有。</span>
+					</div>
+				</div>							 				
+				<div class="row">
+					<label class="row-name">状态：</label>
+					<div class="column">
+						<label><input name="status" type="radio" value="1" {if $row['status']==1}checked="checked"{/if}/>开启</label>&nbsp;
+						<label><input name="status" type="radio" value="0" {if $row['status']==0}checked="checked"{/if}/>关闭</label>
+						<span></span></div>
+				</div>
+ 				<div class="row"><label class="row-name">说明：</label>
+					<div class="column">
+						<textarea  name="memo" maxlength="10000" style="width: 700px;height: 100px;padding: 7px;">{$row['memo']}</textarea><span></span></div>
+				</div>
+				<div class="row"><label class="row-name"></label>
+					<div class="column">
+						<input type="submit" class="sub" value="提交 " />
+						<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=cron'"/>
+						<input name="action" type="hidden" id="action" value="cron">
+						<input name="act" type="hidden" id="act" value="{$act}">
+					</div>
+				</div>
+			</form>
+		</div>
+ 
+		<script type="text/javascript"> 		   
+            var week ={if $row['json_week']}{$row['json_week']}{else}''{/if};
+            var day ={if $row['json_day']}{$row['json_day']}{else}''{/if};
+            var hour ={if $row['json_hour']}{$row['json_hour']}{else}''{/if};
+            var minute ={if $row['json_minute']}{$row['json_minute']}{else}''{/if};
+            var act =$("#act").val();
+            
+            $(function() {            	
+            	initLadderMod('week', week);//周            	            	
+            	initLadderMod('day', day);//日            	            	
+            	initLadderMod('hour', hour);//小时            	            	
+            	initLadderMod('minute', minute);//分钟
+            	
+            	$("#week .it-list span").click(function() {
+            		$("#day .it-list span").removeClass("selected");
+            		$("#timetype-week").prop("checked", true);
+            		$("#timetype-day").prop("checked", false);
+            		$("input[name='day']").val("");
+            	});
+            	$("#day .it-list span").click(function() {
+            		$("#week .it-list span").removeClass("selected");
+            		$("#timetype-week").prop("checked", false);
+            		$("#timetype-day").prop("checked", true);
+            		$("input[name='week']").val("");
+            	});
+            });
+            
+            function initLadderMod(mod, data) {
+            	if (data =='') {
+            		if (mod=='minute') {
+            			$("#"+mod+" .it-list span").eq(1).addClass("selected");	
+            		} 
+            		else{
+            			if((mod =='week' && act =='add') || (week=='' && act =='edit'))
+            			{
+            				return;
+            			}
+            			$("#"+mod+" .it-list span.all").addClass("selected");
+            		}            		
+            	}
+            	else{
+            		$("#"+mod+" .it-list span:not(first)").each(function() {
+            			var t = $(this);
+	            		$.each(data, function(k, v) {
+	            			if (t.data("id") == v) {
+	            				t.addClass("selected");
+	            				return false;
+	            			}
+	            		});
+	            	});
+            	}
+            }
+            
+		    function check() {
+		     	if ($.trim($("#name").val())=='') {
+		     		msg("请填写名称");
+		     		return false;
+		     	}
+		     	if ($.trim($("#filename").val())=='') {
+		     		msg("请填写任务文件");
+		     		return false;
+		     	}
+		     		     	
+		        return true;
+		    }
+		    
+		    
+		</script>
+	</body>
+
+</html>

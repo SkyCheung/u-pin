@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>产品管理</title>
+<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+<script src="{adm_tpl}/js/jquery.js" type="text/javascript"></script>
+<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div id="maintop"><div>你的位置：<span>网站设置 -> {$name}</span></div></div>
+
+
+<div id="mainnav">
+			<a class="button" href="./admin.html?do=set&tab=base" onclick="this.blur();"><span>基本设置</span></a>
+			<a class="button" href="./admin.html?do=set&tab=shop" onclick="this.blur();"><span>商品、购物</span></a>
+			<a class="button" href="./admin.html?do=banner" onclick="this.blur();"><span>Banner组图</span></a>
+			<a class="button" href="./admin.html?do=link" onclick="this.blur();"><span>友情链接</span></a>
+			<a class="button" href="./admin.html?do=watermark" onclick="this.blur();"><span>缩略图、水印设置</span></a>
+			<a class="button" href="./admin.html?do=tools" onclick="this.blur();"><span>网站工具</span></a>
+		</div>
+
+
+<div id="search">
+
+<form method="get" id="form1" name="form1">
+搜索：
+  <input name="keyword" type="text"  class="key" id="keyword" value="{$keyword}"/>
+  <input type="submit" value="提交" class="sub" />
+  
+  <input name="p" type="hidden" id="p" value="admin" />
+  <input name="do" type="hidden" id="do" value="{$do}" />
+  <input name="id" type="hidden" id="id" value="{$code}" />
+</form>
+</div>
+
+
+<div id="mainnav"> 	
+<a class="button next" href="./admin.html?do={$type}.add"><span style="color:#C00">新建组图</span></a>
+</div>
+
+
+
+<div class="maintab">
+<form method="post" id="form1" name="form1">
+  <ul>
+  <li style="width:50%;margin-left:15px;"><strong style="padding-left:25px;">标题</strong><input name="action" type="hidden" id="action" value="site.order" /></li>
+  <li style="width:120px;"><strong>时间</strong></li>
+  <li style="width:80px;"><strong>组图</strong></li>
+  <li style="width:80px;"><strong>编辑</strong> </li> 
+  <li style="width:80px;"><strong>删除</strong> </li>
+ 
+  </ul>
+<!--{loop $row $p}-->
+  <ul>
+  
+
+  <li style="width:50%;margin-left:15px;"><input type="checkbox" name="checkbox" id="checkbox" /> {$p[title]}</li>
+  <li style="width:120px;">{$p[time]}</li>
+  <li style="width:80px;"><a href="javascript:void(0);" onclick="javascript:win('/admin.html?do=banner.upload&type={$type}&id={$p[code]}&cw={$p[c_width]}&ch={$p[c_height]}','上传图片',1000,600);" class="lnk">上传</a></li>  
+  <li style="width:80px;"><a href="./admin.html?do={$type}.edit&amp;id={$p[code]}" class="edit">修改</a></li> 
+  <li style="width:80px;"><a href="javascript:void(0);" onclick="isdel('{$p[title]}','/admin.html?do={$type}.delete&id={$p[code]}');" class="del">删除</a></li>
+ 
+  </ul>
+<!--{/loop}-->
+
+
+</form>
+</div>
+
+
+
+
+
+
+</body>
+
+</html>

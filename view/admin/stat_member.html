@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>会员统计</title>
+		<link rel="stylesheet" href="{adm_tpl}/css/chart.css" />
+	</head>
+	<body>
+		<div class="stat">
+			<h3 class="title">会员统计</h3>			
+			<div class="bd">			
+				<div class="sum" style="width: 200px;float: left; margin-left: 200px;margin-top: 170px;">
+					<span><b id="total_num">0</b><br>会员总数量</span>
+				</div>
+				<div id="chart-grade" style="width: 500px;height:450px;float: left;"></div>
+				<div class="clear"></div>
+			</div>
+			<div class="hd" style="margin-top: 30px;padding-top: 35px; border-top: dashed 1px #ddd;">
+				<div class="btn-groupby">
+					<label><input type="radio" name="groupby" value="year" checked="checked">按年</label>
+					<label><input type="radio" name="groupby" value="month">按月</label>
+					<label><input type="radio" name="groupby" value="day">按日</label>
+				</div>
+				<div class="op-date">
+					<div id="year" style="display: block;">
+						年份	<div class="ladder-mod" data-ismult="0" id="week">
+							<input type="hidden" id="year-y" value="{$cur_year}">
+							<div class="it-list">
+								{loop $years $p}
+								<span data-id="{$p}" {$cbk_year[$p]}>{$p}</span>
+								{/loop}
+							</div>					
+						</div>
+					</div>
+					<div id="month">
+						年份 <div class="ladder-mod" data-ismult="0">
+							<input type="hidden" id="month-y" value="{$cur_year}">
+							<div class="it-list">
+								{loop $years $p}
+								<span data-id="{$p}" {$cbk_year[$p]}>{$p}</span>
+								{/loop}
+							</div>					
+						</div>
+						<br /><br />
+						月份 <div class="ladder-mod" data-ismult="0" >
+							<input type="hidden" id="month-m" value="{$cur_month}">
+							<div class="it-list">
+								{loop $months $p}
+								<span data-id="{$p}" {$cbk_month[$p]}>{$p}</span>
+								{/loop}
+							</div>					
+						</div>
+					</div>
+					<div id="day">
+						销售时间 <input type="text" id="start_date" value="{$start_date}" maxlength="10" readonly="readonly" class="time input wp100" size="10"/>-<input type="text" id="end_date" value="{$end_date}" readonly="readonly" maxlength="10" class="time input wp100" size="10"/>
+					</div>
+				</div>
+			</div>
+			<div class="bd" style="padding-bottom: 50px;">				
+				<div id="chart" style="width: 80%;height:400px;"></div>
+			</div>			
+		</div>
+		 
+		 
+		<link rel="stylesheet" type="text/css" href="./static/datepicker/css/jquery-ui.css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js" ></script>
+		<script type="text/javascript" src="{adm_tpl}/js/main.js" ></script>
+		<script src="./static/datepicker/js/jquery-ui-1.10.4.custom.min.js"></script>
+		<script src="./static/datepicker/js/jquery.ui.datepicker-zh-CN.js"></script>
+		<script type="text/javascript" src="/static/js/echarts.min.js" ></script>
+		<script type="text/javascript">
+			$(document).ready(function(){					
+				$("#start_date,#end_date" ).datetimepicker({showTimepicker:false});
+				
+				query_total();//累计销售金额
+											
+				var myChart = echarts.init(document.getElementById('chart')),gradeChart = echarts.init(document.getElementById('chart-grade'));
+				
+				option = {
+				    title: {
+				        text: ''
+				    },
+				    tooltip: {
+						trigger: 'axis',
+						formatter:function(a) {
+							return a[0].data+" 人";
+						}
+					},
+				    legend: {
+				        data:['新增会员数']
+				    },
+				    grid: {
+				        left: '3%',
+				        right: '4%',
+				        bottom: '3%',
+				        containLabel: true
+				    },
+				    toolbox: {
+				    	x:"80%",
+				        feature: {
+				        	mark : {show: true},
+				        	dataView: {readOnly: false},
+            				magicType : {show: true, type: ['line', 'bar']},
+				            saveAsImage: {}
+				        }
+				    },
+				    xAxis: {
+				        type: 'category',
+				        boundaryGap: false,
+				        data: []
+				    },
+				    yAxis: {
+				        type: 'value'
+				    },
+				    series: [
+				        {
+				            name:'新增会员数',
+				            type:'line',
+				            stack: '总量',
+				            data:[]
+				        }
+				    ]
+				};
+				
+				gradeOption = {
+				    tooltip : {
+				        trigger: 'item',
+				        formatter: "\{c\} 人"
+				    },
+				     toolbox: {
+				    	x:"80%",
+				    	y:"20%",
+				        feature: {
+				        	mark : {show: true},
+				        	dataView: {readOnly: false},
+            				magicType : {show: true, type: ['line', 'bar']},
+				            saveAsImage: {}
+				        }
+				    },
+				    series : [
+				        {
+				            name: '各等级会员数量',
+				            type: 'pie',
+				            radius : '70%',
+				            center: ['50%', '60%'],
+				            data:[],
+				            itemStyle: {
+				                emphasis: {
+				                    shadowBlur: 10,
+				                    shadowOffsetX: 0,
+				                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+				                }
+				            }
+				        }
+				    ]
+				};
+				
+				myChart.setOption(option);
+				gradeChart.setOption(gradeOption); 
+				
+				query_salenum();//加载图表数据
+				
+				$("#query").click(function() {
+					query_salenum();
+				});
+				
+				//ui-datepicker-close
+				$("#start_date,#end_date").change(function() {
+					query_salenum();	
+				});
+				
+				$(".btn-groupby label").click(function() {
+					$(".op-date").children().eq($(this).index()).show().siblings().hide();
+					query_salenum();
+					top.setIframeHeight();					
+				
+					});
+
+				$(".ladder-mod .it-list span").click(function() {
+            		query_salenum();
+            	});
+			
+				function query_total() {
+					$.getJSON("admin.html?do=stat_member", {act:"get_total"}, function(res) {
+						$("#total_num").html(res.total);
+						gradeChart.setOption({
+						    series: [{			
+						    	name:'各等级会员数量',
+					            data:res.data,
+					            itemStyle: {
+					                emphasis: {
+					                	show:true,
+					                    shadowBlur: 10,
+					                    shadowOffsetX: 0,
+					                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+					                },					               
+					            },
+					            label: {
+					            	normal:{show: true}									
+								}	
+						    }]
+						});
+					});
+				}
+				
+				function query_salenum() {
+					var groupby = $("input[name='groupby']:checked").val(),
+						year =0, 
+						month=0;
+						switch (groupby){
+							case 'year':
+								year = $("#year-y").val();
+								break;
+							case 'month':
+								year = $("#month-y").val();
+								month = $("#month-m").val();
+								break;
+							case 'day':								
+								break;
+							default:
+								break;
+						}
+						
+						myChart.showLoading({text: '正在拼命读取数据...'});
+						$.getJSON("admin.html?do=stat_member", {act:"get_member",groupby:groupby,year:year,month:month, start_date:$("#start_date").val(), end_date:$("#end_date").val()}, function(res) {
+							myChart.hideLoading();
+							myChart.setOption({
+								xAxis: {
+						            data: res.data.cat
+						        },
+						        series: [{						            
+						            name:'新增会员数',// 根据名字对应到相应的系列
+				            		type:'line',
+				            		stack: '总量',
+						            data: res.data.data
+						        }]
+							});
+					});
+				}
+				
+			});
+		</script>
+	</body>	
+</html>

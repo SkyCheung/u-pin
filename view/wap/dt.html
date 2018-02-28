@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>分销 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+<a onclick="history.go(-1);" class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+<h1 class="mui-title">分销</h1></header>
+		<div class="mui-content-top mui-content-bot">
+			<div class="nb" style="padding: 5px;">				
+				<div class="center-rside pages-style">					
+					<div class="set-password">
+						<div class="set-pass-box distrib">
+							<br />
+							我的分销链接和二维码：<label style="font-size: 12px;" id="txt">{$ym_url}dt.html?i={$dt_id}</label>
+							<a id="copy" class="btn">复制</a>
+							<p>
+								<img src="qrcode.html?data={$ym_url}dt.html?i={$dt_id}" alt=""/>
+							</p>
+							
+							<div class="commission">
+								<span>分成比例</span>
+								<table class="tb-bd">
+									<tr><th>类别</th><th>一级</th><th>二级</th><th>三级</th></tr>
+									{loop $ym_ditribution_config['commission'] $p}
+									<tr>
+										<td>{$p['name']}</td>
+										<td>{$p['level_1']}%</td>
+										<td>{$p['level_2']}%</td>
+										<td>{$p['level_3']}%</td>
+									</tr>
+									{/loop}
+								</table>
+							</div>
+							
+							<div class="commission">
+								<span>我的下级</span>
+								<div class="list-bd">
+									<div class="list-bd-head">
+										<div class="list-bd-th th3">
+										会员
+										</div>
+										<div class="list-bd-th th3">
+										级别
+										</div>
+									</div>
+									{if $row}
+									<ul>
+										{loop $row $p}
+										<li>
+											<div class="list-bd-th th3">{$p['uname']}</div>
+											<div class="list-bd-th th3">{$level[$p['level']]}</div>
+										</li>
+										{/loop}
+									</ul>
+									{/if}
+								</div>
+								<div class="pages"><!--{$pages['pages']}--></div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<style>			
+			.tb-bd{border:solid 1px #ddd;border-spacing: 0;border-collapse: collapse;text-align: center;}			
+			.tb-bd td{border: 1px solid #ddd;vertical-align: middle;padding: 8px;}
+			.tb-bd th{border: 1px solid #ddd;vertical-align: middle;background-color: #F1F1F1;padding: 12px 8px;}
+			 
+			.distrib .list-bd{border-top: solid 1px #ddd;}
+			.distrib .list-bd .list-bd-th{text-align: left;display: inline-block;}
+			.distrib .list-bd ul{width: 100%;padding: 0px;}
+			.commission{margin-top: 50px;border-top: dashed 1px #ddd; padding-top: 10px;}
+			#copy{width: 50px;margin: 0 auto; display: inline-block;    height: 30px;line-height: 30px;}
+			.th1{width:10%;}
+			.th2{width:25%;}
+			.th3{width:45%;}
+			.th4{width:10%;text-align: center;}
+		</style>
+		
+		
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="js/main.js" ></script>
+        <script type="text/javascript" src="static/js/clipboard.min.js" ></script>
+        
+        <script type="text/javascript">
+        	$(function () {
+      		 	loadLayer();
+      		 	
+      		 	var clipboard = new Clipboard('#copy', {
+			        target: function() {
+			            return document.querySelector('#txt');
+			        }
+			    });
+			
+			    clipboard.on('success', function(e) {
+			        msg("复制成功");
+			    });
+			
+			    clipboard.on('error', function(e) {
+			        console.log(e);
+			    });
+ 			});
+        	
+        </script>
+
+	</body>
+
+</html>

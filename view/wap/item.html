@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{$goods[name]} - {$ym_endtitle}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/swiper.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/phone.css" />
+		<style>
+			body{width: 100%;max-width: 100%;}
+			.mui-bar{z-index: 99999999;}
+			.mui-bar{background-color:#fff;}
+			.swiper-container {width: 100%;height: 100%;}
+	    	.swiper-slide {text-align: center;font-size: 18px;background: #fff;display: -webkit-box;display: -ms-flexbox;display: -webkit-flex;display: flex;-webkit-box-pack: center;-ms-flex-pack: center;-webkit-justify-content: center;justify-content: center;-webkit-box-align: center;-ms-flex-align: center;-webkit-align-items: center;align-items: center;}
+	    	/*切换*/
+	    	.mui-control-content {
+				background-color: white;
+				min-height:800px;
+			}
+			.mui-control-content .mui-loading {
+				margin-top: 50px;
+			}
+			.mui-bar .mui-segmented-control{top:4px}
+			.mui-control-content{background-color:#f5f5f5;}
+			.mui-segmented-control .mui-control-item.mui-active{color:#007cc3 !important;}
+			.mui-pull-top-pocket{top: 0px !important;}
+			.mui-navigate-right:after, .mui-push-right:after {right: 15px;content: '';}
+		</style>
+	</head>
+	<body>
+		<div id="slider" class="mui-slider">
+		<header class="mui-bar mui-bar-nav">
+			<a href="" class="mui-pull-left mui-icon mui-icon-left-nav" onclick="javascript:if(document.referrer){history.go(-1);}else{window.location.href='index.html'}"></a>
+			<div class="mui-pull-right" style="position: absolute;z-index:9;right: 0;">
+				<!--<a href="#share" class="share" style="display: inline-block;padding:10px 12px"><img src="images/share.png" alt="" style="width: 23px;" /></a>-->
+				<a href="cart.html" class="cart gocart" style="display: inline-block;padding:10px 12px;"><img src="images/detail_cart.png" alt="" style="width: 20px;" /></a>
+			</div>
+			<h1 class="mui-title">
+				<div class="tab-detail  flex mui-slider-indicator mui-segmented-control mui-segmented-control-inverted" style="width: 65%;margin:0 auto;" id="sliderSegmentedControl">
+				<a href="#gbox1" class="flex1 mui-control-item mui-active">商品详情</a>
+				<!-- <a href="#gbox2" class="flex1 mui-control-item">详情</a> -->
+				<!-- <a href="#gbox3" class="flex1 mui-control-item" id="hd3">评价</a> -->
+			</div>
+			</h1>
+		</header>
+		<div class="mui-content-top pro-detail-container bggrey mui-slider-group" id="ym-item">
+			<!--第一部分-->
+			<div class="box box1 mui-slider-item mui-control-content mui-active" id="gbox1">
+				<div id="scroll1" class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+		<!--图片轮播-->
+				<div class="slide-detail-pic" id="slide-detail-pic">
+					<div class="slide-detail-pic swiper-container" id="slide-detail-pic">
+						<ul class="swiper-wrapper swiperimgauto">
+							<li class="swiper-slide"><a href="javascript:void(0);"><img src="{$goods['img']}" alt=""/></a></li>
+							<!--{loop $imgs $p}-->
+							<li class="swiper-slide"><a href="javascript:void(0);"><img src="{$p['img']}" alt=""/></a></li>
+							<!--{/loop}-->
+						</ul>
+						<div class="swiper-pagination"></div>
+					</div>
+				</div>
+		<!--图片轮播-->
+		<!--文字介绍-->
+				<div class="word-detail bgw">
+					<div class="title-det">
+						<h3 class="title"><a href="javascript:void(0);">{$goods[name]}</a></h3>
+					</div>
+					<div class="price-det">
+						<!-- <span class="grey-td">售价：</span> -->
+						<div class="pd-nr">
+							<p><span class="now"><span id="ym-price">￥{$goods['price']}</span></span><del>￥<span>{$goods[marketprice]}</span></del></p>
+						</div>
+					</div>
+					<div class="choose-size spec" id="goods-spec">
+					<!--{loop $spec $p}-->
+						<div class="it">
+							<h4 class="spec-name">{$p[name]}</h4>
+							<span class="select-mod">
+								<ul class="choose-size-ul">
+									<!--{loop $p['val'] $v}-->
+										<!--{if $p['is_img']==1}-->
+											<li style="margin:3px"><a href="javascript:void(0);" id="{$v['name']}">{$v['name']}</a><i class="arrow-checked"></i></li>
+											<!--{else}-->
+											<li style="margin:3px"><a href="javascript:void(0);" id="{$v}">{$v}</a><i class="arrow-checked"></i></li>
+										<!--{/if}-->
+									<!--{/loop}-->
+								</ul>
+							</span>
+						</div>
+					<!--{/loop}-->
+					</div>
+					<div class="barnum-det">
+						<p>品牌：<span>{$goods['brand_name']}</span></p>
+						<!-- <p class="num">最近售出：<span>{$goods['salenum']}</span></p> -->
+					</div>
+				</div>
+				<ul class="function-det flex bgw">
+					<li class="flex1">
+						<i class="icon-fun1"></i>
+						正品行贷
+					</li>
+					<li class="flex1">
+						<i class="icon-fun2"></i>
+						免息分期
+					</li>
+					<li class="flex1">
+						<i class="icon-fun3"></i>
+						7天退换
+					</li>
+					<li class="flex1">
+						<i class="icon-fun4"></i>
+						金牌客服
+					</li>
+				</ul>
+		<!--文字介绍-->
+
+        <!--商品参数 -->
+                    <div class="mui-scroll1">
+						<div class="good-para bgw">
+							<h3 class="titie-line ">商品详情</h3>
+							<ul class="para-ul ">
+								{loop $attr $p}
+								<li><span class="para-title" style="font-size: 16px;">{$p['name']}</span><p class="para-nr">
+									{loop $p[val] $v}
+									{$v} 
+									{/loop}	
+								</li>
+								{/loop}
+							</ul>
+						</div>
+						{$goods[details_m]}
+						<br /><br /><br />
+						{$goods['service']}
+					</div>	
+		        <!--商品参数 -->
+
+		<!--评价-->
+				<div class="bgw appraise">
+					<a href="javascript:void(0);" class="mui-navigate-right titie-line" id="view-txt">评价</a>
+					 <div id="view-more-appraise">
+					<ul class="appraise-ul">
+						<!--{if !$comment}--><li style="text-align: center;">暂无评价~</li><!--{/if}-->
+						<!--{loop $comment $p}-->
+						<li>
+							<div class="picbox">
+								<img src="{if $p['uimg']!=''}{$p['uimg']}{else}{tpl_root}images/avatar.jpg{/if}" alt=""/>
+							</div>
+							<div class="txt-right">
+								<div class="txtr-top">
+									<p class=" grey96">{$p['anon_name']}</p>
+								</div>
+								<div class="txt-middle ">
+									<p>{$p['content']}</p>
+								</div>
+								<div class="com-pic">
+									<!--{if $p['thumb']}--> 
+							   	     	<div class="show-pic" id="show-pic">
+							   	     		<div class="sc_bd">
+							   	     			<dl>
+							   	     			<!--{loop $p['thumb'] $i $t}-->
+							   	     			<dd><a data-src="{$p['img'][$i]}"><img src="{$t}" width="80" height="80"/></a></dd>
+							   	     			<!--{/loop}-->   	        	     												 
+   	     						   	     		</dl>
+							   	     		</div>
+   	     								</div> 	     													
+   	     							<!--{/if}-->
+								</div>
+								<!--{if $p['admin_reply']}-->
+							   	     	<div class="reply">
+							   	     		<ul>
+							   	     			<!--{loop $p['admin_reply'] $v}-->
+							   	     			<li>
+							   	     				<span>{$v['uname']}:</span>{$v['content']}
+							   	     			</li>
+							   	     			<!--{/loop}-->
+							   	     		</ul>
+							   	     	</div>
+							   	<!--{/if}-->
+								<p class="clear grey96">{$p['addtime']}</p>
+							</div>
+						</li>
+						<!--{/loop}-->
+					</ul>
+					<!--<div class="morediv" id="view-more-appraise">
+						<a href="javascript:void(0);">查看更多&nbsp;&gt;</a>
+					</div> -->
+					</div>
+				</div>
+		<!--评价-->
+		<!--猜你感兴趣-->
+				<div class="guess-like">
+					<h3 class="pur-title" style="margin-bottom:10px;">猜你感兴趣</h3>
+					<ul class="popular-pro">
+						<!--{loop $remmend_goods $p}-->
+						<li>
+							<a href="{$p[url]}" class="picbox tiao"><img src="{$p[thumb]}" alt="196*196"></a>
+							<a href="{$p[url]}" class="title tiao">{$p[name]}</a>
+							<div class="price-cart">
+								<p>￥<span>{$p[price]}</span></p>
+								<!-- <a onclick="addCart({$p[goods_id]},0,1);" class="cart"></a> -->
+							</div>
+						</li>
+						<!--{/loop}-->
+					</ul>
+				</div>
+		<!--猜你感兴趣-->
+				<!--<div class="loading">
+					<p class="mui-text-center"><i class="mui-icon mui-icon-arrowup"></i>继续拖动，查看图文详情</p>
+				</div>-->
+				</div>
+				</div>
+			</div>
+		</div>
+		</div>
+			<!--评价输入框-->
+			<div class="fix-navbar detailFixBox">
+				<div class="left-btn">
+					<a href='javascript:;' onclick='easemobim.bind()' class="btn-mess"></a>
+					<a href="brand.html" class="btn-like" onclick="javascript:addfavs({$goods['goods_id']},'');"></a>
+				</div>
+				<div class="right-btn">
+					<span href="javascript:void(0)" onclick="addCart({$goods[goods_id]},0,1);" class="addcart fix-btn" id="addcart">加入购物车</span>
+					<a href="javascript:void(0)" onclick="addCart({$goods[goods_id]},1,1);" class="buynown fix-btn">立即购买</a>
+				</div>
+			</div>
+			<!--分享-->
+			<div id="share" class="mui-popover mui-popover-action mui-popover-bottom sharelink">
+				<ul class="share-ul">
+					<li>
+						<a href="javascript:void(0);">
+							<i class="icon-shareb icon-swc"></i>
+							<span>微信好友</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);">
+							<i class="icon-shareb icon-swcgroup"></i>
+							<span>微信朋友圈</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);" onclick="shareSina();">
+							<i class="icon-shareb icon-swb"></i>
+							<span>新浪微博</span>
+						</a>
+					</li>
+					<li>
+						<a href="sms:12001200">
+							<i class="icon-shareb icon-smess"></i>
+							<span>信息</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);" onclick="shareQQ();">
+							<i class="icon-shareb icon-sqq"></i>
+							<span>QQ</span>
+						</a>
+					</li>
+					<li>
+						<a href="javascript:void(0);" onclick="shareQQzone();">
+							<i class="icon-shareb icon-szone"></i>
+							<span>QQ空间</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		<input type="hidden" id="page" value="1">
+		<input type="hidden" id="endall" value="0">
+		<input type="hidden" id="goods_id" value="{$goods['goods_id']}" />
+		<input type="hidden" id="user_discount" value="{$user['discount']}" />
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/swiper.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script type="text/javascript" src="js/cart.js" ></script>
+		
+		<script>
+		mui("body").on("tap",".gocart",function(){
+			window.location.href = this.href;
+		});
+		mui("body").on("tap",".tiao",function(){
+			window.location.href = this.href;
+		});
+		var goods_id = $("#goods_id").val();
+			mui.init({swipeBack: false});
+			(function($) {
+				$('.mui-scroll-wrapper').scroll({indicators: true //是否显示滚动条
+				});
+				
+				var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
+				$('.mui-input-group').on('change', 'input', function() {
+					if(this.checked) {
+						sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-' + this.value;
+						//force repaint
+						sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
+					}
+				});
+				
+			})(mui);
+			$(function(){
+				$(".mui-control-content").css("min-height",$(window).height()-85);
+			})
+		</script>
+		<script>
+		var swiper = new Swiper('.swiper-container', {
+		        pagination: '.swiper-pagination',
+		        paginationClickable: true,
+		        autoplay: 2000
+		    });
+			//切换tab  mui-scroll
+			$(".tab-detail li").each(function(){
+				$(this).click(function(){
+					$(".box").eq($(this).index()).removeClass("hide").siblings(".box").addClass("hide");
+					$(this).addClass("on").siblings().removeClass("on");
+					if($(this).hasClass("on")){
+						$('html,body').animate({scrollTop: '0px'},0.1);//置顶
+					}
+				});
+			});
+			$(".tab-detail li").eq(2).click(function(){
+				console.log("dui la!");
+				$(".mui-scroll").css("transform","translate3d(0px, 0, 0px) translateZ(0px)");
+			});
+			//查看更多评价
+			$("#view-more-appraise").click(function(){
+				$(".box").eq(2).removeClass("hide").siblings(".box").addClass("hide");
+				$(".mui-scroll").css("transform","translate3d(0px, 0, 0px) translateZ(0px)");
+				$(".tab-detail li").eq(2).addClass("on").siblings().removeClass("on");
+			});
+			//跳转
+			var i=0;
+			var ti;
+			$(window).scroll(function(){
+				if(!$(".box1").hasClass("hide")){
+					if (i !=0) {
+						return;
+					}
+					viewH=$(window).height();
+		            contentH =$(".box").get(0).scrollHeight;//内容高度  
+					if($(window).scrollTop()>= contentH-viewH+93 ) {
+						if($(".loading").hasClass("reachbottom")){
+							clearInterval(ti);
+							$(".box").eq(1).removeClass("hide").siblings(".box").addClass("hide");
+							$('html,body').animate({scrollTop: '0px'},0.1);
+							$(".tab-detail li").eq(1).addClass("on").siblings().removeClass("on");
+							$(".loading").removeClass("reachbottom").children("img").remove();
+						}else{
+							$(".loading").addClass("reachbottom").append("<img src='images/load.gif' style='display:block;padding-top:6px;text-align:center;margin:0 auto;'/>");
+							i=1;
+							ti= setInterval(function(){
+								i=0;
+							}, 500);
+						}
+						console.log(i);
+					}
+				}
+			});
+			//滑动到load,自动跳转到tab2
+			
+			//分享
+			function shareSina() {
+			//分享到新浪微博
+			var sharesinastring = 'http://service.weibo.com/share/share.php?title=' + $("#title").val() + '&url=' + $("#url").val();
+			window.location.href = sharesinastring;
+		}
+		function shareQQzone(){
+			var p = {
+			url:location.href,
+			showcount:'0',/*是否显示分享总数,显示：'1'，不显示：'0' */
+			desc:'',/*默认分享理由(可选)*/
+			summary:'',/*分享摘要(可选)*/
+			title:'',/*分享标题(可选)*/
+			site:'{$ym_name}',/*分享来源 如：腾讯网(可选)*/
+			pics:'', /*分享图片的路径(可选)*/
+			style:'203',
+			width:98,
+			height:22
+			};
+			//分享到QQ空间
+			var sharesinastring = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?title=' + $("#title").val() + '&url=' + $("#url").val() + '&site="{$ym_name}"';
+			window.location.href = sharesinastring;
+		}
+		function shareQQ() {
+			var p = {
+			url: location.href, /*获取URL，可加上来自分享到QQ标识，方便统计*/
+			desc: '', /*分享理由(风格应模拟用户对话),支持多分享语随机展现（使用|分隔）*/
+			title: '', /*分享标题(可选)*/
+			summary: '', /*分享摘要(可选)*/
+			pics: '', /*分享图片(可选)*/
+			flash: '', /*视频地址(可选)*/
+			site: '{$ym_name}', /*分享来源(可选) 如：QQ分享*/
+			style: '201',
+			width: 32,
+			height: 32
+			};
+			//分享到QQ
+			var sharesinastring = 'http://connect.qq.com/widget/shareqq/index.html?title=' + $("#title").val() + '&summary=' + $("#url").val() + '&url=' + $("#url").val() + '&site="{$ym_name}"';
+			window.location.href = sharesinastring;
+		}
+
+		
+		//wechat
+		//wechat friends
+//		wx.onMenuShareAppMessage({
+//		    title: '', // 分享标题
+//		    desc: '', // 分享描述
+//		    link: '', // 分享链接
+//		    imgUrl: '', // 分享图标
+//		    type: '', // 分享类型,music、video或link，不填默认为link
+//		    dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+//		    success: function () { 
+//		        // 用户确认分享后执行的回调函数
+//		    },
+//		    cancel: function () { 
+//		        // 用户取消分享后执行的回调函数
+//		    }
+//		});
+		// 分享到朋友圈		
+//		wx.onMenuShareTimeline({
+//		    title: '', // 分享标题
+//		    link: '', // 分享链接
+//		    imgUrl: '', // 分享图标
+//		    success: function () { 
+//		        // 用户确认分享后执行的回调函数
+//		    },
+//		    cancel: function () { 
+//		        // 用户取消分享后执行的回调函数
+//		    }
+//		});	
+		</script>
+		<script>
+			mui.init({
+			  pullRefresh : {
+				container:"#scroll3",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+				up: {
+					height:100,//可选,默认50.触发下拉刷新拖动距离
+					auto: false,//可选,默认false.自动下拉刷新一次
+					contentrefresh: '正在加载...',
+					contentnomore:'没有更多评价了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+					callback: pullupRefresh
+				}
+			  }
+			});
+			var count = 0;
+			/* 上拉加载具体业务实现*/
+			function pullupRefresh() {
+				setTimeout(function() {
+					var endall = document.getElementById('endall').value;
+					if(endall=='1'){
+					var	count = 3;
+					}else{
+					var	count = 1;
+					};
+					mui('#scroll3').pullRefresh().endPullupToRefresh((count > 2)); //参数为true代表没有更多数据了。
+					var table = document.body.querySelector('.appraise-box');
+					var cells = document.body.querySelectorAll('.appraise-box li');
+					page = document.getElementById('page').value;
+					page!=''? page : '';
+					$.getJSON("/user.html", {act:'get_comment', id:"{$goods['goods_id']}",page: page}, function(res) {
+						if(res.err && res.err != '') {
+							mui.toast(res.err);return;
+						}
+						else
+						{
+							var html='';
+							$.each(res.data, function(k, v) {								
+								html = '<div class="picbox"><img src="'+(v.uimg!=''? v.uimg :'{tpl_root}/images/avatar.jpg')+'" alt=""/></div>';
+								html += '<div class="txt-right"><div class="txtr-top"><p class="font18 grey96">'+ v.anon_name +'</p></div><div class="txt-middle font20"><p>'+v.content+'</p></div>';
+								if(v.img){
+									html += '<div class="com-pic"><div class="show-pic" id="show-pic"><div class="sc_bd"><dl>';
+									$.each(v.img, function(w, y) {
+										html += '<dd><a data-src="'+y+'"><img src="'+v.thumb[w]+'" id="openimg"  width="80" height="80" ></a></dd>';
+									});
+									html += '</dl></div></div></div>';
+								}
+								if(v.admin_reply)
+								{
+									html += '<div class="reply"><ul>';
+								    $.each(v.admin_reply, function(w, y) {
+								    	html += '<li><span>'+y.uname+':</span>'+y.content+'</li>';
+								    });
+								    html += '</ul></div>';
+							    }
+								html += '<p class="clear grey96">'+ v.addtime +'</p></div>';
+								var li = document.createElement('li');
+								li.innerHTML = html;
+								table.appendChild(li);
+							});
+							if (res.data.length==0 || (res.res && res.res==1)) {
+								document.getElementById('endall').value='1';
+		    				}
+						}
+					});
+					page++;
+					document.getElementById('page').value = page;
+				}, 500);
+			}
+//			if (mui.os.plus) {
+//				mui.plusReady(function() {
+//					setTimeout(function() {
+//						mui('#pullrefresh').pullRefresh().pullupLoading();
+//					}, 1000);
+//				});
+//			} else {
+//				mui.ready(function() {
+//					mui('#pullrefresh').pullRefresh().pullupLoading();
+//				});
+//			}
+			
+			$(".icon-collect").click(function(){
+				$(this).toggleClass("on");
+			})
+		</script>
+		<script src='//kefu.easemob.com/webim/easemob.js'></script>
+		<script>
+            window.easemobim = window.easemobim || {};
+            easemobim.config = {
+                configId:'ee6e6e9e-47e8-4114-b38c-15cee8e04b25',
+                hide: true,
+                autoConnect: true,
+                hideKeyboard: true,
+                dialogPosition: { x: '10px', y: '50px' },
+                //聊天窗口加载成功回调
+                onready: function () {                  
+                    easemobim.sendExt({
+                        ext:{
+                            "imageName": "mallImage3.png",
+                            //custom代表自定义消息，无需修改
+                            "type": "custom",           
+                            "msgtype": {
+                                "track":{
+                                    "title":"我正在看:",
+                                    "price":"¥: {$goods['price']}",
+                                    "desc":"{$goods[name]}",
+                                    "img_url":"http://120.78.177.179/{$goods['img']}",
+                                    "item_url":window.location.href
+                                }
+                            }
+                        }
+                    });
+                },
+            };
+        </script>
+	</body>
+</html>

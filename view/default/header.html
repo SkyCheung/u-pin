@@ -1,0 +1,106 @@
+<div class="header">
+	<div class="head-top">
+		<div class="nb">
+			{$diy_indexheader}
+			<div class="rside" style='float:right'>
+				<ul class="head-ul">
+					{if $ym_uname!=''}
+					<li><a href="../user.html">{$ym_uname}</a></li>
+					<li><a href="../user.html?act=logout">退出</a></li>
+					{else}
+					<li><a href="../login.html">登录</a></li>
+					<li><a href="../reg.html">注册</a></li>
+					{/if}
+					<li><a href="../myorder.html">我的订单</a></li>
+					<li><a href="../user.html">会员中心</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="head-bot">
+		<div class="nb">
+			<div class="web-title-container">
+				<a href="../index.html" class="logo"><img src="../{$ym_logo}" alt=""/></a>
+				<div class="searchbox">
+					<form name="search" action="../list.html" method="get">
+						<input type="search" name="word" id="word" value="{$word}" placeholder="请输入关键词" class="txt-search"/>
+						<input type="submit" value="搜&nbsp;&nbsp;索" id="btn-search" class="btn-submit"/>
+						<input type="hidden" name="action" value="list" />
+					</form>
+				</div>
+				<div class="cartbox">
+					<div class="cartbtn">
+						<a href="../cart.html" class="radv-nav"><span>购物车</span>(<span class="cartinfo">{$ym_cnum}</span>)</a>
+					</div>
+					<div class="cart-slidedownbox">
+						<h3>最近加入</h3>
+						<ul class="cart-slidedown" id="cart-list">
+							<li id="[goods_id]" data-spec = "[spec_ids]">
+								<div class="cart-pro">
+									<a href="[url]" class="pic-box"><img src="[thumb]" alt="60*60"></a>
+									<div class="cart-pro-num elli">
+										<a href="[url]">[name]</a>
+									</div>
+									<div class="close-price">
+										<button class="close delgoods"></button>
+										<p class="red">￥[price]x[num]</p>
+									</div>
+								</div>
+							</li>
+						</ul>
+						<div class="sum-box">
+							<a class="slidecart-js" href="../cart.html">立即结算(<span class="cartinfo">0</span>)</a>
+							<div class="sum">合计：￥<span class="red" id="cart-total">0.00</span></div>
+							<div class="check">
+								<p>共<span class="red cartinfo">0</span>件商品</p>
+							</div>
+						</div>           
+					</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			<div class="nav">
+				<div class="nav-classify">
+					<h3 class="nav-all-btn">全部分类</h3>
+					<ul class="menu-mainnav" style="height: 450px;">
+						<!--{loop $cats $p}-->
+						<!--{if $p['status'] ==1}-->						
+						<li>
+							<div class="sortmaintitle">
+								<a href="{$p[url]}" target="_blank">{$p[name]}</a>
+							</div>
+							<div class="navsonbox">
+								<div class="nr">
+									<div class="navson-classify">
+									<!--{loop $p[child] $v}-->
+										<!--{if $p['status'] ==1}-->
+										<div class="navson-classify-box">
+											<h3 class="maintitle"><a href="{$v[url]}" target="_blank">{$v[name]}<span>&gt;</span></a></h3>
+											<div class="navson-classify-subtitle">
+											<!--{loop $v[child] $w}-->
+												<!--{if $p['status'] ==1}-->
+												<a href="{$w[url]}" target="_blank">{$w[name]}</a>
+												<!--{/if}-->
+											<!--{/loop}-->
+											</div>
+										</div>
+										<!--{/if}-->
+									<!--{/loop}-->
+									</div>
+								</div>
+							</div>
+						</li>
+						<!--{/if}-->
+						<!--{/loop}-->
+					</ul>
+				</div>
+				<ul class="nav-othder">
+					<li><a href="../index.html">首页</a></li>
+					<!--{loop $nav $p}-->
+					<li><a href="{$p[url]}" {if $p['target']==1}target="_blank"{/if}>{$p[name]}</a></li>
+					<!--{/loop}-->	
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

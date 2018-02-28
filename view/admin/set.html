@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>系统设置</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script src="{adm_tpl}/js/jquery.js" type="text/javascript"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+		<style type="text/css">
+			.picker img{max-height: 60px;}
+			.maincon {display: none;}			
+			{if $tab and $tab!=''}.{$tab}{else}.base{/if}{display: block;}
+		</style>
+	</head>
+
+	<body id="ymbody">
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 基本设置</span></div>
+		</div>
+
+		<div id="mainnav">
+			<a class="button" href="./admin.html?do=set&tab=base" onclick="this.blur();"><span>基本设置</span></a>
+			<a class="button" href="./admin.html?do=set&tab=shop" onclick="this.blur();"><span>商品、购物</span></a>
+			<a class="button" href="./admin.html?do=set&tab=word" onclick="this.blur();"><span>词语限制</span></a>
+			<a class="button" href="./admin.html?do=banner" onclick="this.blur();"><span>Banner组图</span></a>
+			<a class="button" href="./admin.html?do=link" onclick="this.blur();"><span>友情链接</span></a>
+			<a class="button" href="./admin.html?do=watermark" onclick="this.blur();"><span>缩略图、水印设置</span></a>
+			<a class="button" href="./admin.html?do=tools" onclick="this.blur();"><span>网站工具</span></a>
+		</div>
+
+		<div class="maincon base">
+			<form action="" method="post" id="form1" name="form1">
+				<div class="row"><label class="row-name">商城名称：</label>
+					<div class="column"><input name="name" type="text" id="c_coname" value="{$name}" size="50" /><span>填写商城名称，用于调用与显示</span></div>
+				</div>
+				<div class="row"><label class="row-name">商城标题：</label>
+					<div class="column"><input name="title" type="text" id="c_title" value="{$title}" size="50" /><span>优化首页搜索结果标题，SEO用</span></div>
+				</div>
+				<div class="row"><label class="row-name">附加标题：</label>
+					<div class="column"><input name="endtitle" type="text" id="c_endtitle" value="{$endtitle}" size="50" /><span>附加在首页以外的页面标题尾部，增加搜索可能性，SEO用</span></div>
+				</div>
+
+				<div class="row">
+					<label class="row-name">关键词：</label>
+					<div class="column"><input name="keywords" type="text" id="c_keyword" value="{$keywords}" size="50" /><span>填写网站/产品相关关键词，利于SEO优化</span></div>
+				</div>
+
+				<div class="row"><label class="row-name">网站描述：</label>
+					<div class="column"><input name="description" type="text" id="c_description" value="{$description}" size="50" /><span>写一个简单的网站描述，显示于搜索结果。SEO辅助</span></div>
+				</div>
+				<div class="row"><label class="row-name">静态模式：</label>
+					<div class="column">
+						<label><input name="htmlext" type="radio" id="c_htmlext" value="0" {$cbk_htmlext[0]} /> html静态文件 </label>
+						<label><input name="htmlext" type="radio" id="c_htmlext" value="1" {$cbk_htmlext[1]} /> 目录式</label>
+						<span></span></div>
+				</div>
+				<div class="row"><label class="row-name">商城域名：</label>
+					<div class="column"><input name="siteurl" type="text" id="c_siteurl" value="{$siteurl}" size="50" /><span>主域名，用于登陆授权，支付回调，请与微信支付等平台授权设置一致。例如 www.yunec.cn</span></div>
+				</div>
+				<div class="row" style="display: none;"><label class="row-name">手机端域名：</label>
+					<div class="column"><input name="m_siteurl" type="text" id="m_siteurl" value="{$m_siteurl}" size="50" /><span>手机端使用的域名</span></div>
+				</div>
+				<div class="row"><label class="row-name">使用https：</label>
+					<div class="column"><label><input name="is_https" type="radio" value="1" {if $is_https=='1'}checked="checked"{/if}/>开启</label>
+						<label><input name="is_https" type="radio" value="0" {if $is_https=='0'}checked="checked"{/if}/>关闭</label>
+					<span>使用https访问，需要服务器开启SSL</span></div>
+				</div>
+				<div class="row"><label class="row-name">商城logo：</label>
+					<div class="column">
+					<div class="it picker">
+						<div class="filePicker preview" data-uploaddir="logo" data-filename="logo" data-isthumb="0" id="mainpicker">
+							{if $logo!=''}<img src="{$logo}" style="max-height:60px;" id="logo"/>{/if}
+						</div>
+						<input type="hidden" value="{$logo}" name="logo" id="img"/>
+					</div>	
+					</div>
+				</div>
+				<div class="row"><label class="row-name">邮箱：</label>
+					<div class="column"><input name="email" type="text" id="c_email" value="{$email}" size="50" /><span>用于接收系统通知，接收网站最新信息</span></div>
+				</div>
+				<div class="row"><label class="row-name">ICP备案号：</label>
+					<div class="column"><input name="icp" type="text" id="c_icp" value="{$icp}" size="50" /><span>无备案可留空</span></div>
+				</div>
+				<div class="row"><label class="row-name">网站开关：</label>
+					<div class="column"><label><input name="isclosed" type="radio" id="isclosed" value="0" {if !$isclosed or $isclosed=='0'}checked="checked"{/if} /> 开启 </label>
+						<label><input name="isclosed" type="radio" id="isclosed" value="1" {if $isclosed=='1'}checked="checked"{/if} /> 关闭 </label>
+						<span>暂时将站点关闭，但不影响管理员访问</span></div>
+				</div>
+				<div class="row"><label class="row-name">关站原因：</label>
+					<div class="column">
+						<input name="closedreason" type="text" id="closedreason" value="{$closedreason}" size="50" />
+						<span></span></div>
+				</div>
+				<div class="row"><label class="row-name">统计代码：</label>
+					<div class="column">
+						<textarea name="site_statice" id="site_statice" size="50" style="width: 388px;height:60px;">{$site_statice}</textarea>
+						<span></span></div>
+				</div>
+				<div class="row"><label class="row-name"></label>
+					<div class="column"><input type="submit" class="sub" value=" 提交 " onclick="toTop();"/><input name="action" type="hidden" id="action" value="set" /></div>
+				</div>
+			</form>
+		</div>
+		<div class="maincon shop">
+			<form id="form1" name="form1" method="post" action="">
+				<div class="row">
+					<label class="row-name">减库存的时机：</label>
+					<div class="column">
+						<input name="stocktime" type="radio" id="stocktime1" value="1" size="4" {if $stocktime=='1'}checked="checked"{/if} /><label for="stocktime1">下单时</label>&nbsp;
+						<input name="stocktime" type="radio" id="stocktime2" value="0" size="4" {if $stocktime=='0'}checked="checked"{/if} /><label for="stocktime2">发货时</label>&nbsp;
+						<span></span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name">开启积分功能：</label>
+					<div class="column">
+						<label><input name="is_point" type="radio" value="1" {if $is_point==1}checked="checked"{/if} />开启</label>
+						<label><input name="is_point" type="radio" value="0" {if $is_point==0}checked="checked"{/if} />关闭</label>
+						<span></span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name">购物获得积分：</label>
+					<div class="column">
+						每消费<input name="point" type="text" id="point" value="{if !$point}0{else}{$point}{/if}" size="4" maxlength="4" />元可积1分
+						<span>0表示不积分</span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name">积分支付：</label>
+					<div class="column">
+						每<input name="pointpay" type="text" id="pointpay" value="{if !$pointpay}0{else}{$pointpay}{/if}" size="4" maxlength="4" />积分可抵1元，最多不超过每笔订单结算金额的<input name="mostpoint" type="text" id="mostpoint" value="{$mostpoint}" style="width: 23px;" maxlength="4" />%
+						<span>0表示不可抵用</span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name">开启分次支付：</label>
+					<div class="column">
+						<label><input name="split_pay" type="radio" value="1" size="4" {if $split_pay=='1'}checked="checked"{/if} />开启</label>&nbsp;
+						<label><input name="split_pay" type="radio" value="0" size="4" {if $split_pay=='0'}checked="checked"{/if} />关闭</label>&nbsp;
+						<span>开启后用户可以将订单金额分批支付。</span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name">价格格式：</label>
+					<div class="column" style="width: 80%;">
+						<label for="priceformat1"><input name="priceformat" type="radio" id="priceformat1" value="0" size="4" {if !$priceformat or $priceformat=='0'}checked="checked"{/if} />默认</label>&nbsp;
+						<label for="priceformat2"><input name="priceformat" type="radio" id="priceformat2" value="1" size="4" {if $priceformat=='1'}checked="checked"{/if}/>不四舍五入，保留一位小数</label>&nbsp;
+						<label for="priceformat3"><input name="priceformat" type="radio" id="priceformat3" value="2" size="4" {if $priceformat=='2'}checked="checked"{/if}/>不四舍五入，不保留小数</label>&nbsp;
+						<label for="priceformat4"><input name="priceformat" type="radio" id="priceformat4" value="3" size="4" {if $priceformat=='3'}checked="checked"{/if}/>四舍五入，不保留小数</label>&nbsp;
+						<label for="priceformat5"><input name="priceformat" type="radio" id="priceformat5" value="4" size="4" {if $priceformat=='4'}checked="checked"{/if}/>四舍五入，保留一位小数</label>&nbsp;
+						<label for="priceformat6"><input name="priceformat" type="radio" id="priceformat6" value="5" size="4" {if $priceformat=='5'}checked="checked"{/if}/>四舍五入，保留两位小数</label>
+						<span></span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name">猜你喜欢数量：</label>
+					<div class="column">
+						<input name="youlike_num" type="text" value="{$youlike_num}" size="4"/>
+						<span></span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name">晒单图片数量：</label>
+					<div class="column">
+						<input name="comment_imglimit" type="text" value="{$comment_imglimit}" size="4"/>
+						<span>晒单最多可以上传的图片数量</span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name">晒单+5星好评返：</label>
+					<div class="column">
+						<label><input name="comment_reward" type="radio" value="1" size="4" {if $comment_reward=='1'}checked="checked"{/if}/>现金</label>
+						<label><input name="comment_reward" type="radio" value="2" size="4" {if $comment_reward=='2'}checked="checked"{/if}/>积分</label>
+						<span>晒单同时5星好评将返还给用户现金或积分，现金存入用户余额。额度在商品编辑里设置.</span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name">评论需要审核：</label>
+					<div class="column">
+						<label><input name="comment_audit" type="radio" value="1" size="4" {if $comment_audit=='1'}checked="checked"{/if} />是</label>&nbsp;
+						<label><input name="comment_audit" type="radio" value="0" size="4" {if $comment_audit=='0'}checked="checked"{/if} />否</label>&nbsp;
+						<span>如选择审核，审核后前台才显示</span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name">发票功能：</label>
+					<div class="column">
+						<input name="is_invoice" type="radio" id="bill1" value="1" size="4" {if $is_invoice=='1'}checked="checked"{/if} /><label for="bill1">开启</label>&nbsp;
+						<input name="is_invoice" type="radio" id="bill2" value="0" size="4" {if $is_invoice=='0'}checked="checked"{/if} /><label for="bill2">关闭</label>&nbsp;
+						<span></span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name">发票内容：</label>
+					<div class="column">
+						<textarea name="invoice_con" style="width: 255px;height: 100px;">{$invoice_con}</textarea>
+						<span></span>
+					</div>
+				</div>
+				<fieldset style="border: solid 1px #DDDDDD;margin-bottom: 20px;">
+                	<legend>通知提醒</legend>
+                	<div class="row">
+						<label class="row-name">通知以下手机号：</label>
+						<div class="column">
+							<textarea name="notice_mobile" size="50" style="width: 600px;height:40px;">{$notice_mobile}</textarea>
+							<span>接收通知的手机号码，多个用英文逗号隔开</span>
+						</div>
+						<label class="row-name" style="clear: both;">通知以下微信：</label>
+						<div class="column">
+							<textarea name="notice_weixin" size="50" style="width: 600px;height:40px;" disabled="disabled">{$notice_weixin}</textarea>
+							<span>接收通知的<b class="co-orange">微信openid</b>，多个用英文逗号隔开</span>
+						</div>
+					</div>
+                	<div class="row">
+						<label class="row-name">订单通知：</label>
+						<div class="column">
+							<label><input name="notice_order_sms" value="1" type="checkbox" size="50" maxlength="20" {if $notice_order_sms=='1'}checked="checked"{/if}></input>短信通知</label>
+							<label><input name="notice_order_weixin" value="{$notice_order_weixin}" disabled="disabled" type="checkbox" size="50" maxlength="20" {if $notice_order_weixin=='1'}checked="checked"{/if}></input>微信通知</label>
+							<span>有已付款或货到付款的订单，短信/微信通知商家</span>
+						</div>
+					</div>
+                </fieldset>
+                <fieldset style="border: solid 1px #DDDDDD;">
+                	<legend>退货设置</legend>
+                	<div class="row">
+					<label class="row-name">收件人：</label>
+					<div class="column">
+						<input name="return_name" value="{$return_name}" type="text" size="50" maxlength="20"></input>
+						<span>退货收件人</span>
+					</div>
+					</div>
+					<div class="row">
+					<label class="row-name">收件地址：</label>
+					<div class="column">
+						<input name="return_addr" value="{$return_addr}" type="text" size="50" maxlength="150"></input>
+						<span>退货地址</span>
+					</div>
+					</div>
+					<div class="row">
+					<label class="row-name">联系电话：</label>
+					<div class="column">
+						<input name="return_tel" value="{$return_tel}" type="tel" size="50" maxlength="30"></input>
+						<span></span>
+					</div>
+					</div>
+					<div class="row">
+					<label class="row-name">邮编：</label>
+					<div class="column">
+						<input name="return_zipcode" value="{$return_zipcode}" type="text" size="50" maxlength="6"></input>
+						<span></span>
+					</div>
+					</div>
+                </fieldset>
+				<div class="row">
+					<label class="row-name"></label>
+					<div class="column">
+						<input type="submit" name="button" id="button" class="sub" value="提交"  onclick="toTop();"/>
+						<input name="action" type="hidden" id="action" value="set" />
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="maincon word">
+			<form id="form1" name="form1" method="post" action="">
+				<div class="row">
+					<label class="row-name">用户名保留字：</label>
+					<div class="column">
+						<textarea name="keepword" onkeyup="changeDocHeight(this);" onresize="changeDocHeight(this);" class="autoheight" style="width: 255px;min-height: 100px;resize: none;">{$keepword}</textarea>
+						<span>用户注册无法使用这些保留字作为用户名。每个保留字一行<br>可使用通配符 * 号,  如 &nbsp;*管理员*</span>
+					</div>
+				</div>
+				<div class="row">
+					<label class="row-name"></label>
+					<div class="column">
+						<input type="submit" name="button" id="button" class="sub" value="提交" />
+						<input name="action" type="hidden" id="action" value="set" />
+					</div>
+				</div>
+			</form>	
+		</div>
+		 
+		<script type="text/javascript" src="./static/webuploader/webuploader.js"></script>
+    	<script type="text/javascript" src="./static/webuploader/fileupload.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$(".filePicker").each(function() {
+					com_upload($(this), setLogo);
+				});
+			});				 
+			
+			function setLogo(res, picker) {
+				$("#img").val(res.data.img);
+				$("#logo").attr("src", res.data.img);
+			}
+		
+			function changeDocHeight(t) {
+				autoResize(t);
+				top.document.getElementById('ym_main').height =top.document.getElementById('ym_main').contentWindow.document.documentElement.scrollHeight + t.scrollHeight;
+			}
+			
+		    var minRows = 12;// 最小高度		   
+		    var maxRows = 30; // 最大高度，超过则出现滚动条
+		    function autoResize(t){
+		        if (t.scrollTop == 0) t.scrollTop=1;
+		        while (t.scrollTop == 0){
+		            if (t.rows > minRows)
+		                t.rows--;
+		            else
+		                break;
+		            t.scrollTop = 1;
+		            if (t.rows < maxRows)
+		                t.style.overflowY = "hidden";
+		            if (t.scrollTop > 0){
+		                t.rows++;
+		                break;
+		            }
+		        }
+		        while(t.scrollTop > 0){
+		            if (t.rows < maxRows){
+		                t.rows++;
+		                if (t.scrollTop == 0) t.scrollTop=1;
+		            }
+		            else{
+		                t.style.overflowY = "auto";
+		                break;
+		            }
+		        }
+		    }
+		</script>
+	</body>
+
+</html>

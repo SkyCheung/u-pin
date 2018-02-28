@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>金额明细 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<style type="text/css">
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{color:#f5cb02;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" onclick="history.go(-1);" class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title">金额明细</h1>
+		</header>
+		<div class="mui-content-top mui-scroll-wrapper">
+			<div class="amount mui-scroll">
+				<ul class="detail-list">
+					<!--{loop $row $p}-->
+					<li>
+						<a>
+							<p class="title" style="width:100%">{$p['description']}</p>
+							<div class="left">
+								<p class="lightgrey">{$p['addtime']}</p>
+							</div>
+							<div class="right">
+								<b class="usemon {if $p['val']>0}add{/if}">{if $p['val']>0}+{/if}{$p['val']}</b>
+							</div>
+						</a>
+					</li>
+					<!--{/loop}-->
+				</ul>
+			</div>
+		</div>
+		<input type="hidden" id="page" value="2">
+		<input type="hidden" id="endall" value="0">
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script>
+			mui.init({
+				swipeBack: false
+			});
+			mui('.mui-scroll-wrapper').scroll({
+				indicators: true, //是否显示滚动条
+			});
+			(function($) {
+				//刷新页面
+				$.ready(function() {
+					//循环初始化所有下拉刷新，上拉加载。
+					$.each(document.querySelectorAll('.mui-content-top'), function(index, pullRefreshEl) {
+						$(pullRefreshEl).pullRefresh({
+							down: {
+							},
+							up: {
+								contentrefresh: '正在加载...',
+								contentnomore:'没有更多余额记录了',
+								callback: pullupRefresh
+							}
+						});
+					});
+					/**
+					 * 上拉加载具体业务实现
+					 */
+					function pullupRefresh() {
+						var self = this;
+						setTimeout(function() {
+							var ul = self.element.querySelector('.detail-list');
+							var idname = ul.parentNode.parentNode.id;
+							setTimeout(function() {
+								var endall = document.getElementById('endall').value;
+								mui(".mui-content-top").pullRefresh().endPullupToRefresh((endall > 0)); //参数为true代表没有更多数据了。
+							}, 100);
+							var pagenum = document.getElementById('page').value;
+							var fragment = document.createDocumentFragment();
+							$.getJSON("/moneylog.html",{is_ajax:'1', page:pagenum}, function(res) {
+								if(res.url){
+									alert(res.err);
+									window.location.href=res.url;
+								}else if(res.data==''){
+									document.getElementById('endall').value='1';
+								}else{
+								  for(var o in res.data){
+										li = document.createElement('li');
+										li.className = 'mui-table-view-cell';
+										var htmlss = '';
+										htmlss = htmlss + '<a><p class="title" style="width:100%">' + res.data[o].description + '</p><div class="left"><p class="lightgrey">' + res.data[o].addtime + '</p></div><div class="right"><b class="usemon ';
+										if(res.data[o].val>0){
+											htmlss = htmlss + 'add';
+										}
+										htmlss = htmlss + '">';
+										if(res.data[o].val>0){
+											htmlss = htmlss + '+';
+										}
+										htmlss = htmlss + res.data[o].val + '</b></div></a>';
+										li.innerHTML = htmlss;
+										fragment.appendChild(li);
+								  } 
+								  ul.appendChild(fragment);
+								  pagenum++;
+								  document.getElementById('page').value = pagenum;
+								}
+							})
+						}, 100);
+					}
+				});
+			})(mui);
+		</script>
+	</body>
+</html>

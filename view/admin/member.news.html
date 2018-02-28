@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>文章/新闻管理</title>
+<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+<style>
+body{margin-left:0px;margin-right:0px;}
+#mainnav{padding-left:0px;}
+#mainnav .button{margin-left:40px;}
+</style>
+</head>
+
+<body>
+<div id="maintop"><div>你的位置：<span>内容管理 -> {$name}</span></div></div>
+
+<div id="mainnav"> 	
+
+
+<a class="button next" href="./admin.html?do=member.news.add&amp;id={$code}"><span style="color:#C00">发布</span></a>
+
+
+
+
+
+</div>
+
+
+
+
+<div id="search">
+
+<form method="get" id="form1" name="form1">
+搜索：
+  <input name="keyword" type="text"  class="key" id="keyword" value="{$keyword}"/>
+  <input type="submit" value="提交" class="sub" />
+  
+  <input name="p" type="hidden" id="p" value="admin" />
+  <input name="do" type="hidden" id="do" value="{$do}" />
+  <input name="id" type="hidden" id="id" value="{$code}" />
+</form>
+</div>
+
+
+
+
+<div class="maintab">
+<form method="post" id="form1" name="form1">
+  <ul>
+  <li style="width:50%;margin-left:15px;"><strong style="padding-left:25px;">标题</strong><input name="action" type="hidden" id="action" value="site.order" /></li>
+  <li style="width:120px;"><strong>时间</strong></li>
+  <li style="width:80px;"><strong>编辑</strong> </li> 
+  <li style="width:80px;"><strong>删除</strong> </li>
+ 
+  </ul>
+<!--{loop $row $p}-->
+  <ul>
+  
+
+  <li style="width:50%;margin-left:15px;"><input type="checkbox" name="checkbox" id="checkbox" /> {$p[title]}</li>
+  
+  <li style="width:120px;">{$p[time]}</li>
+  <li style="width:80px;"><a href="./admin.html?do=member.news.edit&amp;id={$p[code]}&toid={$code}" class="edit">修改</a></li> 
+  <li style="width:80px;"><a href="javascript:void(0);" onclick="isdel('{$p[title]}','/admin.html?do=member.news.delete&id={$p[code]}&toid={$code}');" class="del">删除</a></li>
+ 
+  </ul>
+<!--{/loop}-->
+<div class="page" style="">{$pages['pages']}</div>
+
+</form>
+</div>
+
+
+
+
+
+
+</body>
+
+</html>

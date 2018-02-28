@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>订单结算 - {$ym_endtitle}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<link rel="stylesheet" href="css/phone.css" />
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<style>
+			.mui-table-view-cell:after{left: 0;}
+			.jumpout .mui-table-view-cell{padding:10px;}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{color:#f5cb02;}
+		
+			.mui-input-group{background:none;}
+			.mui-input-group:after{height: 0;}
+			.all-checkway .mui-table-view-cell>a.linkall:not(.mui-btn){padding:0 15px}
+			.mui-table-view-chevron .mui-table-view-cell>a:not(.mui-btn){margin-right: -40px;}
+			.mui-table-view-cell:after{left: 0;}
+			/*bot*/
+			#fapiao .mui-table-view .mui-table-view-cell:after{height: 0;}
+			.writecheck{width: 100%;padding:0 !important;border-radius: 0 !important;}
+			.one-line .titie-line{text-align: left;color:#191919;padding:10px 0 0 ;border:none;border-top:1px solid #eee;margin-top:10px;}
+			.detail-check .mui-table-view-cell{padding:11px 0 11px 0}
+			.detail-check .mui-table-view-cell .mui-navigate-right:after{right: -5px;}
+			.one-line .detail-check .mui-table-view-cell{padding-right: 18px;}
+			.one-line .detail-check .mui-table-view-cell.mui-selected .mui-navigate-right,.mui-table-view-cell.mui-selected span{color:#007cc3;}
+			.mui-table-view-cell a,.writecheck input,.mui-table-view-cell span{color:#191919;}
+			.hide{display: none;}
+			.one-line .mui-table-view-cell b{color:#191919}
+			.delexp:after {content: "";}
+			.all-checkway .mui-navigate-right {padding-right: 30px;}
+			.bottom-top {max-height: 300px;overflow-y: auto;position: absolute;bottom: 0;z-index: 99;margin: 0 10px;width: 95%;width: -webkit-calc(100% - 20px);width: -moz-calc(100% - 20px);width: calc(100% - 20px);border-radius: 5px;position: fixed;}
+			.maskblack {background-color: #000;background: rgba(0, 0, 0, .4);}
+			.totopbtn {background-color: #fff;text-align: center;display: block;padding: 10px;border-top: 1px solid #f1f1f1;}
+			#peisong .maincheck span {display: block;padding: inherit;margin: -12px -10px;}
+			.anonlogin{width: 95%;margin:0 auto 20px auto;}
+			.anonlogin input.btn{background-color: #007cc3;color: #fff;padding: 10px 0;}
+			.cmypointbox>h3{margin-bottom: 0px;}
+			.quan-ul li{border: solid 1px #74d2d4;}
+			.quan-ul .lside{background-color: initial;color: #333;}
+			.quan-ul .lside .tit{height: 48px;}
+			.quan-ul .quannow .rside{background-image:inherit;background-color:#74d2d4;color:#ffffff;}
+			.quan-ul .quannow .rside span{display:block; font-size:16px;text-align: center;margin-top: 45px;}
+			.quan-ul .quannow .rside span b{font-size:30px;}
+			.quan-ul .selected{border-color: #ffb057;}
+			.quan-ul .selected .rside{background-color:#ffb057;}
+			#userpoint,#userbalance{width: 100%; display: inline-block;vertical-align: middle;}
+			#couponselected{display: none; background-color: rgb(245, 218, 189); width: 100%; height: 24px; border: 1px solid rgb(255, 176, 87); padding-left: 30px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a onclick='history.go(-1);' class="mui-pull-left mui-icon mui-icon-left-nav" href="javascript:void(0);"></a>
+			<h1 class="mui-title" id="mytitle">确认订单</h1>
+		</header>
+		<div class="mui-content-top mui-content-bot confirm">
+			{if $ym_uid ==0 || ($user && $user['mobile']=='')} 
+				<div class="anonlogin">
+					<div>
+						<h3 style="margin-bottom: 10px;text-align: left;color: #007cc3;font-size: 20px;">{if $user['mobile']==''}绑定手机号码{else}一步登陆，免注册{/if}</h3>
+					</div>
+					<div class="input-box">
+						<label class="icon-phone" for="loginmobile"></label>
+						<input type="text" id="loginmobile" value="" placeholder="手机号码" maxlength="11" autocomplete="off"/>
+					</div>
+					<div class="input-box">
+						<label class="icon-smscode" for="smscode"></label>
+						<input type="text" name="smscode" id="smscode" maxlength="8" value="" placeholder="短信验证码" onkeyup="onlyNum(this);" style="width: 30%;"/>	
+						<input type="button" class="btn" id="btnSendCode" data-mobileid="loginmobile" data-act ="{if $user['mobile']==''}user_bind{else}login{/if}" value="获取验证码" style="width: 30%;display: inline-block;"/>	
+					</div>
+							
+						<input type="button" class="btn" id="btnlogin" value="{if $user['mobile']==''}绑定{else}登陆{/if}" />	
+						<span class="formtip"><i></i><label></label></span>
+				</div>
+				{/if}
+			<ul class="personal-infor">
+				<!--{if $consignee}-->
+				<!--{loop $consignee $p}-->
+				<!--{if $p['is_default']==1}-->
+				<li class="recive-add other-add default-add" id="recive-add" value="{$p['id']}">
+					<a href="address.html" class="">
+						<p><span class="username" style="margin-right: 10px;">{$p['name']}</span><span class="phonen">{$p['mobile']}</span></p>
+						<p class="add add-detail">{$p['addr']}</p>
+					</a>
+				</li>
+				<!--{/if}-->
+				<!--{/loop}-->
+				<!--{else}-->
+				<li>
+					<a href="address.html" class="mui-navigate-right">
+						<p>你还没有收货地址，点击增加</p>
+					</a>
+				</li>
+				<!--{/if}-->
+			</ul>
+			<div class="order">
+				<h3 class="pur-title">商品信息<a href="/cart.html" class="blue right">修改商品</a></h3>
+				<ul class="list-more  mui-table-view">
+				<!--{loop $cart['goods'] $p}-->
+					<li class="mui-table-view-cell">
+						<div class="order-nr">
+							<a href="{$p['url']}" class="picbox">
+								<img src="{$p['thumb']}" alt="110*110" width="60" height="60"/>
+							</a>
+							<div class="order-word">
+								<a class="order-top" href="{$p['url']}">
+									<p href="{$p['url']}">{$p['name']}</p>
+								</a>
+								<div class="pwtxt">
+									<p class="money">￥<span>{if $p['user_price']!=0}{$p['user_price']}{else}{$p['price']}{/if}</span></p>
+									<span class="buy-num">x{$p['num']}</span>
+								</div>
+							</div>
+						</div>
+					</li>
+				<!--{/loop}-->
+				</ul>
+			</div>
+			<div class="all-checkway">
+				<ul class="yunec-list">
+					<li class="peisong toboxup">
+						<div class="yec-navgation">配送方式 <span class="subtitle" id="exp">商家配送</span></div>
+					</li>
+					<li class="zhifufashi toboxup">
+						<div class="yec-navgation">支付方式 <span class="subtitle" id="pay"></span></div>
+					</li>
+					<!--{if $ym_is_invoice ==1}-->
+					<li class="fapiao toboxup">
+						<div class="yec-navgation">发票信息 <span class="subtitle" id="bill">不需要发票</span></div>
+					</li>
+					<!--{/if}-->
+					<li class="bgw">
+						<div href="javascript:void(0);" class="linkall">
+							<label class="list-name" for="leavemess">留言：</label>
+							<input type="text" name="" id="leavemess" value="" class="leave-mess" style="margin-top:6px;" maxlength="200" autocomplete="off"/>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<!--使用积分-->
+			<div class="all-checkway2 mar30">
+				<ul class="yunec-list most-check">
+					<li class="mui-table-view-cell toboxup">
+						<div class="yec-navgation">优惠券 <span class="subtitle update">-￥<span id="coupon">0.00</span></span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell toboxup">
+						<div class="yec-navgation">使用积分 <span class="subtitle update">-￥<span id="point">0.00</span></span>
+						</div>
+					</li>
+					<li class="mui-table-view-cell toboxup">
+						<div class="yec-navgation">使用余额 <span class="subtitle update">-￥<span id="balance">0.00</span></span>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="all-checkway2 mar30">
+				<ul class="yunec-list most-check">
+					<li class="mui-table-view-cell">
+						<div class="yec-navgation delexp">运费 <span class="subtitle update">￥<span id="expfee">{$express_fee}</span></span>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="all-checkway mar30 paypassword" style="margin-top:-0.125rem;background:#fff;padding:16px 20px 16px 15px;display:none">
+				<span>支付密码</span>
+				<input type="password" style=";display: none;" value=""/>
+				<input id='cbkpaypwd' value="" placeholder="请输入密码" type="password" style="height:30px; width: 150px;margin-bottom: 0;font-size: 12px;" maxlength="12" {if $user['paypwd']==''}disabled="disabled"{/if}/>
+			</div>
+			{if $user['paypwd']==''}
+			<span id="setpaypwd" style="margin: 10px 0;text-align: center;width: 100%;display: none;">为保障您的资金安全，请先<a href="/updatepwd.html?act=pay" class="blue zhifumima" style="color:#007cc3"> 设置支付密码</a></span>
+			{/if}
+			<div class="fix-navbar cart-fix">
+				<p class="sum"><span>{$cart['num']}</span>件商品，总计：￥<span id="payAmount">{$total}</span></p>
+				<a href="javascript:void(0);" class="fix-btn gotosum gotobuy btn-jiesuan" id="buynow">提交订单</a>
+			</div>
+		</div>
+		<div class="box-dan">
+			<!--配送方式 start-->
+			<div id="peisong" class="one-line bottom-top hide">
+				<ul class="mui-table-view" style="height: 158px;overflow-y: auto;" id="expresslist">
+					{if $express_common}
+					<!--{loop $express_common $p}-->
+					<li class="mui-table-view-cell {if !$i&&($i='1')}mui-selected{/if} maincheck"><span class="mui-navigate-right" id="{$p['id']}">{$p['name']}</span></li>
+					<!--{/loop}-->
+					{else}
+					<li class="mui-table-view-cell mui-selected maincheck"><span class="mui-navigate-right">商家配送</span></li>
+					{/if}
+				</ul>
+			</div>
+			<!--配送方式 end-->
+			<!--支付方式 start-->
+			<div id="zhifufashi" class="one-line bottom-top hide">
+				<ul class="mui-table-view mui-table-view-radio" id="paylist">
+				<!--{loop $payment $p}-->
+					<li class="mui-table-view-cell {if (!$j)&&($j=1)}mui-selected{/if} maincheck">
+						<div class="mui-navigate-right left" id="{$p['pay_code']}"><span class="payicon"><img src="{upload_img}/payment/{$p['pay_code']}.png"/></span><span class="word">{$p['pay_name']}</span></div>
+					</li>
+				<!--{/loop}-->
+				</ul>
+			</div>
+			<!--支付方式 end-->
+			<!--发票信息 start-->
+			<div id="fapiao" class="one-line bottom-top hide">
+				<div class="bgw" style="border-radius: 4px;margin-bottom:8px;padding:0 10px;">
+					<ul class="mui-table-view mui-table-view-radio flex" id="is_invoice">
+						<li class="mui-table-view-cell mui-selected topcheck maincheck flex1" id="0"><span class="mui-navigate-right font12">不要发票</span></li>
+						<li class="mui-table-view-cell topcheck maincheck flex1" id="1"><span class="mui-navigate-right font12">个人发票</span></li>
+						<li class="mui-table-view-cell topcheck company-check maincheck flex1" id="2"><span class="mui-navigate-right font12">公司发票</span></li>
+					</ul>
+					<div class="hide company" id="edit-company" style="margin-top:10px;">
+						<input type="text" name="" id="edit-company" value="" placeholder="填写公司发票抬头" style="margin-bottom:10px;" />
+					</div>
+					<div class="checkdetailbox hide">
+						<div class="titie-line">发票内容</div>
+						<ul class="detail-check flex checkone" style="padding:10px 0;">
+							<!--{loop $ym_invoice_con $p}-->
+							<li class="flex1 {if $p=='明细'}on{/if}"><span class="font12" id="{$p}">{$p}</span></li>
+							<!--{/loop}-->
+						</ul>
+					</div>
+				</div>
+				<div class="sure totopbtn"><b>确定</b></div>
+			</div>
+			</div>
+			<!--发票信息 end-->
+		<div class="box-dan2">
+			<!--使用优惠券start-->
+			<div id="cmycoupon" class="one-line bottom-top hide" style="height:90%;max-height: 90%;bottom: 0px;border-radius: 0;">
+				<div class="cmypointbox bgw">
+					<h3>使用优惠券</h3>
+					<span id="couponselected"></span>
+					<div class="mypoint-tr quan-ul couponlist" id="couponlist" style="padding: 10px 0.1rem 20px 0.1rem;">
+
+					</div>
+				</div>
+				<div class="totopbtn" id="btncoupon" style="width: 100%;height: 44px; position: fixed;left: 0; bottom: 0;z-index: 99;background-color: #007cc3;border-top-color: #007cc3;color:#fff;"><b>确 定</b></div>
+			</div>
+			<!--使用优惠券 end-->
+			<!--使用积分start-->
+			<div id="cmypoint" class="one-line bottom-top hide">
+				<div class="cmypointbox bgw">
+					<h3>使用积分</h3>					
+					<div class="mypoint-tr" style="padding-bottom: 0;">
+						<span class="title">我的积分：</span>
+						<span id="curpoint">{$user['point']}</span>
+					</div>
+					<div class="mypoint-tr">
+						<span class="title">							
+							<div class="mui-switch" id="userpoint">
+								<div class="mui-switch-handle"></div>
+							</div> 使用积分：</span><label id="pointval">0</label>，抵现金：￥<span id="pointamount">0.00</span>
+						<p style="padding-top: 10px;">每{if $ym_pointpay}{$ym_pointpay}{else}0{/if}积分抵用1元</p>
+					</div>
+				</div>
+				<div class="totopbtn" id="btnpoint" style="margin-bottom: 8px;border-radius: 4px;"><b>关 闭</b></div>
+			</div>
+			<!--使用积分 end-->
+			<!--使用余额 start-->
+			<div id="cmyye" class="bottom-top one-line hide">
+				<div class="cmypointbox bgw">
+					<h3>使用余额</h3>
+					<div class="mypoint-tr" style="padding-bottom: 0;">
+						<span class="title">我的余额：</span>
+						<span id="curbalance">￥{$user['balance']}</span>
+					</div>
+					<div class="mypoint-tr">
+						<span class="title">
+							<div class="mui-switch" id="userbalance">
+								<div class="mui-switch-handle"></div>
+							</div> 使用余额：</span>￥<label id="balanceval">0.00</label>
+							<br /><br>
+					</div>
+				</div>
+				<div class="totopbtn" id="btnbalance" style="margin-bottom: 8px;border-radius: 4px;"><b>关 闭</b></div>
+			</div>
+			<!--使用余额 end-->
+		</div>	
+		<div class="mask maskblack hide"></div>
+		<input id="balance" value="" type="hidden">
+		<input id="point" value="" type="hidden">
+		<input type="hidden" id="user_mobile" value="{$user['mobile']}"/>		
+		
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/cart.js" ></script>	
+		<script>
+			var goods_amount = {if $cart['amount']}{$cart['amount']}{else}0{/if};			
+			var mostpoint = {if $ym_mostpoint}{$ym_mostpoint}{else}0{/if};			
+			var pointpay = {if $ym_pointpay}{$ym_pointpay}{else}0{/if};			
+			var is_invoice={if $ym_is_invoice}{$ym_is_invoice}{else}0{/if};			
+			var $mask = $(".mask");
+			var is_paypwd=false;
+			$("#pay").html($("#zhifufashi li div").eq(0).find(".word").html());
+			$("#exp").html($('#peisong li span').eq(0).html());
+			$(".all-checkway .toboxup").each(function() {
+				$(this).click(function() {
+					$(".bottom-top").eq($(this).index()).removeClass("hide").animate({
+						bottom: '10px'
+					}, 200);
+					$mask.removeClass("hide");
+				});
+			});
+			$(".all-checkway2 .toboxup").each(function() {
+				$(this).click(function() {
+					$(".box-dan2 .bottom-top").eq($(this).index()).removeClass("hide").animate({
+						bottom: '0px'
+					}, 200);
+					$mask.removeClass("hide");
+				});
+			});
+			$mask.click(function() {
+				$(this).addClass("hide");
+				$(".bottom-top").addClass("hide");
+			});
+			$(".sure").click(function() {
+				$mask.addClass("hide");
+				$(".bottom-top").addClass("hide");
+			});
+			mui.init();
+			mui('body').on('tap', 'a', function() {
+				window.location.href = this.href;
+			});
+			//选中当前的
+			mui(".checkone").on('tap','li',function(){
+				$(this).addClass("on").siblings().removeClass("on");
+			})
+			$(function() {
+				setTimeout(function() {
+					get_coupon_list();//加载优惠券
+				}, 100);
+				
+				$(".company-check").click(function() {
+					$("#edit-company").stop(true, true).slideDown(0);
+				});
+				var $edit_company = $("#edit-company");
+				var $checkdetailbox = $(".checkdetailbox");
+				$(".topcheck").each(function() {
+					$(this).click(function() {
+						if($(this).attr("id") == 0) {
+							$edit_company.addClass("hide");
+							$checkdetailbox.addClass("hide");
+						} else if($(this).attr("id") == 1) {
+							$edit_company.addClass("hide");
+							$checkdetailbox.removeClass("hide");
+						} else if($(this).attr("id") == 2) {
+							$edit_company.removeClass("hide");
+							$checkdetailbox.removeClass("hide");
+						}
+					});
+				});
+			
+				var $exp = $("#exp");
+				var $peisong = $("#peisong");
+				mui('#peisong li').on('tap', 'span', function(e) {
+					$exp.html($(this).html());
+					$peisong.addClass("hide");
+					$mask.addClass("hide");
+				});
+				$("#peisong li span").each(function() {
+					$(this).click(function() {
+						$exp.html($(this).html());
+						$peisong.addClass("hide");
+						$mask.addClass("hide");
+					});
+				});
+			//支付方式
+				var $pay = $("#pay");
+				var $zhifufashi = $("#zhifufashi");
+				$("#zhifufashi li div").each(function() {
+					$(this).click(function() {
+						$pay.html($(this).find(".word").html());
+						$zhifufashi.addClass("hide");
+						$mask.addClass("hide");
+					});
+				});
+				mui('#zhifufashi li').on('tap', 'div', function(e) {
+					$pay.html($(this).find(".word").html());
+					$zhifufashi.addClass("hide");
+					$mask.addClass("hide");
+				});
+			//发票
+				$("#fapiao .maincheck .mui-navigate-right").each(function() {
+					$(this).click(function() {
+						$("#bill").html($(this).html());
+					});
+				});
+				//使用优惠券
+				$("#btncoupon").click(function(){					
+					$mask.addClass("hide");
+					$("#cmycoupon").addClass("hide");
+				});
+			   						   
+			   //关闭积分面板
+				$("#btnpoint").click(function(){
+					$mask.addClass("hide");
+					$("#cmypoint").addClass("hide");
+				});
+
+				//关闭余额面板
+				$("#btnbalance").click(function(){
+					$mask.addClass("hide");
+					$("#cmyye").addClass("hide");												
+				});	
+			});
+			
+			var is_count=1,//各状态数量
+        	page = 1; //当前页码
+			//加载优惠券
+ 			function get_coupon_list() {		
+	 				var ids_arr = Array();
+	 				 $(".goodinfor").each(function() {
+	 				 	ids_arr.push($(this).attr('id'));
+	 				 })
+	 				var goods_ids = ids_arr.toString();
+ 				 
+					$.getJSON("myquan.html", {act: "get_coupon", page:page,num:100, goods_ids:goods_ids, is_count:is_count,type:0,is_available:1}, function(res) {						
+						if(res.err) {
+							msg("加载优惠券失败，".res.err);return;
+						}
+						
+						var html ='';
+						$.each(res.data, function(k, v) {
+							html +='<li class="quannow '+(v.is_vaild==0 ? ' disabled' :'')+ '" id="'+v.id+'" data-cid="'+v.cid+'" data-amount="'+v.amount+'"><div class="lside">';
+							html +='<div class="txt tit">'+v.name+'</div>';
+							html +='<div class="txt"><span>满'+v.amount_reached+'元可用</span></div>';
+							html +='<div class="txt">有效期：'+v.date_start+'-'+v.date_end+'</div></div>';							
+							html +='<div class="rside opbtn">';
+							html +='<span>￥<b>'+v.amount+'</b></span>';
+						    html +='</div></li>';				    
+						});
+						
+						if(is_count ==1)
+						{
+							is_count=0;
+						}
+						if (res.data.length==0) {
+							return;
+						}
+												
+						$(".couponlist").append(html);						
+						calcTotal();
+						sumSelected();
+						page++; 
+					});	
+			}
+ 			
+ 			//选择优惠券
+ 			$(".couponlist").each(function() { 				
+				$(this).on("click",".quannow",function() {
+					var t =$(this);
+					if(t.hasClass("disabled")) {
+						return;
+					}
+					
+					var cid = t.data("cid");		
+					if(t.hasClass("selected"))
+					{
+						t.removeClass("selected");
+					}
+					else
+					{											
+						var ids = getSelectedCoupon(); //已选
+						if(ids !='' && t.hasClass("selected") ==false) {
+							$.getJSON("myquan.html", {act: "select_coupon", id: cid, ids: ids}, function(res) {
+								var html ='';
+								if(res.err) {
+									msg("选择优惠券失败，".res.err);return;
+								}
+								if(res.data && res.data.length > 0) {
+									$.each(res.data, function(k, v) {
+										var coupon = $(".couponlist>.selected[data-cid='"+v+"']");
+										$(".couponlist>.selected[data-cid='"+v+"']").each(function() {
+											if($(this).attr("id") != t.attr("id")) {
+												$(this).removeClass("selected");
+											}
+										})									
+									});								
+								}
+								sumSelected();
+								calcTotal();
+							});	
+						}
+						
+						t.addClass("selected");
+					}
+										
+					sumSelected();
+					calcTotal();
+				});
+			}); 
+			
+			function sumSelected(num) {
+				num = num || $(".couponlist>.selected").length;
+				$("#couponselected").html("已选<b class='red'> "+ num + "</b> 张").css("display", (num == 0 ? "none" :"inline-block") );
+			}
+			
+			//获取优惠券id
+			function getSelectedCoupon(){
+				var ids = '';
+				$(".couponlist>.selected").each(function() {
+					ids += $(this).data("cid") + ",";
+				});
+				if (ids !='') {
+					ids = ids.substr(0, ids.length - 1);
+				}
+				return ids;
+			}
+			
+			//获取会员优惠券id
+			function getCouponIDs(){
+				var ids = '';
+				$(".couponlist>.selected").each(function() {
+					ids += $(this).attr("id") + ",";
+				});
+				if (ids !='') {
+					ids = ids.substr(0, ids.length - 1);
+				}
+				return ids;
+			}
+			
+			function inputdis() {
+				if( ($.trim($("#balance").html()) != 0) || ($.trim($("#point").html()) != 0 )) {
+					$(".paypassword").show();
+					is_paypwd= true;
+				} else {
+					$(".paypassword").hide();
+					is_paypwd=false;
+				}
+			}
+			
+			//积分开关
+			mui('.mui-switch').each(function() {
+				this.addEventListener('toggle', function(event) {
+					$("#"+event.currentTarget.id).attr("isuse", event.detail.isActive ? '1' : '0');
+					calcTotal();
+					inputdis();
+				});
+			});
+			
+			//结算
+			mui('body').on('tap', '.btn-jiesuan', function() {
+				if($("#btnSendCode").length>0 && $.trim($("#btnSendCode").data("act")) =='user_bind')
+				{
+					$("#loginmobile").focus();
+					mui.toast("请先绑定手机号码");return;
+				}
+				if ($(".other-add").length==0) {
+					mui.toast("请先填写您的收货人信息");return;
+				}
+				if ($("#payAmount").html() !=0 && $("#paylist .mui-selected div").length==0) {
+					mui.toast("请选择支付方式");return;
+				}
+				if ($("#expresslist .mui-selected").length==0) {
+					mui.toast("请选择配送方式");return;
+				}
+				if (is_paypwd && $.trim($("#cbkpaypwd").val()) == '') {
+					$("#cbkpaypwd").focus();
+					mui.toast("请填写支付密码");return;
+				}
+				//发票信息
+				var invoice_title ='', invoice_con =''; 
+				if (($("#is_invoice .mui-selected").attr("id") ==1)||($("#is_invoice .mui-selected").attr("id") ==2)) { //开启发票功能
+					var sl_title = $("#is_invoice .mui-selected");
+					invoice_title = sl_title.attr("id") ==1 ? sl_title.children('span').html() : $.trim($('.company input').val());
+					invoice_con = $(".detail-check .on span").attr("id");
+					if (invoice_title=='') {
+						mui.toast("请填写发票抬头");return;
+					}
+					if (invoice_con =='') {
+						mui.toast("请填写发票内容");return;
+					}
+				}
+				
+				var data ={
+					act : 'add_order',
+					cneeid: $(".default-add").attr("value"),
+					balance: $.trim($("#balance").html()),
+					point : $.trim($("#pointval").html()),
+					pay : $("#paylist .mui-selected div").attr("id"),
+					exp_id : $("#expresslist .mui-selected span").attr("id"),
+					paypwd : is_paypwd ? $.trim($("#cbkpaypwd").val()) : '',
+					invoice_title: invoice_title,
+					invoice_con : invoice_con,
+					user_remark : $("#leavemess").val(),
+					coupon_ids:getCouponIDs()//会员优惠券
+				};
+				$(this).attr("disabled", "disabled");
+				$.getJSON("order.html", data, function(res) {
+					if( (res.err && res.err != '')) {
+						mui.toast('操作失败，' + res.err);return;
+					}
+					if( (res.url && res.url != '')) {
+						 window.location.href = res.url;
+					}
+
+					$(this).removeAttr("disabled");
+				});	
+			});
+			mui('body').on('tap', '.mui-pull-left', function() {
+				history.go(-1);
+			});
+		</script>
+		<script type="text/javascript">
+			mui('body').on('tap', '#expresslist li', function() {
+				$(this).addClass("mui-selected").siblings().removeClass("mui-selected");
+			});
+			
+			$("#loginmobile").change(function() {
+				var mobile  = $.trim($(this).val());
+				if (is_mobile(mobile) == false) {
+					mui.toast("请输入正确手机号码")
+					return;
+				}
+				check_mobile(mobile, callback_check_mobile);
+			});
+			
+			function callback_check_mobile(res) {
+				if ($.trim($("#btnSendCode").data("act")) =='user_bind') {
+					return false;
+				}
+				if(res.err && res.err !='')//已注册
+				{
+					$("#btnSendCode").data("act", 'login');	
+				}
+				else
+				{
+					$("#btnSendCode").data("act", 'reg');
+				}
+			}
+			
+			$("#btnlogin").click(function() {
+				var mobile = $.trim($("#loginmobile").val()), smscode = $.trim($("#smscode").val()),
+				act = $.trim($("#btnSendCode").data("act"));
+				
+				$.post("user_api.html",
+						{   act: act,
+							authtype:1,//短信验证
+							username: (act=='reg' ? '' : mobile),
+							tel: mobile,
+							smscode: smscode,
+							password: '',
+							repassword: '',
+							agree: 1,
+							isOauth: 0,
+							authcode: '',
+							autologin:1
+						},
+						function(data) {
+							if (data.err != '') {
+								mui.toast(data.err);
+							}
+							else{
+								mui.toast("登陆成功");
+								setTimeout(function() {
+									window.location.reload();	
+								},1500)
+												
+							}
+				},"json");
+								
+			});
+			
+			//发送验证码
+			$("#btnSendCode").click(function() {
+				var act= $.trim($(this).data("act"))
+				sendSms($(this)[0], 'sms_'+ (act=="user_bind" ?'login':act));		
+			})
+		</script>	
+	</body>
+
+</html>

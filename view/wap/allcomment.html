@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en" class="feedback">
+	<head>
+		<meta charset="UTF-8">
+		<title>晒单评价 - {$ym_endtitle}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/phone.css" />
+		<style type="text/css">
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:history.go(-1);" class="mui-pull-left mui-icon mui-icon-left-nav" ></a>
+			<h1 class="mui-title">晒单评价</h1>
+		</header>
+		<div class="mui-content-top mui-content-bot">
+		    <div class="list-products">
+		        <div class="mui-content mui-scroll-wrapper" id="pullrefresh">
+		            <div class="mui-scroll" style="padding-bottom: 50px;">
+						<ul class="appraise-ul appraise-box bgw" style="margin-top:10px;">
+						<!--{if !$comment}--><li style="text-align: center;">暂无评价~</li><!--{/if}-->
+						<!--{loop $comment $p}-->
+						<li>
+							<div class="picbox">
+								<img src="{if $p['uimg']!=''}{$p['uimg']}{else}{tpl_root}images/avatar.jpg{/if}" alt=""/>
+							</div>
+							<div class="txt-right">
+								<div class="txtr-top">
+									<p class=" grey96">{$p['anon_name']}</p>
+								</div>
+								<div class="txt-middle ">
+									<p>{$p['content']}</p>
+								</div>
+								<div class="com-pic">
+									<!--{if $p['thumb']}--> 
+							   	     	<div class="show-pic" id="show-pic">
+							   	     		<div class="sc_bd">
+							   	     			<dl>
+							   	     			<!--{loop $p['thumb'] $i $t}-->
+							   	     			<dd><a data-src="{$p['img'][$i]}"><img src="{$t}" width="80" height="80"/></a></dd>
+							   	     			<!--{/loop}-->   	        	     												 
+   	     						   	     		</dl>
+							   	     		</div>
+   	     								</div> 	     													
+   	     							<!--{/if}-->
+								</div>
+								<!--{if $p['admin_reply']}-->
+							   	     	<div class="reply">
+							   	     		<ul>
+							   	     			<!--{loop $p['admin_reply'] $v}-->
+							   	     			<li>
+							   	     				<span>{$v['uname']}:</span>{$v['content']}
+							   	     			</li>
+							   	     			<!--{/loop}-->
+							   	     		</ul>
+							   	     	</div>
+							   	<!--{/if}-->
+								<p class="clear grey96">{$p['addtime']}</p>
+							</div>
+						</li>
+						<!--{/loop}-->
+                      </ul>
+                      </div>
+		        </div>
+		    </div>
+            <div id="totop" class="totop"><img src="images/totop.png" alt="" style="width: 40px;"/></div>
+            <!--{tpl fixnavbar}-->
+		</div>
+		<input type="hidden" id="page" value="2">
+		<input type="hidden" id="endall" value="0">
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<style>
+		.mui-scroll-wrapper {top: 46px;bottom:16px;}
+		.icon-price {background: url(view/wap/images/price_updown.png) no-repeat;display: inline-block;width: 9px;height: 14px;background-size: 100%;vertical-align: middle;margin-left: 7px;}
+		.down {background: url(view/wap/images/price_down.png) no-repeat;background-size: 100%;}
+		.up {background: url(view/wap/images/price_up.png) no-repeat;background-size: 100%;}
+		</style>
+		<script type="text/javascript">
+
+        (function($) {
+				//刷新页面
+				$.ready(function() {
+					//循环初始化所有下拉刷新，上拉加载。
+					mui.init({
+						pullRefresh: {
+							container: '#pullrefresh',
+							up: {
+								contentrefresh: '正在加载...',
+								contentnomore:'没有更多评价了',
+								callback: pullupRefresh
+							}
+						}
+					});
+					/**
+					 * 上拉加载具体业务实现
+					 */
+					function pullupRefresh() {
+						setTimeout(function() {
+							var endall = document.getElementById('endall').value;
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh((endall > 0)); //参数为true代表没有更多数据了。
+							var table = document.body.querySelector('.appraise-ul');
+							var cells = document.body.querySelectorAll('li');
+							var href = window.location.pathname + window.location.search;
+							var pagenum = document.getElementById('page').value;
+							$.getJSON(href,{is_ajax:'1', page:pagenum}, function(res) {
+								if(res.url){
+									alert(res.err);
+									window.location.href=res.url;
+								}else if(res.data==''){
+									document.getElementById('endall').value='1';
+								}else{
+								  /*	
+								  for(var o in res.data){
+										li = document.createElement('li');
+										var htmlss = '';
+										htmlss = htmlss + '<a href="'+res.data[o].url+'" class="picbox"><img src="'+res.data[o].thumb+'" alt="196*196"/></a><a href="'+res.data[o].url+'" class="title">'+res.data[o].name+'</a><div class="price-cart"><p>￥<span>'+res.data[o].price+'</span></p><a href="javascript:void(0);" onclick="addCart('+res.data[o].goods_id+',0,1);" class="cart"></a></div>';
+										li.innerHTML = htmlss;
+										table.appendChild(li);
+								  } */
+
+                                    var html='';
+									$.each(res.data, function(k, v) {								
+										html = '<div class="picbox"><img src="'+(v.uimg!=''? v.uimg :'{tpl_root}/images/avatar.jpg')+'" alt=""/></div>';
+										html += '<div class="txt-right"><div class="txtr-top"><p class="font18 grey96">'+ v.anon_name +'</p></div><div class="txt-middle font20"><p>'+v.content+'</p></div>';
+										if(v.img){
+											html += '<div class="com-pic"><div class="show-pic" id="show-pic"><div class="sc_bd"><dl>';
+											$.each(v.img, function(w, y) {
+												html += '<dd><a data-src="'+y+'"><img src="'+v.thumb[w]+'" id="openimg"  width="80" height="80" ></a></dd>';
+											});
+											html += '</dl></div></div></div>';
+										}
+										if(v.admin_reply)
+										{
+											html += '<div class="reply"><ul>';
+										    $.each(v.admin_reply, function(w, y) {
+										    	html += '<li><span>'+y.uname+':</span>'+y.content+'</li>';
+										    });
+										    html += '</ul></div>';
+									    }
+										html += '<p class="clear grey96">'+ v.addtime +'</p></div>';
+										var li = document.createElement('li');
+										li.innerHTML = html;
+										table.appendChild(li);
+									});
+
+								  pagenum++;
+								  document.getElementById('page').value = pagenum;
+								}
+							})
+						}, 100);
+					}
+				});
+			})(mui);
+
+	    var scrollToTopBox = document.getElementById('totop');
+			//返回按钮tap
+			scrollToTopBox.addEventListener('tap', function(e) {
+			e.stopPropagation();
+			mui('#pullrefresh').pullRefresh().scrollTo(0, 0, 1000);//滚动到顶部
+			window.scrollTo(0, 1000);
+			}); 
+
+		$('.fix-navbar .fix-bar-ul li').eq(2).addClass('on');	
+		</script>
+	</body>
+</html>

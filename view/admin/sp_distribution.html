@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>分销管理</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+		<script src="{adm_tpl}/js/api.js"></script>
+		<style>			
+			.auto-height-list ul{padding-top: 10px;padding-bottom: 10px;}
+			ul.rowtit{padding-top: 0px;padding-bottom: 0px;}
+		</style>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>分销管理</span></div>
+		</div>
+		
+       <form method="post" id="sp_distribution" name="form1">
+       	
+		<div id="mainnav">
+			<a class="button" href="./admin.html?do=sp_distribution&act=config"><span>基础设置</span></a>
+			<input type="hidden" value="sp_distribution.delete" name="action" />
+		</div>
+
+		<div class="maintab list auto-height-list ajaxedit">			
+				<ul class="rowtit">
+					<li class="w5">会员ID</li>
+					<li class="w15">账号</li>
+					<li class="w10 center">级别</li>
+					<li class="w10 center">一级会员</li>
+					<li class="w10 center">二级会员</li>
+					<li class="w10 center">三级会员</li>
+				</ul>
+				<!--{loop $row $p}-->
+				<ul>
+					<li class="w5">{$p['id']}</li>
+					<li class="w15">{$p['uname']}</li>
+					<li class="w10 center">{$ym_ditribution_config['commission'][$p['commiss_id']]['name']}</li>
+					<li class="w10 center">{$p['level1']}</li>
+					<li class="w10 center">{$p['level2']}</li>
+					<li class="w10 center">{$p['level3']}</li>
+				</ul>
+				<!--{/loop}-->
+				<div class="page" style="">{$pages['pages']}</div>
+		</div>
+       </form>
+       
+	</body>
+
+</html>

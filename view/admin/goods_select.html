@@ -1,0 +1,342 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>选择商品</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+		
+		<style type="text/css">
+			.maintab {width: 960px;border-top: none;padding-top: 0px;padding-bottom: 3px;margin-left: 0px;border-bottom: 0px;}						
+			.maincon .list ul li {
+				border-bottom: none;
+				padding-left: 0px;
+				line-height: 70px;
+				height: 70px;
+			}
+			.wintit{padding-bottom: 0px;}
+			.maincon .list ul.rowtit{height: 32px;line-height: 32px;}
+			.maincon .list ul.rowtit li{height: 32px;line-height: 32px}
+			.maincon .search span{height: auto;}
+			 .maincon  .list ul li span{float: none;}
+			 .maincon .column{float: none;}
+			 .maincon .fixedRow{padding: 5px 0;}
+			 #goods_list{}
+			 #goods_list img{margin-right: 10px;display: inline-block;}
+			 #goods_list .txt{width: 80%;display: inline-block;line-height: 26px;}
+			 #brandcat li{padding-bottom: 0px;}
+			 #c_cat_ids{position: relative;z-index: 99999;}
+			 #selectedcat a{padding: 0px 3px;font-size: 12px;}
+			 #selectedcat{display: block;padding-top: 3px;}
+			 .page{width: 300px;float: right;clear: none;padding-top: 0px;padding-bottom: 0px;}
+			 .page .skip{width: 30px; text-align: center;}
+			 #selectedtotal{position: absolute;left: 10px;top: 7px; font-size: 16px;}
+			 #selectedtotal b{color: #E01C2C;}
+			 #catlist{height: 520px;}
+		</style>
+	</head>
+
+	<body>
+		<div class="maincon wintit">
+			<div class="">
+				<div class="search" style="height:40px;">
+					<div class="column" style="position: relative;">
+						<div style="width: 500px; float: left;">
+							<input type="button" value="所有分类" class="sub" size="8" id="c_cat_ids"/>
+							<input type="text" class="input" size="10" placeholder="商品名称关键字" id="goods_name"/>
+							<input type="button" class="sub" value=" 搜索 " id="btn-search" />
+							<span id="selectedcat">
+								<!--{loop $brandcat $p}--><a href="javascript:void(0);" id="{$p[id]}" data-id="{$p[id]}" onclick="delcat(this)">{$p['name']}<i class="i-del"></i></a><!--{/loop}-->
+							</span>
+							<input name="c_cat_ids" type="hidden" value="{$row[cat_ids]}" />						
+							<div id="catlist" class="winlayer" style="top:32px;">
+								<div id="brandcat">
+									<div class="it" id="c1">
+									  	<ul><!--{loop $cat $p}-->
+									    	<li><input type="checkbox" value="{$p[id]}"  data-id="{$p[id]}" name="cat_ids" onchange="selectCat(this);"/> <a href="javascript:void(0);" data-id="{$p[id]}" onclick="getCat(this);">{$p[name]}</a></li>
+									    	<!--{/loop}--></ul>
+									</div>
+									<div class="it" id="c2">
+										<ul></ul>
+									</div>
+									<div class="it" id="c3">
+										<ul></ul>
+									</div>
+									<div class="it" id="c4">
+										<ul></ul>
+									</div>
+								</div>
+								<div style="text-align: center;"><input type="button" class="sub back" value="关闭" id="close"></div>
+							</div>
+						</div>
+						<div class="page"><a href="javascript:void(0);" class="page-prev">上一页</a><a href="javascript:void(0);" class="page-next">下一页</a> <input type="text" value="0" class="skip"> /<span class="page-total">0</span></div>
+					</div>
+				</div>
+				<div class="maintab list auto-height-list">		
+					<form method="post" name="form1">
+					<ul class="rowtit">
+						<li class="w5"><input type="checkbox" name="chkall"  id="chkall" onclick="checkall(this.form)"/></li>
+						<li class="w80"><strong>商品</strong></li>
+						<li class="w15"><strong>价格</strong></li>
+					</ul>
+					<div id="goods_list"></div>
+					</from>
+				</div>
+							 
+			</div>
+			<div class="row fixedRow">
+				<div class="column"><span id="selectedtotal"></span><input type="button" class="sub" id="ok" value="确定 " />&nbsp;&nbsp;<input type="button" class="sub" id="cancel" value="取消" /></div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var curpage=1, //当前页
+			totalpage=0, //总页数
+			goods_ids; //缓存选择的商品
+			$(function() {				 
+				$("#selectedcat a").each(function() {
+		    		var id= $(this).data("id");
+		    		$("#c1 input[type='checkbox']").each(function() {
+		    		  	if ($(this).val()==id) {
+		    		  		$(this).prop("checked",true).parent().addClass("on selected");
+		    		  	}
+		    	    });
+		    	});
+		    	
+		    	loadGoods(curpage);
+		    	
+		    	goods_ids = $(parentlayer).find("#ids").val();		
+		    	sumSelected();
+			});
+			
+			function loadGoods(p, isSearch) {
+				curpage =p;				
+				if (!isSearch && $("#goods_list .pageid_" + p).length >0) {
+					$("#goods_list .pageitem").hide();
+					$("#goods_list .pageid_" + p).show();
+					$(".skip").val(p);
+					return;
+				}
+				
+				var cat_ids='';
+				$("#selectedcat a").each(function  () {
+		     		cat_ids+="," + $(this).data("id");	     		
+		     	});
+		     	if (cat_ids.lastIndexOf(",")>=0) {
+		     		cat_ids=cat_ids.substring(1, cat_ids.length);
+		     	} 
+				$.getJSON("admin.html?do=goods_select",	{act:"get_goods", page:p,num:6, catid:cat_ids, word: $.trim($("#goods_name").val())}, function(res) {
+					if (res.err && res.err !='') {
+						msg(res.err);return;
+					} else{
+						var html='';
+						var ids_arr = goods_ids.split(",");
+						$.each(res.data, function(k, v) {
+							var chk='';
+							for (var i = 0; i < ids_arr.length; i++) {
+								if (ids_arr[i]==v.goods_id) {
+									chk='checked="checked"';
+								}
+							}
+							html +='<ul class="pageitem pageid_' + p + '"><li class="w5"><input type="checkbox" name="ids[]" value="'+v.goods_id+'" id="checkbox" '+chk+'/></li>';
+							html +='<li class="w80"><a href="'+v.url+'" target="_blank"><img src="'+v.thumb+'" width="60" height="60"></a><span class="txt"><a href="'+v.url+'" target="_blank">'+v.name+'</a></span></li>';
+							html +='<li class="w15">'+v.price+'</li></ul>';
+						});
+						if (isSearch) {
+							$("#goods_list").html(html);
+						} else{
+							$("#goods_list").append(html);
+						}	
+						
+						totalpage =res.total;
+						$(".skip").val(p);
+						$(".page-total").html(res.total);
+						$("#goods_list .pageitem").hide();
+						$("#goods_list .pageid_" + p).show();
+					}
+				});
+			}
+						
+			$(".page-prev").click(function() {
+				if (curpage==1) {
+					return;
+				}
+				loadGoods(curpage-1);
+			});
+			$(".page-next").click(function() {
+				if (curpage>=totalpage) {
+					return;
+				}
+				loadGoods(curpage+1);
+			});
+			
+			$(".skip").blur(function() {
+				var p = parseInt($(this).val());
+				if (p< 1 || p >totalpage) {
+					return;
+				}
+				loadGoods(p);
+			});
+			
+			$("#btn-search").click(function() {
+				loadGoods(1, true);
+			});
+			
+			$("#goods_list").on("click","ul",function(e) {
+				if ($(e.target).is("a") || $(e.target).is("img") || $(e.target).is("input#checkbox")) {
+					return;
+				}
+				$(this).children().eq(0).children("input").trigger("click");
+			});
+			
+			//选择商品时
+			$("#goods_list,.rowtit").on("change","input[type='checkbox']",function(){
+		     	var ids=new Array();
+		     	var ids_arr = goods_ids ==''? new Array():goods_ids.split(",");	
+				$("#goods_list input[type='checkbox']").each(function() {
+					var ishas=false;
+					for (var i = 0; i < ids_arr.length; i++) {
+						if (ids_arr[i] == $(this).val()) {
+							ishas=true;
+							if ($(this).is(":checked")==false) {
+								ids_arr.removeByVal(ids_arr[i]);
+							}														
+							break;
+						}
+					}
+					if (ishas ==false && $(this).is(":checked")) {
+						ids_arr.push($(this).val());
+					}
+				});
+					
+				goods_ids = ids_arr.join(",");//缓存选择的商品
+				sumSelected();
+			});					
+			
+			function sumSelected() {
+				var ids_arr = goods_ids ==''? new Array():goods_ids.split(",");				
+				$("#selectedtotal").html("已选择<b> "+ ids_arr.length + "</b> 个");
+			}			
+			
+			$("#ok").click(function() {				
+				$(parentlayer).find("#ids").val(goods_ids);
+				$(parentlayer).find("#ids_count").html($("#selectedtotal b").html());
+				//$(parentlayer).find("#layer_res").val("ok");
+				parent.layer.close(parent.layer.getFrameIndex(window.name));
+			});
+			
+			$("#cancel").click(function() {				
+				parent.layer.close(parent.layer.getFrameIndex(window.name));
+			});
+			
+			//打开商品分类
+			$("#c_cat_ids").click(function (e) {
+				if ($(this).siblings(".winlayer").css("display") == "block") {
+					$(document).trigger("click");return;
+				}
+				$(this).css({"border-bottom-color":"#fff", "background-color":"#fff"});
+				$(this).siblings(".winlayer").slideDown(200);
+				setTimeout(function() {
+					if ($(".catlist .it").innerHeight()>=345) {
+						$(".catlist .it").css({"overflow-y":"scroll"});
+			       	}				  
+				},200);
+								 			
+				e.stopPropagation();
+			});
+			
+			function delcat(th) {
+				$("#selectedcat a[id='"+$(th).data("id")+"']").remove();
+				$("#catlist input[type='checkbox']:checked").each(function() {
+					if ($(this).data("id")==$(th).data("id")) {
+						$(this).prop("checked", false).parent("li").removeClass("on selected");						
+					}
+				});
+			};
+			
+			function getCat(t) {
+				var th = $(t);
+				var n = th.parents(".it").attr("id");				
+				n = n.substring(1, n.length);
+				var i = parseInt(n);//当前层级
+				//去掉孙子级及以下
+				while (n < $("#catlist .it").length){
+					n++;
+					$("#c"+n).each(function () {						
+						if (n>i+1) {
+							$(this).children("ul").html("");
+						}
+					});				
+				}
+				
+				$son ="";
+				$.ajax({
+					type:"post",
+					url:"./admin.html?do=ajax",
+					data:{act:"getCats", pid:th.data("id")},
+					dataType: "json",
+					success:function(data)
+					{
+						if (data.err=='') {
+							var m=0;
+							$.each(data.data, function(k,v) {
+								var chk="";
+								$("#selectedcat a").each(function  () {
+		     						if ($(this).data("id")==v.id) {
+		     							chk='checked="checked"';
+		     						}	     		
+		     					});
+								$son +='<li'+(chk!=''?' class="on selected"':'') +'><input type="checkbox" '+chk+' value="'+v.id+'" data-id="'+v.id+'" name="cat_ids" onclick="selectCat(this);"/><a href="javascript:void(0);" data-id="'+v.id+'" onclick="getCat(this);">'+v.name+'</a></li>';
+							    m++;
+							});
+							if (m> 10) {
+								$("#c"+(i+1)+" ul").css("overflow-y","scroll");
+							}
+							$("#c"+(i+1)+" ul").html($son);
+						} else{
+							alert(data.err);
+						}
+					},
+					complete: function(XMLHttpRequest, textStatus){             			
+          			}
+				});	
+			}
+			
+			//选择分类
+			function selectCat(t) {
+				getCat(t);
+				var th = $(t);
+				var id = th.val();
+				th.parent().toggleClass("on selected");
+				
+				if (th.prop("checked")) {
+					$("#selectedcat").append('<a href="javascript:void(0);" id="'+ id+'" data-id="'+ id+'" onclick="delcat(this)">'+ th.siblings("a").html()+'<i class="i-del"></i></a>');									
+				}
+				else
+				{
+					delcat(th);
+				}								
+			};
+			$("#catlist").click(function(e) {
+				e.stopPropagation();
+			});
+			$("#close").click(function  () {
+				close();
+			});
+		     	
+			$(document).click(function () {
+				close();
+			});
+			
+			function close() {
+				$(".winlayer").hide();
+				$("#c_cat_ids").css({"border-bottom-color":"#bbb", "background-color":"#f6f9fc"});
+			}
+
+		</script>
+		
+		 
+	</body>
+
+</html>

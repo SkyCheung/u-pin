@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>订单详情 - {$ym_title}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style type="text/css">
+			.mui-table-view-cell p{color:#323232}
+			#topPopover{height: 130px;width: 110px;}
+			#topPopover .mui-table-view{text-align: center;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="myorder.html" class="mui-pull-left mui-icon mui-icon-left-nav tiao"></a>
+			<h1 class="mui-title" id="mytitle">订单详情</h1>
+			<a href="#topPopover" class="mui-pull-right mui-icon mui-icon-more icon-full"></a>
+		</header>
+		<div class="mui-content-top mui-content-bot order-view order">
+			<ul class="mui-table-view mui-table-view-chevron ordinary-infor single-list">
+				<li class="mui-table-view-cell">
+					<div class="">交易单号<span class="single-word">{$oid}</span></div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="">状态<span class="single-word">{$order['status_name']}</span></div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="">下单时间<span class="single-word">{$order['add_time']}</span></div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="">收货信息
+						<div class="single-word">
+							<p><span>{$order['cnee_name']}</span><span class="right">{$order['cnee_mobile']}</span></p>
+							<p class="add-detail">{$order['cnee_addr']}</p>
+						</div>
+					</div>
+				</li>	
+			</ul>
+			<ul class="ov-good-infor bgw">
+				<!--{loop $order['goods'] $p}-->
+				<li class="mui-table-view-cell">
+					<div class="order-nr">
+						<a href="{$p['url']}" class="picbox">
+							<img src="{$p['thumb']}" alt="110*110" width='60' height='60'/>
+						</a>
+						<div class="order-word">
+							<a class="order-top" href="{$p['url']}">
+								<p class="single-elli">{$p['name']}</p>
+								<!--{loop $p['spec'] $v}-->
+								<p class="style">{$v['name']}：<span>{$v['val']}</span></p>
+								<!--{/loop}-->
+							</a>
+							<div class="pwtxt">
+								<p class="money">￥<span>{$p['price']}</span></p>
+									<span class="buy-num">x{$p['num']}</span>
+							</div>
+						</div>
+					</div>
+				</li>
+				<!--{/loop}-->
+			</ul>
+			{if $ym_is_invoice==1}
+			<ul class="mui-table-view mui-table-view-chevron ov-carsh-infor">
+				<li class="mui-table-view-cell">
+					<p class="">发票抬头<span class="right">{$order['invoice_title']}</span></p>
+				</li>
+				<li class="mui-table-view-cell">
+					<p class="">发票内容<span class="right">{$order['invoice_con']}</span></p>
+				</li>
+			</ul>
+			{/if}
+			<ul class="mui-table-view mui-table-view-chevron ov-carsh-infor" style="margin-bottom: 50px;">
+				<li class="mui-table-view-cell">
+					<p class="">商品金额<span class="right">￥<span></span>{$order['goods_amount']}</span></p>
+				</li>
+				<li class="mui-table-view-cell">
+					<p class="">运费<span class="right">￥<span></span>{$order['exp_amount']}</span></p>
+				</li>
+				<li class="mui-table-view-cell">
+					<p class="">应付款<span class="right">￥<span></span>{$order['amount']}</span></p>
+				</li>
+				<li class="mui-table-view-cell">
+					<p class="">优惠券<span class="right">￥<span></span>{$order['coupon_amount']}</span></p>
+				</li>
+				<li class="mui-table-view-cell">
+					<p class="">余额支付<span class="right">￥<span></span>{$order['balance_amount']}</span></p>
+				</li>
+				<li class="mui-table-view-cell">
+					<p class="">积分支付<span class="right">￥<span></span>{$order['point_amount']}</span></p>
+				</li>
+			</ul>
+		</div>
+		<div class="fix-navbar btn-ty" style="padding:6px 10px;">
+			<a href="exp.html?oid={$order['order_sn']}" class="sing-ty bg-yellow">查看物流</a>
+			<!--{if $order['status']==order_paying}-->
+			<a href="pay.html?oid={$order['order_sn']}" class="sing-ty bg-yellow">付款</a>
+			<!--{elseif $order['status']==order_receiving}-->
+			<a href="javascript:void(0);" onclick="confirm_receiving({$order['order_sn']})" class="sing-ty bg-yellow">确认收货</a>
+			<!--{elseif $order['status']==order_finish}-->
+				 <!--{if $order['is_comment']==1}-->
+				 <a class="sing-ty">完成</a>
+				 <!--{else}-->
+				 <a href="comment.html?oid={$order['order_sn']}" class="sing-ty bg-yellow">评价</a>
+				 <!--{/if}-->
+			<!--{/if}-->
+		</div>
+		<!--右上角弹出菜单-->
+		<div id="topPopover" class="mui-popover jumpout">
+			<div class="mui-popover-arrow"></div>
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell"><a href="index.html">首页</a></li>
+						<li class="mui-table-view-cell"><a href="list.html">商品</a></li>
+						<li class="mui-table-view-cell"><a href="cart.html">购物车</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/cart.js"></script>
+	</body>
+</html>

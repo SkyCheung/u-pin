@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>网站切换</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+		<script src="{adm_tpl}/js/api.js"></script>
+		<style type="text/css">
+			#express-orderamount ul.trow{border-bottom: 1px #ccc dashed;}
+			#express-orderamount .trow li{position: relative;}
+			#express-orderamount .trow li:first-child{height: auto;line-height: 25px;text-align: left;}
+			.maintit{border-top: none;margin-left: 20px;}
+			.winlayer{height: auto;text-align: left;top: 40px;}
+			.winlayer .datalist{height: auto;line-height: 30px;}
+			ul.thead{border-top: solid 1px #DDDDDD;}
+		</style>
+	</head>
+
+	<body >
+		<div id="maintop">
+			<div>你的位置：<span>配送方式管理</span></div>
+		</div>
+		<div class="express-hd maincon" id="mainnav">
+			<div>
+				<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1">
+				<h3>选择要执行的运费标准</h3>
+				<p>
+					<label><input type="radio" name="express_type" value="1" {$cbk_express_type[1]}/>普通模式</label><span class="optip">可单独或同时使用“按订单金额范围计算运费”和 “按区域和重量计算运费”模式。若混合使用，则前者优先。</span>
+				</p>				 
+				<p>
+					<label><input type="radio" name="express_type" value="2" {$cbk_express_type[2]}/>免运费</label><span class="optip">不需要运费</span>
+				</p>				
+				<br />
+				<p>
+					<input type="hidden" name="action" value="express" />
+					<input type="hidden" name="act" value="express" />
+					<input type="submit" class="sub" value="提 交" />
+				</p>
+				</form>
+			</div>
+		</div>
+		
+		<div class="maintab maintit list" id="express-orderamount"> 
+			<h3>1、按订单金额范围计算运费</h3>	
+					<ul class="rowtit">
+						<li class="w30 center"><strong>会员级别</strong> </li>
+						<li class="w10 center"><strong>配送类型</strong> </li>
+						<li class="w20 center"><strong>订单情形</strong> </li>
+						<li class="w10 center"><strong>运费</strong> </li>
+						<li class="w10 center"><strong>排序</strong> </li>
+						<li class="w10 center"><strong>操作</strong> </li>
+					</ul>
+					<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1">
+					<div class="tbody">
+						<!--{loop $row $r}-->
+						<ul class="trow">
+							<li class="w30">
+								<a href="javascript:void(0);" onclick="pickgrade(this);" class="lnk">{if $r[grade_name]}{$r[grade_name]}{else}所有会员{/if}&nbsp;</a>
+								<input type="hidden" name="grade_id[]" value="{$r[grade_id]}"/>
+								<div class="winlayer" style="display: none;">
+									<div class="datalist">
+										<div id="gradelist">
+										<!--{loop $grade $p}-->
+										<a href="javascript:void(0);" onclick="setGrade(this);" data-id="{$p[grade_id]}">{$p[grade_name]}</a>
+										<!--{/loop}-->
+										</div>									
+										<div style="width: 100%; height: 50px;z-index: 2;background-color: #fff; position: absolute;bottom: 3px;left: 0px;text-align: center;">
+											<a href="javascript:void(0);" class="close" data-id="0">关	闭</a>
+	   									</div>
+	   								</div>
+								</div>
+							</li>
+							<li class="w10 center">
+								<select name="express_type[]" class="select">
+									<option value="0" {if $r[express_type]==0}selected="selected"{/if}>所有</option>
+									<option value="1" {if $r[express_type]==1}selected="selected"{/if}>商家配送</option>
+									<option value="2" {if $r[express_type]==2}selected="selected"{/if}>上门自提</option>
+								</select>
+							</li>
+							<li class="w20">订单金额大于或等于<input type="number" min="0" id="money_reached" name='money_reached[]' value="{$r[money_reached]}" class="wp70"/>元</li>
+							<li class="w10"><input type="number" min="0" name="express_fee[]" value="{$r[express_fee]}" class="wp70">元</li>
+							<li class="w10"><input name="c_sort[]" min="0" type="number" id="sort[]" value="{$r[sort]}" class="wp70" maxlength="50" /></li>
+							<li class="w10"><a href="javascript:void(0);" class="del">删除</a></li>
+						</ul>
+						<!--{/loop}-->
+						<!--{if !$row}-->
+						<ul class="trow">
+							<li class="w30">
+								<a href="javascript:void(0);" onclick="pickgrade(this);" class="lnk">所有会员</a>
+								<input type="hidden" name="grade_id[]" />
+								<div class="winlayer" style="display: none;">
+									<div class="datalist">
+										<div id="gradelist">
+										<!--{loop $grade $p}-->
+										<a href="javascript:void(0);" onclick="setGrade(this);" data-id="{$p[grade_id]}">{$p[grade_name]}</a>
+										<!--{/loop}-->
+										</div>									
+										<div style="width: 100%; height: 50px;z-index: 2;background-color: #fff; position: absolute;bottom: 3px;left: 0px;text-align: center;">
+											<a href="javascript:void(0);" class="close" data-id="0">关	闭</a>
+	   									</div>
+	   								</div>
+								</div>
+							</li>
+							<li class="w10 center">
+								<select name="express_type[]" class="select">
+									<option value="0">所有</option>
+									<option value="1">商家配送</option>
+									<option value="2">上门自提</option>
+								</select>
+							</li>
+							<li class="w20">订单金额大于或等于<input type="number" min="0" id="money_reached" name='money_reached[]' value="" class="wp70"/>元</li>
+							<li class="w10"><input type="number" min="0" name="express_fee[]" value="" class="wp70">元</li>
+							<li class="w10"><input name="c_sort[]" min="0" type="number" id="sort[]" value="10" class="wp70" maxlength="50" /></li>
+							<li class="w10"><a href="javascript:void(0);" class="del">删除</a></li>
+						</ul>
+						<!--{/if}-->
+					</div>
+					<p class="clear"><a href="javascript:void(0);" class="add"><i class="i-add">+</i>&nbsp;再加一个</a></p>
+					<p class="row">
+						<span class="row-name"><input type="submit" class="sub" value="提 交" style="margin-left: 21px;"/></span>
+						<input type="hidden" name="action" value="express" />
+						<input type="hidden" name="act" value="express_order" />
+					</p>
+					</form>
+					<ul class="trow newrow tpl" style="display: none;">
+						<li class="w30">
+								<a href="javascript:void(0);" onclick="pickgrade(this);" class="lnk">所有会员</a>
+								<input type="hidden" name="grade_id[]" />
+								<div class="winlayer" style="display: none;">
+									<div class="datalist">
+										<div id="gradelist">
+										<!--{loop $grade $p}-->
+										<a href="javascript:void(0);" onclick="setGrade(this);" data-id="{$p[grade_id]}">{$p[grade_name]}</a>
+										<!--{/loop}-->
+										</div>									
+										<div style="width: 100%; height: 50px;z-index: 2;background-color: #fff; position: absolute;bottom: 3px;left: 0px;text-align: center;">
+											<a href="javascript:void(0);" class="close" data-id="0">关	闭</a>
+	   									</div>
+	   								</div>
+								</div>
+							</li>
+							<li class="w10 center">
+								<select name="express_type[]" class="select">
+									<option value="0">所有</option>
+									<option value="1">商家配送</option>
+									<option value="2">上门自提</option>
+								</select>
+							</li>
+							<li class="w20">订单金额大于或等于 <input type="number" min="0" id="money_reached" name='money_reached[]' value="" class="wp70"/>元</li>
+							<li class="w10"><input type="number" min="0" name="express_fee[]" value="" class="wp70">元</li>
+							<li class="w10"><input name="c_sort[]" min="0" type="number" id="sort[]" value="10" class="wp70" maxlength="50" /></li>
+							<li class="w10"><a href="javascript:void(0);" class="del">删除</a></li>
+					</ul>		
+		</div>
+		<div class="maintab list auto-height-list ajaxedit" id="express-common" style="border-top: none;">			
+			<h3>2、按区域和重量计算运费<input type="submit" class="sub" value="添 加" onclick="window.location.href='admin.html?do=express.add'" style="margin-left: 20px;"/></h3>
+				<ul class="rowtit">
+					<li class="w40"><strong>配送方式</strong></li>
+					<li class="w15 center"><strong>启用</strong></li>
+					<li class="w15"><strong>排序</strong></li>
+					<li class="w15"><strong>操作</strong></li>
+				</ul>
+				<!--{loop $express $p}-->
+				<ul>
+					<li class="w40"><label {if $p['code']=='pickup'}style="color: #d2691e;"{/if}>{$p[name]}&nbsp;[{$p[code]}]</label><br></li>					 
+					<li class="w15 center"><a href="javascript:void(0);" class="ajax i-status{if $p['status']=='1'} i-status-on{/if}"  data-orival="{$p[status]}" data-id="{$p[id]}" data-do="express" data-val="{$p[status]}" data-act="edit_status"></a></li>
+					<li class="w10"><input name="c_sort[]" type="text" id="c_sort[]" value="{$p[sort]}" size="3" maxlength="5" class="ajax" data-orival="{$p[sort]}" data-id="{$p[id]}" data-do="express" data-act="edit_sort"/></li>
+					<li class="w15"><a href="./admin.html?do=express.edit&id={$p[id]}" class="edit">配置</a><a href="{if $p['code']!='pickup'}./admin.html?do=express.tpl&id={$p[id]}&code={$p[code]}&name={$p[name]}{else}javascript:void(0);{/if}" class="edit{if $p['code'] =='pickup'} disabled{/if}">模板</a><a href="javascript:void(0);" onclick="isdel('','/admin.html?do=express.delete&id={$p[id]}');" class="del">删除</a></li>
+				</ul>
+				<!--{/loop}-->
+				<div class="page" style="">{$pages['pages']}</div>			
+		</div>
+				    
+    <script type="text/javascript">
+    	$(document).ready(function() {
+    		$(".express-hd input[name='express_type']").click(function() {
+    		    if ($(this).val() =='1') {
+    		    	$(".maintab").show();
+    		    }
+    		    else{
+    		    	$(".maintab").hide();
+    		    }
+    		    top.setIframeHeight();
+    	    });
+    	    top.setIframeHeight();
+    	});
+	    	
+    	function pickgrade(th)
+    	{
+    		var t = $(th);  
+    		t.siblings(".winlayer").slideDown(200);  
+    		var str =t.siblings("input[name='grade_id[]']").val();
+    		var arrs= new Array();
+			arrs=str.split(",");
+    		t.siblings(".winlayer").find("#gradelist").children().each(function() {
+    			var cur_grade=$(this);
+    		 	$.each(arrs, function(k,v) {
+    		 		if (cur_grade.data("id")==v) {
+    		 			cur_grade.addClass("selected");
+    		 		}
+    		 	});
+    		});
+    	}
+    	
+    	function setGrade(th)
+    	{
+    		$(th).toggleClass("selected"); 
+    	}
+    	    	 
+    	$(".close").click(function() {
+    		var t= $(this);    		
+    		var html="";
+    		var grade_id='';
+    		t.parents(".datalist").find(".selected").each(function() {
+    			html +="、" + $(this).html();
+    			grade_id +="," + $(this).data("id");
+    		});
+    		if (html.indexOf("、")!=-1) {
+    			html=html.substr(1, html.length-1);
+    			grade_id=grade_id.substr(1, grade_id.length-1);
+    		} 
+    		t.parents(".winlayer").siblings("input[name='grade_id[]']").val(grade_id);
+    		t.parents(".winlayer").siblings(".lnk").html(html=='' ? '所有会员' : html);
+    		t.parents(".winlayer").hide();    		
+    	});
+    	
+    	//删除
+		$("#express-orderamount .del").click(function() {
+				if ($(this).parents(".trow").hasClass("newrow")) {
+					del($(this).parents(".trow").index());
+				} else {
+					isdel('', 'javascript:del(' + $(this).parents(".trow").index() + ');');
+				}
+		});
+
+			function del(i) {
+				$(".trow").eq(i).remove();
+			}
+		 
+			//添加新项
+			$(".add").click(function() {
+				$(".tpl").clone(true).appendTo(".tbody").removeClass("tpl").removeAttr("style");
+				top.setIframeHeight();
+			});	
+    </script>
+	</body>
+
+</html>

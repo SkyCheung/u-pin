@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>友情链接管理</title>
+<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+<script src="{adm_tpl}/js/jquery.js" type="text/javascript"></script>
+<script src="$images/jquery-ui-1.8.14.custom.min.js" type="text/javascript"></script>
+<style>
+body{padding:0;margin:10px;}
+#sorttop{text-align:center;clear:both;}
+#sorttop input{border:1px #ccc solid; background:#f5f5f5;text-align:center;font-size:16px; font-weight:bold;padding:10px;width:200px;}
+#container {
+	
+
+}
+h1.title_name {
+	font-family: "Trebuchet MS","Myriad Pro",Arial,sans-serif;
+	font-weight: normal;
+	font-size: 3em;
+	color: #FAFAFA;
+	margin: 0;
+	padding: 20px 0 0 0;
+	text-align: center;
+	line-height: 1em;
+}
+h1.title_name span {
+	font-family: normal Georgia,'Times New Roman',Times,serif;
+	color: #FF6600;
+	font-size: 0.9em;
+}
+h1.title_name small {
+	display: block;
+	font-family: normal Verdana,Arial,Helvetica,sans-serif;
+	font-size: 0.3em;
+	font-weight: bold;
+	letter-spacing: 0.5em;
+	text-transform: uppercase;
+	color: #111;
+	text-shadow: 1px 1px 1px #FFF;
+}
+/* DEMO START */
+#demo {
+	list-style: none;
+}
+#demo li {
+	float: left;
+	display: block;
+	width: 200px;
+	
+	cursor: pointer;
+	background:#FFF;
+	margin: 0 5px 5px 0;
+	padding:10px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+}
+#demo li.active {
+	background:#f75d88;
+}
+#demo li span {
+	font-weight: bold;
+}
+
+</style>
+</head>
+
+<body>
+<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
+
+<div id="sorttop"><input name="" type="submit" value=" 提交排序 " />
+  <input name="action" type="hidden" id="action" value="batch.order" /><input name="kktype" type="hidden" id="kktype" value="{$type}" />
+</div>
+
+
+
+
+<section id="container">
+  <ul id="demo">
+    <!--{loop $row $p}-->
+        <li><img src="{$p[simg]}" alt="{$p[title]}"
+        width="200" height="160" />
+      <span>{$p[title]}</span><input name="c_order[]" type="hidden" id="c_order[]" value="{$p[order]}"  /><input name="h_id[]" type="hidden" id="h_id[]" value="{$p[id]}"  /></li>
+<!--{/loop}-->
+	</ul>
+
+</section>
+
+
+<script type="text/javascript">
+$(function() {
+	$('#demo').sortable({
+		
+		start: function(event, ui) {
+			ui.item.addClass('active');
+		},
+		stop: function(event, ui) {
+			ui.item.removeClass('active').effect(
+				'highlight', 
+				{ color : '#000' }, 100, function() {
+				$.each($('#demo li'), function(index, event) {
+					$(this).find("[name='c_order[]']").val(parseInt(index, 10)+1);
+				});
+			});
+		}
+		
+	});
+	$('#demo').disableSelection();
+	
+});
+</script>
+
+<div id="sorttop"><input name="" type="submit" value=" 提交排序 " /></div>
+
+</form>
+</body>
+
+</html>

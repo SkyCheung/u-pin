@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>绑定手机号码 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style>
+			.vcodebox .inp-vcode .entercode{width: 100%;}
+			.paymentcode input{margin-bottom:0;}
+			.btn-box{margin:10px;}
+			.vcodebox .inp-vcode .getcode{background-color:#007cc3;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" onclick='history.go(-1);' class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title">绑定手机号码</h1>
+		</header>
+		<div class="mui-content-top payment">
+			<div class="checkold">
+				<div class="paymentcode">
+					<input type="text" id="mobile" data-old="{$user['mobile']}" {if $user['mobile']}style="border: none;" readonly="readonly"{/if} value="{$user['mobile']}" placeholder="手机号" maxlength="11" onkeyup="onlyNum(this);"/>
+				</div>
+				<div class="vcodebox checkold">
+					<div class="inp-vcode">
+						<input type="text" id="smscode-mobile" value="" placeholder="短信验证码" class="entercode" maxlength="8" onkeyup="onlyNum(this);"/>
+						<input class="getcode" id="sendcode" type="button"  data-mobileid="mobile" value="获取验证码" onclick="send_sms(this, {if $user['mobile']}'sms_oldmobile'{else}'sms_changemobile'{/if});">
+					</div>
+				</div>
+			</div>
+			{if $user['mobile']}
+				<div class="checknew" style="display: none;">
+					<div class="paymentcode">
+						<input type="text" id="newmobile" placeholder="新手机号码" maxlength="11" onkeyup="onlyNum(this);"/>
+					</div>
+					<div class="vcodebox checknew">
+						<div class="inp-vcode">
+							<input type="text" id="newsmscode" value="" placeholder="短信验证码" class="entercode" maxlength="8" onkeyup="onlyNum(this);"/>
+							<input class="getcode" id="sendcode" type="button"  data-mobileid="newmobile" value="获取验证码" onclick="send_sms(this,'sms_changemobile');">
+						</div>
+					</div>
+				</div>
+				<br>
+				<input type="button" value="下一步" class="btn btn-single-click checkold" onclick="javascript:check_curMobile('{$user['mobile']}');"/>	 	        
+				{/if}
+			<div class="btn-box">
+				<input type="submit" class="btn btn-single-click checknew" id="save-btn" value="绑定" onclick="javascript:bindMobile();" {if $user['mobile']}style="display: none;"{/if}/>
+			</div>
+			
+			{if $user['mobile']}
+			<br>
+			<br>
+			<span style="padding-left: 20px;display: block;">更换手机，需要先验证旧手机。</span>
+			{/if}
+			
+		</div>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+        <script type="text/javascript" src="js/users.js" ></script>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+
+			function bindMobile() {
+ 				var mobile, smscode;
+ 				if($(".payment>.checknew").length ==0)
+ 				{
+ 					mobile = $.trim($("#mobile").val()),
+ 					smscode = $.trim($("#smscode-mobile").val()) ;
+ 				}
+ 				else
+ 				{
+ 					mobile = $.trim($("#newmobile").val()),
+ 					smscode = $.trim($("#newsmscode").val()) ;
+ 				}
+ 				
+ 				bind_mobile(mobile, smscode); 				
+ 			}
+ 			
+ 			function send_sms(el, sms_type) {
+ 				var	ipt_mobile = $("#"+$(el).data("mobileid"));
+ 				var mobile = $.trim(ipt_mobile.val());
+ 				var oldMobile = ipt_mobile.data("old");
+			    if (mobile == '') {
+			        msg("请输入手机号码"); return;
+			    } else if (!is_mobile(mobile)) {
+			        msg("手机号码不正确");return;
+			    } 
+
+ 				daoshu(el);
+ 				sendSms(el, sms_type);
+ 			}
+ 			
+ 			function check_curMobile(mobile) {
+ 				var smscode = $.trim($("#smscode-mobile").val());
+ 				check_cur_mobile(mobile,smscode,res_checkMobile);
+ 			}
+ 			 		
+ 			function res_checkMobile(res) {
+ 				if(res.err !='')
+ 				{
+ 					msg("操作失败：" + res.err);return;
+ 				}
+ 				$(".checkold").hide();
+ 				$(".checknew").show();
+ 			}
+		</script>
+		
+	</body>
+</html>

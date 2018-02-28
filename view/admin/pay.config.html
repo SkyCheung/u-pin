@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>配置支付方式</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script type="text/javascript" src="{adm_tpl}/js/main.js"></script>
+		<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.config.js"></script>
+    	<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.all.min.js"> </script>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 配置支付方式</span></div>
+		</div>
+
+		<div class="maincon base" style="min-height: 800px;">
+			<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+				<div class="row"><label class="row-name">支付方式名称：</label>
+					<div class="column"><input name="pay_name" type="text" id="pay_name" value="{$row[pay_name]}" size="50" maxlength="50" /><span></span></div>
+				</div>
+				<div class="row"><label class="row-name">是否启用：</label>
+					<div class="column">
+						<label><input name="status" type="radio" {$cbk_status[1]} value="1" />是</label>
+						<label><input name="status" type="radio" {$cbk_status[0]}  value="0" />否 </label><span></span>
+					</div>
+				</div>
+				<!--{loop $payment_param $p}-->
+				<div class="row"><label class="row-name">{$p[value]}：</label>
+					<div class="column"><input name="{$p[name]}" type="text" value="{$pay_config[$p[key]]}" size="50"  maxlength="255"/><br><span>{$p[desc]}</span></div>
+				</div>
+				<!--{/loop}-->
+				<div class="row"><label class="row-name">描述：</label>
+					<div class="column">
+						<script id="editor" name="pay_desc" type="text/plain" style="width:800px;height:300px;">{$row[pay_desc]}</script>					
+					</div>
+				</div>	
+				<div class="row"><label class="row-name">排序：</label>
+					<div class="column"><input name="c_sort" type="number" min="0" max="255" id="c_sort" value="{$row[sort]}" size="50" maxlength="5" /><span>数字</span></div>
+				</div>
+ 
+				<div class="row"><label class="row-name"></label>
+					<div class="column">
+						<input type="submit" class="sub" value="提交 " onclick="toTop();"/>
+						<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=pay'"/>
+						<input name="action" type="hidden" id="action" value="pay">
+						<input name="pay_code" type="hidden" id="pay_code" value="{$row[pay_code]}">
+						<input name="act" type="hidden" id="act" value="config">
+					</div>
+				</div>
+			</form>
+		</div>
+ 
+		<script type="text/javascript"> 
+		    $(document).ready(function () {
+				var ue = UE.getEditor('editor',{
+		    		autoHeightEnabled: false,
+		    		textarea:'pay_desc',
+		    		catname:'common'
+		    	});
+		    	
+		    	 ue.addListener('ready', function( editor ) {
+     				$(".edui-for-fullscreen").click(function () {
+     					if ($(this).children().eq(0).hasClass("edui-state-checked")) {
+     						//top.document.getElementById('ym_main').width =document.body.scrollWidth-186;
+     					}
+     					else{
+     						//top.document.getElementById('ym_main').width =document.body.scrollWidth+186;
+     					}
+		    		});
+				 });
+				 ue.addListener("contentChange", function ( type, arg1, arg2 ) {
+     				//top.document.getElementById('ym_main').height =document.body.scrollHeight+ ue.iframe.scrollHeight;
+				 });
+		    });
+            
+		    function check () {
+		     	if ($.trim($("#pay_name").val())=='') {
+		     		error("请填写支付方式名称");
+		     		return false;
+		     	}
+		 
+		        return true;
+		      }
+		     
+		</script>
+	</body>
+
+</html>

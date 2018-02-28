@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>我的账户 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+	<body>
+		<div class="center">
+			<div class="cen-top">
+				<div class="notice"><a href="" class="iconfont icon-notic" style="display: none;"></a></div>
+				<div class="cen-logreg">
+					<a href="userinfo.html" class="infor">
+					{if $user['img']!=''}	
+					<img src="{$user['img']}" width="80" height="80" style="border-radius: 80px;"/>
+					{else}
+					<img src="images/avatar.jpg" width="80" height="80" style="border-radius: 80px;"/>
+					{/if}
+					</a>
+					<a href="userinfo.html">{$user['uname']}<br><span>{$user['grade_name']}</span><span class="right">我的账户 &gt;</span></a>
+				</div>
+			</div>
+			<div class="cen-allfun mui-content-bot">
+				<ul class="fun-ul-base flex">
+					<li class="flex1">
+						<a href="/myorder.html?t=1">
+							<span class="fun-icon icon-c-1">{if $count_unpay}<em>{$count_unpay}</em>{/if}</span>
+							<span>待付款</span>
+						</a>
+					</li>
+					<li class="flex1">
+						<a href="/myorder.html?t=4">
+							<span class="fun-icon icon-c-2">{if $count_deliver}<em>{$count_deliver}</em>{/if}</span>
+							<span>待发货</span>
+						</a>
+					</li>	
+					<li class="flex1">
+						<a href="/myorder.html?t=2">
+							<span class="fun-icon icon-c-3">{if $count_receiving}<em>{$count_receiving}</em>{/if}</span>
+							<span>待收货</span>
+						</a>
+					</li>
+					<li class="flex1">
+						<a href="/myorder.html?t=3">
+							<span class="fun-icon icon-c-4">{if $count_comment}<em>{$count_comment}</em>{/if}</span>
+							<span>待评价</span>
+						</a>
+					</li>
+					<li class="flex1">
+						<a href="service.html">
+							<span class="fun-icon icon-c-5">{if $servicenum}<em>{$servicenum}</em>{/if}</span>
+							<span>售后</span>
+						</a>
+					</li>
+				</ul>
+				<ul class="yunec-list">
+					<!-- <li>
+						<a href="mymoney.html" class="yec-navgation">
+							<i class="iconfont icon-wallet"></i>
+							<span class="title">我的钱包</span>
+						</a>
+					</li> -->
+					<li>
+						<a href="mypoint.html" class="yec-navgation">
+							<i class="iconfont icon-point"></i>
+							<span class="title">我的积分</span>
+						</a>
+					</li>
+					<li>
+						<a href="myquan.html" class="yec-navgation">
+							<i class="iconfont icon-quan"></i>
+							<span class="title">优惠券</span>
+						</a>
+					</li>
+				</ul>
+				<ul class="yunec-list">
+					<li>
+						<a href="fav.html" class="yec-navgation">
+							<i class="iconfont icon-fav"></i>
+							<span class="title">我的收藏</span>
+						</a>
+					</li>
+					<li>
+						<a href="track.html" class="yec-navgation">
+							<i class="iconfont icon-footprint"></i>
+							<span class="title">我的足迹</span>
+						</a>
+					</li>
+					<!-- <li>
+						<a href="dt.html" class="yec-navgation">
+							<i class="iconfont icon-help"></i>
+							<span class="title">分销</span>
+						</a>
+					</li> -->
+					<li>
+						<a href="n-help.html" class="yec-navgation">
+							<i class="iconfont icon-help"></i>
+							<span class="title">帮助中心</span>
+						</a>
+					</li>
+				</ul>
+				<ul class="yunec-list">
+					<li>
+						<a href="setting.html" class="yec-navgation">
+							<i class="iconfont icon-setting"></i>
+							<span class="title">设置</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!--{tpl fixnavbar}-->
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+		<script>
+		$('.fix-navbar .fix-bar-ul li').eq(3).addClass('on');
+		</script>
+	</body>
+</html>

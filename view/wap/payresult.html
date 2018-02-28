@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>支付结果 - {$ym_endtitle}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" onclick="history.go(-1);" class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title" id="mytitle">订单详情</h1>
+		</header>
+		<div class="pay-status">
+			<!--{if ($order['pay_status'] && $order['pay_status']==pay_unpayed) || ($order['type'] && $order['status'] && $order['status']==pay_unpayed)}--> 
+			<div class="top">
+				<i class="icon-success" style="background: url(../view/wap/images/icon-failpay.png) no-repeat;background-size: contain;"></i>
+				<span>支付失败，{$order['trade_msg']}</span>
+				<span>订单号：{$order['order_sn']}</span>
+			</div>
+			<p>订单号：<span>{$oid}</span></p>
+			<p>（3秒后自动跳转）</p>
+			<a href="/details.html?oid={$order['order_sn']}" class="blue">查看订单明细</a> <a href="/index.html" class="blue">继续购物</a>
+			<!--{else}-->
+			<div class="top">
+				<i class="icon-success"></i>
+				<span>支付成功！我们会尽快为您发货！</span>
+			</div>
+			<p>订单号：<span>{$oid}</span></p>
+			<p>（3秒后自动跳转）</p>
+			<a href="/details.html?oid={$order['order_sn']}" class="blue">查看订单明细</a> <a href="/index.html" class="blue">继续购物</a>
+			<!--{/if}-->
+		</div>
+		<!--{tpl fixnavbar}-->
+		<script>
+			 {if $order['type'] == 0}
+			 setTimeout(function(){window.location.href="details.html?oid={$order['order_sn']}";},3000);
+			 {else}
+			 setTimeout(function(){window.location.href="mymoney.html";},3000);
+			 {/if}
+		</script>
+	</body>
+</html>

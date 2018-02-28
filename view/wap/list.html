@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{$ym_title}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/phone.css" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" class="mui-pull-left mui-icon mui-icon-left-nav" onclick='history.go(-1);'></a>
+			<h1 class="mui-title">{if $catinfo}{$catinfo['name']}{else}{$ym_title}{/if}</h1>
+		</header>
+		<div class="mui-content-top mui-content-bot">
+			<div class="list-products">
+				<div class="index-navbar">
+					<ul class="flex pro-navindex bgw"  id="class">
+						<!--{if $cat_child}-->
+						<li class="flex1" title="分类" id="class1"><a href="javascript:void(0);"><span>分类</span><em class="icon-close"></em></a></li>
+						<!--{/if}-->
+						<li class="flex1" id="class2"><a href="javascript:void(0);"><span>排序</span></a></li>
+						<li class="flex1" title="筛选" id="class3"><a href="javascript:void(0);"><span>筛选</span><i class="icon-sx"></i><em class="icon-close"></em></a></li>
+					</ul>
+					<div id="class-son">
+						<!--分类-->
+						<!--{if $cat_child}-->
+						<div class="class-son1 navson-list class-son">
+						 	<ul>
+								<!--{loop $cat_child $p}-->
+						 		<li><a href="{$p[url]}"  class="tiao{if $v['cur']== 1} check{/if}">{$p[name]}</a></li>
+								<!--{/loop}-->
+						 	</ul>
+						</div>
+						<!--{/if}-->
+						<!--排序-->
+						<div class="class-son2 navson-list class-son" id="class-son2">
+						 	<ul>
+						 		<li><a href="{$sort_add_time}"  {$cur['a1']}>默认</a></li>
+								<li><a href="{$sort_sale}"  {$cur['s1']}>销量</a></li>
+								<li><a href="{$sort_price}"  {$cur['p1']}{$cur['p2']}>价格<i {if $sort=='p2'}class="icon-price down"{elseif $sort=='p1'}class="icon-price up"{else}{/if}></i></a></li>
+						 	</ul>
+						</div>
+						<!--筛选-->
+						<div class="class-son3 class-son2 class-son" id="class-son3">
+							<div class="form-choose">
+								<h3>价格</h3>
+								<div class="claason-price kind-choose">
+									<!--{loop $price_grade $p}-->
+									<a href="{$p['url']}" class="tiao{if $v['cur']== 1} check{/if}">{$p['name']}</a>
+									<!--{/loop}-->
+									<br>
+									 <p class="setprice" style="margin-top: 10px;">
+										<input type="text" id="price-min" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');" style="width: 35%;height: 33px;margin-bottom: 5px;"/> - <input type="text" id="price-max" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');" style="width: 35%;height: 33px;margin-bottom: 5px;"/>
+										<input type="button" id="btnprice" value="确定"/>
+									 </p>
+								</div>
+								<!--{if !$word && $word ==''}-->
+								<!--{loop $attr $p}-->
+								<h3>{$p[name]}</h3>
+								<div class="claason-price kind-choose">
+									<!--{loop $p[value] $v}-->
+									<a href="{$v['url']}" class="tiao{if $v['cur']== 1} check{/if}">{$v['name']}</a>
+									<!--{/loop}-->
+								</div>
+								<!--{/loop}-->
+								<!--{/if}-->
+							</div>
+							<div class="btn-choose">
+								<a href="list.html" class="reset tiao" id="btn-reset" style="width:100%">重置</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mui-content mui-scroll-wrapper" id="pullrefresh">
+					<div class="mui-scroll" style="padding-bottom: 50px;">
+						<ul class="popular-pro" style="margin-top:10px;">
+							<!--{loop $goods $p}-->
+							<li>
+								<a href="{$p[url]}" class="picbox"><img src="{$p[thumb]}" alt="196*196"/></a>
+								<a href="{$p[url]}" class="title">{$p[name]}</a>
+								<div class="price-cart">
+									<p>￥<span>{$p[price]}</span></p>
+									<!-- <a href="javascript:void(0);" onclick="addCart({$p[goods_id]},0,1);" class="cart"></a> -->
+								</div>
+							</li>
+							<!--{/loop}-->
+						</ul>
+					</div>
+				</div>
+				<!--<div style="text-align: center;margin:10px;">
+					<img src="images/load.gif" class="icon-load"/>
+					<p>下拉加载更多</p>
+					<p>没有更多了</p>
+				</div>-->
+		    </div>
+		    <div id="totop" class="totop"><img src="images/totop.png" alt="" style="width: 40px;"/></div>
+		    <!--{tpl fixnavbar}-->
+		</div>
+		<input type="hidden" id="page" value="2">
+		<input type="hidden" id="endall" value="0">
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<style>
+		.mui-scroll-wrapper {top: 86px;bottom:16px;}
+		.icon-price {background: url(view/wap/images/price_updown.png) no-repeat;display: inline-block;width: 9px;height: 14px;background-size: 100%;vertical-align: middle;margin-left: 7px;}
+		.down {background: url(view/wap/images/price_down.png) no-repeat;background-size: 100%;}
+		.up {background: url(view/wap/images/price_up.png) no-repeat;background-size: 100%;}
+		</style>
+		<script>
+		mui("body").on("tap","#class-son2 ul li a",function(){
+			window.location.href=this.href
+		});
+		mui("body").on("tap","#class-son3 ul li a",function(){
+			window.location.href=this.href
+		});
+		mui("body").on("tap","#class1",function(){
+			if($(this).find("em").hasClass("on")){
+				$(this).find("span").html($(this).attr("title")).siblings().removeClass("on").hide(0);
+			}else{
+				$(".class-son1").slideToggle(300);
+			}
+			$("#class-son3").slideUp(0);
+			$("#class-son2").slideUp(0);
+		});
+		mui("body").on("tap","#class3",function(){
+			$("#class-son3").stop(true,true).slideToggle(300);
+			$(".class-son1").slideUp();
+			$("#class-son2").slideUp();
+		});
+		mui("body").on("tap","#class2",function(){
+			$("#class-son2").stop(true,true).slideToggle(300);
+			$(".class-son1").slideUp();
+			$("#class-son3").slideUp();
+		});
+		mui("body").on("tap",".tiao",function(){
+			window.location.href = this.href;
+		});		
+		mui(".navson-list").on("tap","a",function(){
+			$(this).parents("#class-son").siblings().children("li").eq($(this).parents(".navson-list").index()).children("a").find("span").html($(this).html()).siblings().show(0).addClass("on");//赋值到头部
+			$(".class-son").slideUp(0);
+		});
+		/*筛选*/
+		mui("body").on("tap","#btn-reset",function(){
+			$(".form-choose a").removeClass("check");
+		});
+		mui(".form-choose").on("tap","a",function(){
+			$(this).toggleClass("check").siblings().removeClass("check");
+		});
+		mui(".popular-pro").on("tap","a",function(){
+			var onclickvalue = this.onclick;
+			if(onclickvalue){
+				this.click();
+			}else{
+				var href = this.href;
+				window.location.href = href;
+			}
+		});
+		mui(".fix-bar-ul .flex1").on("tap","a",function(){
+			window.location.href = this.href;
+		});
+		/*排序*/
+		mui("body").on("tap",".sub",function(){
+			$("#class-son3").slideUp(300);
+		});
+		//头部定位置顶
+		$(window).scroll(function(){
+			var P_listindex=$(".nybanner").outerHeight()+$(".brand-describ").outerHeight()+$(".home-title").outerHeight();
+			//console.log(P_listindex);
+			if($(window).scrollTop()>P_listindex){
+				$(".index-navbar").addClass("fix");
+				$(".mui-scroll").css("position","absolute");
+			}else{
+				$(".index-navbar").removeClass("fix");
+				$(".mui-scroll").css("position","initial");
+			}
+		});
+		</script>
+		<script>
+			(function($) {
+				//刷新页面
+				$.ready(function() {
+					//循环初始化所有下拉刷新，上拉加载。
+					mui.init({
+						pullRefresh: {
+							container: '#pullrefresh',
+							up: {
+								contentrefresh: '正在加载...',
+								contentnomore:'没有更多产品了',
+								callback: pullupRefresh
+							}
+						}
+					});
+					/**
+					 * 上拉加载具体业务实现
+					 */
+					function pullupRefresh() {
+						setTimeout(function() {
+							var endall = document.getElementById('endall').value;
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh((endall > 0)); //参数为true代表没有更多数据了。
+							var table = document.body.querySelector('.popular-pro');
+							var cells = document.body.querySelectorAll('li');
+							var href = window.location.pathname + window.location.search;
+							var pagenum = document.getElementById('page').value;
+							$.getJSON(href,{is_ajax:'1', page:pagenum}, function(res) {
+								if(res.url){
+									alert(res.err);
+									window.location.href=res.url;
+								}else if(res.data==''){
+									document.getElementById('endall').value='1';
+								}else{
+								  for(var o in res.data){
+										li = document.createElement('li');
+										var htmlss = '';
+										htmlss = htmlss + '<a href="'+res.data[o].url+'" class="picbox"><img src="'+res.data[o].thumb+'" alt="196*196"/></a><a href="'+res.data[o].url+'" class="title">'+res.data[o].name+'</a><div class="price-cart"><p>￥<span>'+res.data[o].price+'</span></p><a href="javascript:void(0);" onclick="addCart('+res.data[o].goods_id+',0,1);" class="cart"></a></div>';
+										li.innerHTML = htmlss;
+										table.appendChild(li);
+								  } 
+								  pagenum++;
+								  document.getElementById('page').value = pagenum;
+								}
+							})
+						}, 100);
+					}
+				});
+			})(mui);
+
+			var scrollToTopBox = document.getElementById('totop');
+			//返回按钮tap
+			scrollToTopBox.addEventListener('tap', function(e) {
+			e.stopPropagation();
+			mui('#pullrefresh').pullRefresh().scrollTo(0, 0, 1000);//滚动到顶部
+			window.scrollTo(0, 1000);
+			});
+		</script>
+	</body>
+</html>

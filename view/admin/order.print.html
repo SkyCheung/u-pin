@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+    <!--打印发货单-->
+	<style>
+		table{border-collapse: collapse;border-spacing: 0;}
+		table td{padding-top: 3px;padding-bottom: 3px;}
+		.tb-baseinfo td{padding-top: 5px;padding-bottom: 5px;}
+		.remove_goods{float: right;color: #005EA7;cursor: pointer;}
+	</style>
+</head>
+<body>
+<div style="max-width: 1080px;margin: 0 auto;">
+	<div style="margin-bottom: 10px;margin-top: 20px;" id="btnlist"> <input type="button" value=" 打 印 " onclick="prints();" /> </div>
+	<div> {$res} </div>
+</div>
+<script src="{adm_tpl}/js/jquery.js" type="text/javascript"></script>
+<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+<script type="text/javascript">
+	function prints() {
+		$("#btnlist,.remove_goods").hide();
+		print();
+		$("#btnlist,.remove_goods").show();
+	}
+	
+	$(".remove_goods").click(function() {
+		$(this).parents("tr").remove();
+		msg("移除成功");
+		/*var t = $(this);
+		top.layer.confirm('确定要移除吗', function(index) {
+			t.parents("tr").remove();
+			top.layer.close(index);
+		});	*/	
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>操作提示 - {$ym_endtitle}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/common.css" />
+		<style>body{background-color:#fff;}</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav" href="{$url}"></a>
+			<h1 class="mui-center mui-title">操作提示</h1>
+		</header>
+		<div class="mui-content-top pure-page" style="text-align: center;">
+			<div style="font-size: 15px;font-size: 20px;margin: 50px auto;">{$msg}</div> 
+			<br />
+			<a href="{$url}" class="tiao" style="color: #005ea7;">点击返回上一页</a>
+		</div>
+		<script type="text/javascript">
+			setTimeout(function () {
+				window.location.href ='{$url}';
+			},{$s}*1000);
+			
+		</script>
+	</body>
+</html>

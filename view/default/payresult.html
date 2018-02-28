@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>支付结果 - {$ym_endtitle}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/animate.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/cart.css"/>
+
+	</head>
+
+	<body>
+		<div class="ny-header">
+			<div class="nb">
+				<div class="logo">
+					<a href="/"><img src="{$ym_logo}" alt="" /></a>
+				</div>
+				<div class="right cart-center"> {if $ym_uname!=''}
+					<a href="/user.html" class="red">{$ym_uname}</a>&nbsp;&nbsp;
+					<a href="/user.html?act=logout">退出</a> {else}
+					<a href="login.html" class="red login">马上登录</a>
+					<a href="/reg.html" class="red">免费注册</a>{/if}
+					<a href="/myorder.html">我的订单</a>
+					<a href="/help.html">客户服务</a>
+				</div>
+			</div>
+		</div>
+		<div class="cart-box">
+			<div class="nb">
+				<div class="cart-step">
+					<ul>
+						<li class="cart1"><i></i>购物车</li>
+						<li class="cart2 oncart2"><i></i>确认订单</li>
+						<li class="cart3 oncart3"><i></i>付款</li>
+						<li class="cart4 oncart4"><i></i>支付成功</li>
+					</ul>
+				</div>
+				<div class="cart3-body success-body">
+					<div class="success-box">
+						<i <!--{if $order['pay_status']==pay_unpayed && $order['trade_msg']!=''}class="err"{/if}--> ></i>
+						<div class="congregation">
+							<!--{if ($order['pay_status'] && $order['pay_status']==pay_unpayed) || ($order['type'] && $order['status']&& $order['status']==pay_unpayed)}--> 
+								<h3 class="deep-red">支付失败，{$order['trade_msg']}</h3>													
+							<!--{else}--> 
+								<h3 class="deep-red">支付成功！我们会尽快为您发货！</h3>
+							<!--{/if}-->
+							
+							<p class="slivergrey">订单号：{$oid}</p>
+							<p><a href="details.html?oid={$order['order_sn']}" class="vivi-blue">查看订单明细</a><a href="/index.html" class="vivi-blue" style="margin-left: 20px;">继续购物</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<!--{tpl footer}-->
+		<!--{tpl toolbar}-->
+		 
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/jquery.SuperSlide.2.1.1.js" ></script>
+		<script type="text/javascript" src="js/cart.js" ></script>
+		<script>
+			$(function(){
+				$(".ul-pro-box li").each(function(){
+					if($(this).index()%3==2){
+						$(this).css("margin-right","0");
+					}			
+				});
+				$(".slide-like-pro").slide({});				
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>我的购物车 - {$ym_endtitle}</title>
+		<link rel="stylesheet" href="css/mui.poppicker.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style>
+			.mui-checkbox input[type=checkbox], .mui-radio input[type=radio]{width: 0;border-color:#fff;}
+			.cart-buy li .picbox{border:none;}
+			.cart-buy li .mui-checkbox{margin-top:16px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" class="mui-pull-left mui-icon mui-icon-left-nav" onclick="javascript:history.go(-1);"></a>
+			<h1 class="mui-title">购物车</h1>
+			<a href="javascript:void(0);" class="btn-arrow-right" id="btn-showhide" style="right: 0;">编辑</a>
+		</header>
+		<div class="mui-content-top mui-content-bot">
+			<ul class="cart-buy" id="list">
+				<!--{loop $cart['goods'] $p}-->
+				<li class="cart-tr {if $p['status']==1}it-selected{/if}" id="{$p['goods_id']}" data-spec="{$p['spec_name']}">
+					<div class="checkbox mui-checkbox">
+						<input type="checkbox" name="checkbox1" id="listCheckBox" value="1"  {if $p['status']==1}checked="checked"{/if}>
+					</div>
+					<div class="nr">
+						<a href="{$p['url']}" class="picbox"><img src="{$p['thumb']}" width="60" height="60" alt="商品图片未上传"/></a>
+						<div class="word">
+							<a href="{$p['url']}" class="title">{$p['name']}</a>
+							<div class="price"><p class="left red">￥<span class="g-price">{if $p['user_price']!=0}{$p['user_price']}{else}{$p['price']}{/if}</span></p><p>x<span class='reconum'>{$p['num']}</span></p></div>
+						</div>
+						<input class="subtotal" type="hidden" value="{if $p['user_amount']!=0}{$p['user_amount']}{else}{$p['amount']}{/if}"/>
+						<div class="mui-numbox num-add-reduce cart-btn-add-reduce-style" data-numbox-min="1" data-numbox-max="{$p['number']}">
+							<button class="mui-btn mui-btn-numbox-minus" type="button" disabled="">-</button>
+							<input id="test" class="mui-input-numbox result" type="number" value="{$p['num']}" maxlength="3">
+							<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+						</div>
+					</div>
+				</li>
+				<!--{/loop}-->
+			</ul>
+			<div class="fix-navbar cart-fix">
+				<div class="checkall mui-checkbox">
+					<input type="checkbox" name="" id="selectall" value="1" class="listCheckBox"><span>全选</span>
+				</div>
+				<p class="sum">总计：￥<span id="total">0</span></p>
+				<a href="javascript:void(0);" class="fix-btn gotosum" onclick="gotoOrder();" id="buynow">去结算</a>
+				<a class="fix-btn delete" id="confirmBtn">删除</a>
+			</div>
+			<input type="hidden" value='0' id="selectnum"/>
+		</div>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>					
+		<script type="text/javascript" src="js/cart.js" ></script>
+		<script type="text/javascript" src="js/jquery.cookie.min.js" ></script>
+		<script>
+	        setCheckbox('selectall', 'checkbox1');
+			sumShopping();
+	    	$(function(){
+	    		$("#btn-showhide").click(function(){
+	    			if($(this).html()=="编辑"){
+	    				$(this).html("完成").addClass("word-yellow");
+	    				$(".mui-content-top").addClass("sh-cart");
+	    			}else{
+	    				$(this).html("编辑").removeClass("word-yellow");	
+	    				$(".mui-content-top").removeClass("sh-cart");
+	    			}
+	    		});
+	    	});
+			//mui初始化
+			(function(m) {
+				$("#confirmBtn").click(function(){
+					var listBox = m("input[name='"+'checkbox1'+"']:checked");
+					var n = listBox.length;
+					if(n>0){
+						mui.init({
+							swipeBack: true //启用右滑关闭功能
+						});
+						var btnArray = ['否', '是'];
+						mui.confirm('是否删除选中的商品，确认？', '温馨提示', btnArray, function(e) {
+							if (e.index == 1) {
+								var ids = '';
+								var spec = '';
+								$("#list input[name='checkbox1']:checked").each(function() {
+									ids += $(this).parent().parent().attr("id") + "@";
+									spec += $(this).parent().parent().data("spec") + "@";
+								});
+								if(ids == '') {
+									return;
+								}
+								ids = ids.substring(0, ids.length - 1);
+								removeGoods(ids, spec);
+								sumShopping();
+							} else {
+								//否
+							}
+						});
+					}else{
+						mui.toast('请选择您要删除的商品');
+					}
+				});
+				$("#buynow").click(function(){
+					var listBox = m("input[name='"+'checkbox1'+"']:checked");
+					var n = listBox.length;
+					if(n<=0){
+						mui.toast('你没有选择任何商品');
+					}
+				});
+			})(mui)
+		</script>
+	</body>
+</html>

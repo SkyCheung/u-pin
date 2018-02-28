@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>{$ym_title}-欢迎注册会员</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/loginregister.css" />
+		<link rel="stylesheet" href="css/valifrom.css" />
+	</head>
+<style>.form-box .input-box {overflow: visible;}</style>
+	<body>
+		<div class="ny-header">
+			<div class="nb">
+				<div class="logo">
+					<a href="../index.html"><img src="{$ym_logo}" alt="" /></a> <span>&middot; 欢迎注册</span>
+				</div>
+				<div class="right">
+					<span>我已经注册，马上</span>
+					<a href="login.html" class="blue">登录 &gt;</a>
+				</div>
+			</div>
+		</div>
+		<div class="nb">
+			<div class="ny-body ny-register">
+				<div class="left">
+					<div class="form-box">
+						<!--{if $oauth_userinfo}-->
+						<div class="bind">
+							
+							<!--{if $oauth_userinfo==''}-->
+							<div class="bind-oauth"><b class="red">获取授权失败</b></div>
+							<!--{else}-->
+							<div class="bind-oauth">
+								<input type="hidden" id="isOauth" value="1"/>
+								<img src="{$oauth_userinfo['avatar']}" id="oauth_avatar" height="60" width="60">
+								<span>尊敬的：<b>{$oauth_userinfo['nickname']}</b></span></div>
+							<label class="bind-exist">注册新账号并绑定</label>	
+							<!--{/if}-->
+							
+							<a href="/login.html" class="blue">绑定已有账号</a>
+						</div>
+						<!--{/if}-->
+						<form action="" method="post">
+							<div class="input-box input-box1 onfocusstyle user-word">
+								<label for="username" class="icon-user"></label>
+								<input type="text" name="username" id="username" value="" placeholder="用户名" maxlength="20" autocomplete="off"/>
+								<div class="Validform_checktip formtip">
+									<span class="i-tip"><i></i><label>支持中文、字母、数字、“-”“_”的组合</label></span>
+								</div>							
+							</div>
+							<div class="input-box onfocusstyle position-input p-w">
+								<label class="icon-phone" for="mobile"></label>
+								<input type="text" id="mobile" value="" placeholder="手机号码" maxlength="11" autocomplete="off"/>
+								<div class="Validform_checktip formtip">
+									<span class=""><i></i><label></label></span>
+								</div>
+							</div>
+							<div class="input-box yzm-box  onfocusstyle y-w">
+								<label class="icon-yzm" for="smscode"></label>
+								<input type="button" class="hq-yzm" id="btnSendCode" value="获取验证码" />
+								<input type="text" name="smscode" id="smscode" maxlength="8" value="" placeholder="请输入短信验证码" class="phoneyzm" disabled="disabled" onkeyup="onlyNum(this);"/>
+								<div class="Validform_checktip formtip">
+									<span class=""><i></i><label></label></span>
+								</div>
+							</div>
+							<div class="input-box onfocusstyle  pass-w">
+								<label class="icon-setpassw" for="password"></label>
+								<input type="password" name="password" id="password" value="" placeholder="请输入密码" maxlength="20" min="8" autocomplete="off"/>
+								<div class="Validform_checktip formtip">
+									<span class="i-tip"><i></i><label>建议使用字母、数字和符号两种及以上的组合，6-20个字符</label></span>
+								</div>
+							</div>
+							<div class="input-box onfocusstyle position-input  pass-w2">
+								<label class="icon-setpassw" for="repassword"></label>
+								<input type="password" name="repassword" id="repassword" value="" placeholder="请再次输入密码" maxlength="20"/>
+								<div class="Validform_checktip formtip">
+									<span class=""><i></i><label></label></span>
+								</div>
+							</div>
+							<div class="check onfocusstyle" style="position: relative;">
+								<input type="checkbox" nullmsg="请阅读并选择" name="agree" id="agree" value="1" />&nbsp;&nbsp;<label for="agree">我已阅读并同意</label>
+								<a href="javascript:void(0);"  class="blue" id="rule">《{$ym_name}用户协议》</a>
+								<div class="Validform_checktip formtip" style="top: 0px;">
+									<span class=""><i></i><label></label></span>
+								</div>
+							</div>
+							<div class="input-box sub-box">
+								<input type="button" id="reg" value="注册" />
+							</div>
+						</form>
+					</div>
+
+				</div>
+				<div class="right">
+					<div class="hezuo oauth">
+						<!--<h4>如果您已注册，请<a href="login.html" class="blue">直接登录</a></h4>
+						<p style="border-top: dashed 1px #ddd;margin: 15px auto; "></p>-->
+						<h4>合作网站帐号登录：</h4>
+						<ul>
+							{loop $oauth $p}
+							<li><a href="{if $p['is_qrcode']==1}javascript:void(0);{else}/plugin.html?mod=oauth&c={$p['code']}{/if}" class="{$p['code']}">{$p['name']}</a>
+								{if $p['is_qrcode']==1}
+								<div class="qrcode">
+									<img src="{$p['src']}"/>
+									<br />
+									<p>请用{$p['name']}扫描登陆</p>
+								</div>
+								<div class="clear"></div>
+								{/if}
+							</li>
+							
+							{/loop}
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="ny-footer">
+				<div class="link">
+					<a href="/">首页</a>
+					<!--{loop $nav_footer $p}-->
+					 |  <a href="{$p[url]}" {if $p['target']==1}target="_blank"{/if}>{$p[name]}</a>
+					<!--{/loop}-->
+				</div>
+				<div class="copyright">
+					<p>{$diy_copyright}</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="pass-rule">
+			<div class="pass-rule-box">
+				<div class="rule-title">
+					<h3>{$row['c_title']}</h3><a href="javascript:void(0);" class="btn-close"></a>
+					<div class="rule-nr">
+						{$row['c_body']}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="mask"></div>
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/users.js"></script>
+		<script type="text/javascript">
+		var return_url = '{$return_url}';
+		$(function () {
+			loadLayer();
+		});
+			$(function() {
+				$(".hezuo li:last-child").css("margin-right", 0);
+				var wait = 60;
+
+				function time(o) {
+					if (wait == 0) {
+						o.removeAttribute("disabled");
+						o.value = "获取验证码";
+						wait = 60;
+					} else {
+						o.setAttribute("disabled", true);
+						o.value = "重新发送(" + wait + ")";
+						wait--;
+						setTimeout(function() {
+							time(o);
+						}, 1000)
+					}
+				}
+				
+				$("#mobile").change(function() {
+					var mobile = $.trim($("#mobile").val());
+					if (mobile.length == 11 && is_mobile(mobile)) {
+						check_mobile(mobile, callback_check_mobile);
+						
+						$("#smscode").attr("disabled", false).css({"background-color": "#fff"});
+						$("#btnSendCode").attr("disabled", false).addClass("active");
+						document.getElementById("btnSendCode").onclick = function() {
+							if(wait != 60)
+							{
+								msg("请"+wait+"秒后再试！");
+								return;
+							}
+							if(mobile==''){
+								msg("请填写手机号码");
+								return;
+							}
+							$("#smscode").val("");
+							time(this);
+							$.getJSON("index.html?p=user_api", {act:'sms_reg',mobile:mobile}, function(res){
+								if(res.err && res.err !='')
+								{
+									msg("发送失败，" + res.err, 4000);
+									return;
+								}
+								else
+								{
+									msg("验证码已发送，5分钟内有效");
+									return;
+								}
+							});
+						}
+					} else {
+						$("#smscode").attr("disabled", true);
+						//$("#btnSendCode").attr("disabled", true).removeClass("active");
+					}
+				});
+				
+				function callback_check_mobile(res) {
+					if(res.err && res.err !='')
+					{
+						$("#mobile").siblings(".Validform_checktip").children().attr('class',"i-err").children("label").text(res.err);
+						$("#btnSendCode").attr("disabled", true).removeClass("active");
+						$("#smscode").attr("disabled", true);
+						return;
+					}
+				}
+				 
+				//密码设置强度 end
+				if ((navigator.userAgent.indexOf('MSIE') >= 0 && navigator.userAgent.indexOf('MSIE 10') == -1) && (navigator.userAgent.indexOf('Opera') < 0)) {
+					$(".user-word").append("<span>用户名</span>");
+					$(".p-w").append("<span>手机号码</span>");
+					$(".y-w").append("<span>短信验证码</span>");
+					$(".pass-w").append("<span>请设置密码</span>");
+					$(".pass-w2").append("<span>请输入密码</span>");
+					$("#mobile,.p-w>span").blur(function() {
+						$(".p-w>span").html($("#mobile").val() == ""? "手机号码":"");
+					});
+					$("#username,.user-word>span").blur(function() {
+						$(".user-word>span").html($("#username").val() == ""? "用户名":"");
+					});
+					$("#smscode,.y-w>span").blur(function() {
+						$(".y-w>span").html($("#smscode").val() == ""? "短信验证码":"");
+					});
+					$("#password,.pass-w>span").blur(function() {
+						$(".pass-w>span").html($("#password").val() == ""?"请设置密码":"");
+					});
+					$("#repassword,.pass-w2>span").blur(function() {
+						$(".pass-w2>span").html($("#repassword").val() == ""?"请输入密码":"");
+					});
+					$("#username,.user-word>span").focus(function() {
+						$(".user-word>span").html("");
+					});
+					$("#mobile,.p-w>span").focus(function() {
+						$(".p-w>span").html("");
+					});
+					$("#smscode,.y-w>span").focus(function() {
+						$(".y-w>span").html("");
+					});
+					$("#password,.pass-w>span").focus(function() {
+						$(".pass-w>span").html("");
+					});
+					$("#repassword,.pass-w2>span").focus(function() {
+						$(".pass-w2>span").html("");
+					});
+					 
+				}
+
+			});
+			
+			 $("#rule").click(function(){
+				$(".pass-rule").show();
+			    $("#mask").css("height",$(window).outerHeight()).show();
+			});
+			$(".btn-close,#mask").click(function(){
+				$("#mask").hide();
+				$(".pass-rule").hide();
+			});
+		</script>
+		<p style="display: none;">{if $ym_site_statice}{$ym_site_statice}{/if}</p>
+	</body>
+
+</html>

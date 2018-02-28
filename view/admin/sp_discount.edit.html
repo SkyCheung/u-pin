@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>添加优惠活动</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+		<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.config.js"></script>
+    	<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.all.min.js"> </script>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 添加优惠活动</span></div>
+		</div>
+
+		<div class="maincon base" style="min-height: 800px;">
+			<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+				<div class="row"><label class="row-name">活动名称：</label>
+					<div class="column"><input name="name" type="text" id="name" value="{$row['name']}" size="50" maxlength="50" /><span></span></div>
+				</div>
+				<div class="row"><label class="row-name">是否启用：</label>
+					<div class="column"><label><input name="status" type="radio" value="1" {$cbk_status[1]}/>是</label> <label><input name="status" type="radio" value="0" {$cbk_status[0]}/>否</label><span></span>						
+					</div>
+				</div>				
+				<div class="row"><label class="row-name">活动时间：</label>
+					<div class="column"><input name="start_time" type="text" value="{$row[start_time_format]}" size="14" readonly="readonly"/>&nbsp;至&nbsp;<input name="end_time" type="text" value="{$row[end_time_format]}" size="14" readonly="readonly"/><span></span></div>
+				</div>	
+				<div class="row"><label class="row-name">优惠方式：</label>
+					<div class="column">
+						<!--{loop $lang_promotion_type $k $p}-->
+							<label><input name="type" type="radio" value="{$k}" {$cbk_promotion_type[$k]}/>{$p}</label>
+						<!--{/loop}-->
+						<input type="text" name="val" value="{$row['val']}" size="6" onkeyup="onlyAmount(this);" maxlength="12"/>
+						<span>1、统一价：所选商品统一价格。2、直减：在价格基础直减。3、折扣：在价格基础打折，请填写小数，如八五折填写0.85。</span>						
+					</div>
+				</div>
+				<div class="row"><label class="row-name">指定会员：</label>
+					<div class="column">
+						<!--{loop $grade $p}-->
+						<label><input name="grade_ids[]" type="checkbox" value="{$p['grade_id']}" {if $grade_arr[0] == '0'}{$checked}{else}{$p['checked']}{/if}/>{$p['grade_name']} </label>  
+						<!--{/loop}-->
+						<span>指定等级的会员可参与该活动，全选或全不选表示所有会员。</span>						
+					</div>
+				</div>
+				<div class="row"><label class="row-name">商品：</label>
+					<div class="column"><input type="button"  size="6" maxlength="5" value="选择商品" class="sub" onclick="openGoodsMod();"/><span>已选择 <b id="ids_count" style="color: #E01C2C;font-size: 14px;">{if $row['goods_count']}{$row['goods_count']}{else}0{/if}</b> 个商品</span></div>
+				</div>
+ 				<div class="row"><label class="row-name">活动描述：</label>
+					<div class="column">
+						<textarea  name="description" maxlength="10000" style="width: 700px;height: 100px;padding: 7px;">{$row['description']}</textarea><span></span></div>
+				</div>
+				<div class="row"><label class="row-name"></label>
+					<div class="column">
+						<input type="submit" class="sub" value="提交 " />
+						<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=sp_discount'"/>
+						<input name="action" type="hidden" id="action" value="promotion">
+						<input name="act" type="hidden" id="act" value="sp_discount_{$act}">
+						<input name="goods_ids" type="hidden" id="ids" value="{$row['goods_ids']}">
+						<input name="grade_count" type="hidden" value="{$grade_count}">
+					</div>
+				</div>
+			</form>
+		</div>
+ 
+ 		<link rel="stylesheet" type="text/css" href="./static/datepicker/css/jquery-ui.css" />
+		<script src="./static/datepicker/js/jquery-ui-1.10.4.custom.min.js"></script>
+		<script src="./static/datepicker/js/jquery.ui.datepicker-zh-CN.js"></script>
+		<script type="text/javascript"> 
+		    $(document).ready(function () {
+		    	 $("input[name='start_time'],input[name='end_time']" ).datetimepicker();
+		    });
+            
+		    function check () {
+		     	if ($.trim($("#name").val())=='') {
+		     		msg("请填写名称");
+		     		return false;
+		     	}
+		     	if ($.trim($("input[name='status']:checked").val())=='') {
+		     		msg("请选择是否启用");
+		     		return false;
+		     	}
+		     	if ($.trim($("input[name='start_time']").val())=='') {
+		     		msg("请选择活动开始时间");
+		     		return false;
+		     	}
+		     	if ($.trim($("input[name='end_time']").val())=='') {
+		     		msg("请选择活动结束时间");
+		     		return false;
+		     	}
+		     	if ($.trim($("input[name='type']:checked").val())=='') {
+		     		msg("请选择优惠方式");
+		     		return false;
+		     	}
+		     	if ($.trim($("input[name='val']").val())=='') {
+		     		msg("请填写优惠值");
+		     		return false;
+		     	}
+		     	if ($.trim($("input[name='goods_ids']").val())=='') {
+		     		msg("请选择参与活动的商品");
+		     		return false;
+		     	}
+		     	
+		     	var ids="";
+		     	$("#selectedcat a").each(function  () {
+		     		ids+="," + $(this).data("id");	     		
+		     	});
+		     	if (ids.lastIndexOf(",")>=0) {
+		     		ids=ids.substring(1, ids.length);
+		     	}
+		     	$("input[name='c_cat_ids']").val(ids);
+		     	
+		     	//alert(ids);
+		        return true;
+		    }
+		    
+		    //编辑区域
+		    function openGoodsMod() {
+		    	var ii = top.layer.open({
+					type: 2,
+					title: '选择商品',
+					closeBtn: 1,
+					shift: 2,
+					fix:true,
+					shadeClose: false,
+					area: ['1000px', '590px'],
+					content: ['./admin.html?do=goods_select'],
+					end: function() {
+
+					}
+                 });
+		    }
+		  
+			$("#catlist").click(function(e) {
+				e.stopPropagation();
+			});
+			$("#close").click(function  () {
+				$(this).parents(".winlayer").hide();
+			});
+		     	
+			$(document).click(function () {
+				$(".winlayer").hide();
+			});
+		</script>
+	</body>
+
+</html>

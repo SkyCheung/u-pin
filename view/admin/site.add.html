@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新建网站</title>
+
+<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+
+<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div id="maintop"><div>你的位置：<span>网站切换 -> 新建网站</span></div></div>
+<div id="mainnav"> 	<a class="button" href="./admin.html?do=site.add"><span>新建网站</span></a><a class="button" href="./admin.html?do=site"><span>网站列表</span></a></div>
+<div class="maincon">
+<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1"><input name="action" type="hidden" id="action" value="site.add" />
+  <div class="row"><label class="row-name">版本名称：</label><div class="column"><input name="c_sitename" type="text" id="c_sitename" value="{$row[c_sitename]}" size="30" /><span>网站版本，如：中文版，English</span></div></div>
+  <div class="row">
+      <label class="row-name">模板目录：</label><div class="column"><input name="c_mo" type="text" id="c_mo" value="{$row[c_mo]}" size="30" />
+    </div></div>
+    
+    
+<div class="row">
+      <label class="row-name">绑定域名：</label><div class="column"><input name="c_url" type="text" id="c_url" value="{$row[c_url]}" size="50" />
+    </div></div>
+    
+    
+    <div class="row">
+      <label class="row-name">引导页：</label><div class="column"> <label><input name="c_index" type="radio" id="c_index" value="1" /> 
+        是 </label> 
+      <label><input name="c_index" type="radio" id="c_index" value="0" checked="checked" /> 
+        否</label><span style="margin-left:20px;">如设置引导页，综合首页模板文件名为home.html</span>
+      </div></div>
+    
+    
+    <div class="row">
+      <label class="row-name">网站语言：</label><div class="column"> <label><input name="c_pageln" type="radio" id="radio" value="0" checked="checked" /> 默认 </label> <label><input type="radio" name="c_pageln" id="radio" value="1" /> 中文</label> <label><input type="radio" name="c_pageln" id="radio" value="2" /> 英文</label>
+      </div></div>
+    <div class="row"><label class="row-name"></label><div class="column"><a href="javascript:void(0);" onclick="javascript:dosub('form1');" class="submit">提交</a></div></div>
+</form>
+  
+</div>
+
+
+
+
+
+
+</body>
+
+</html>

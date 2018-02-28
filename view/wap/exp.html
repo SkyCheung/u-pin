@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>物流跟踪 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-closeempty mui-pull-left icon-full" href="javascript:void(0);" onclick='history.go(-1);'></a>
+			<h1 class="mui-title" id="mytitle">物流跟踪</h1>
+			<a class="mui-icon mui-icon-refreshempty mui-pull-right icon-full" href="javascript:void(0)" id="btn-showhide" onclick='window.location.reload();'></a>
+		</header>
+		<div class="mui-content exp">
+			<div class="bgw">
+				<div class="exp-num">
+					<span class="mui-left">订单号: &nbsp;&nbsp;</span>
+					<span>{$oid}</span>
+				</div>
+				<!--{loop $delivery $i $p}-->
+				<div class="exp-infor" id="track-list">
+					<p data-expcode="{if $ym_exp_sp=='kdniao'}{$p['exp_code2']}{else}{$p['exp_code']}{/if}" {if $i==0}class="cur"{/if}>
+						<span>快递公司：{$p["exp_name"]}</span></br>
+						<span id="dan">快递单号：<b>{$p["exp_no"]}</b></span>
+					</p>
+				</div>
+				<!--{/loop}-->
+				<div class="exp-detail track-list">
+					<ul class="exp-detail-ul">
+					<!--{loop $delivery $i $p}-->
+					<!--{loop $p['order_log'] $v}-->
+						<li class="exp-on"><div class="state state-ok"><span class="on"></span></div><div class="exp-nr"><p>{$v[msg]}</p><span>{$v[addtime]}</span></div></li>
+					<!--{/loop}-->
+					<!--{/loop}-->
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script>
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			mui('.mui-scroll-wrapper').scroll();
+			mui('body').on('shown', '.mui-popover', function(e) {
+				//console.log('shown', e.detail.id);//detail为当前popover元素
+			});
+			mui('body').on('hidden', '.mui-popover', function(e){
+				//console.log('hidden', e.detail.id);//detail为当前popover元素
+			});
+			$("#view-exp").click(function(){
+				$("#xiangxi").hide();
+				$("#wuliu").show();
+			});
+			function xin(){
+				$("#xiangxi").show();
+				$("#wuliu").hide();
+			}
+		</script>
+		<script type="text/javascript">			
+			$("#track-list p").click(function() {
+				$(this).addClass("cur").siblings().removeClass("cur");
+				$(".track-list ul").eq($(this).index()).show().siblings().hide();
+				if($(this).hasClass("loaded")==false) {
+					var t = $(this);
+					$.getJSON("order.html", {act:'get_exp_track',exp_code:t.data("expcode"), exp_no:t.children("#dan").children("b").html()}, function(data) {
+						 var html='';
+						 $.each(data.data, function(k, v) {
+						 	html +='<li class="exp-on"><div class="state state-ok"><span class="on"></span></div><div class="exp-nr"><p>'+v.AcceptStation+'</p><span>'+v.AcceptTime+'</span></div></li>';
+						 });
+						 $(".track-list ul").eq(t.index()).prepend(html);
+					});
+					$(this).addClass("loaded");	
+				}							
+			});
+			$(function() {
+				loadLayer();	
+				$("#track-list p").eq(0).trigger("click");
+			});
+		</script>
+	</body>
+</html>

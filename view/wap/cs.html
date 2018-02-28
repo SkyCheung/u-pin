@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{$goods[name]} - {$ym_endtitle}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<style>
+		</style>
+        <!-- <script src='//kefu.easemob.com/webim/easemob.js'></script> -->
+	</head>
+	<body>
+		<div id="slider" class="mui-slider">
+		<!--<iframe width="100%" height="300" frameborder="0" marginheight="0" marginwidth="0" src="https://kefu.easemob.com/webim/im.html?configId=45317400-b294-43e4-9431-b028ad5ac7a8"></iframe> -->	
+		<!--<script src='//kefu.easemob.com/webim/easemob.js?configId=ee6e6e9e-47e8-4114-b38c-15cee8e04b25'></script> -->
+		<a href='javascript:;' onclick='easemobim.bind()'>快联系我</a>
+        <a href='javascript:;' onclick='csim()'>快联系我们吧</a>
+	   </div>
+
+<script>
+window.easemobim = window.easemobim || {};
+easemobim.config = {
+    configId:'ee6e6e9e-47e8-4114-b38c-15cee8e04b25',
+    hide: true,
+    autoConnect: true,
+    hideKeyboard: true,
+    //聊天窗口加载成功回调
+    onready: function () {                  
+            easemobim.sendExt({
+                ext:{
+                    "imageName": "mallImage3.png",
+                    //custom代表自定义消息，无需修改
+                    "type": "custom",           
+                    "msgtype": {
+                        "track":{
+                            "title":"我正在看：",
+                            "price":"¥: 235.00",
+                            "desc":"女装小香风气质蕾丝假两件",
+                            "img_url":"http://120.78.177.179/upload/img/goods/20170330/47da2cf521bd17ef2e593f4b2c588936.jpg",
+                            "item_url":"http://120.78.177.179/LAaD2-g.html"
+                        }
+                    }
+                }
+            });
+    },
+};
+</script>
+<script type='text/javascript'>
+    function csim(){
+        var dolinaParams = {};
+        dolinaParams.appid = '95fc3d462c097d9d1b73eb0714b58906';    
+        //dolinaParams.showChatWin();
+        //dolina.showChatWin();     
+    }
+
+    var dolinaParams = {};
+    dolinaParams.appid = '95fc3d462c097d9d1b73eb0714b58906';
+    //dolinaParams.windowClosed = false;
+</script>
+<!-- <script type="text/javascript" src="/view/wap/js/include.js"></script> -->
+<script type='text/javascript' src='https://sdk.engyne.net/js/include.js'></script>
+<script type="text/javascript">
+    //document.getElementById('dolina_dialog_window').style.display='none';
+</script>
+</body>
+</html>

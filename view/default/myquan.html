@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的优惠券 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />		
+		<link rel="stylesheet" href="css/quan.css" />
+		<style type="text/css">
+			.couponlist{margin: 8px auto;min-height: 400px;}
+			.couponlist .cp-it{margin-right: 16.5px; margin-left: 16.5px;}
+			.couponlist .cp-it .bt{height: 173px;}
+			.center-body i{background: initial;}
+			.center-title-sig .vivi-blue{border-color: #007cc3;font-size: 16px;color: #007cc3;line-height: 20px;margin-top: 4px;}
+		</style>
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<div class="center-body">
+			<div class="nb">
+				<div class="center-lside">
+					<!--{tpl usermenu}-->
+				</div>
+				<div class="center-rside pages-style">
+					<div class="center-title-sig">
+						<h3 class="tab">
+							<span class="on" data-id="{coupon_unused}" data-page="1">未使用（<b id="status-{coupon_unused}">0</b>）</span>  
+							<span data-id="{coupon_used}" data-page="1">已使用（<b id="status-{coupon_used}">0</b>）</span>  
+							<span data-id="{coupon_expire}" data-page="1">已过期（<b id="status-{coupon_expire}">0</b>）</span>
+							<a href="quan.html" class="vivi-blue btn">去领券</a>
+						</h3>						   
+					</div>
+					<div class="set-password list-{coupon_unused}">
+						<div class="couponlist"></div>
+						<div class="clear"></div>
+					</div>
+					<div class="set-password list-{coupon_used}" style="display: none;">
+						<div class="couponlist"></div>
+						<div class="clear"></div>
+					</div>
+					<div class="set-password list-{coupon_expire}" style="display: none;">
+						<div class="couponlist"></div>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="js/main.js" ></script>
+        <script type="text/javascript" src="js/users.js" ></script>
+        <script type="text/javascript">
+        	var is_count=1,//各状态数量
+        		curtype = 0; //当前状态
+        		    
+        	$(function () {        		
+				$(function () {
+					loadLayer();
+					get_coupon_list(0);	
+				});
+								       		
+        		//切换  
+      		 	$(".center-title-sig .tab").children().click(function() {
+      		 		$(this).addClass("on").siblings().removeClass("on");
+      		 		$(".set-password").eq($(this).index()).show().siblings(".set-password").hide();
+      		 		curtype = $(this).data("id");
+      		 		get_coupon_list();
+      		 	});  	
+ 			});
+ 			
+ 			//加载优惠券
+ 			function get_coupon_list() {
+					page = $(".tab span.on").attr("data-page"); //第几页										
+					$.getJSON("myquan.html", {act: "get_coupon", page:page, is_count:is_count,type:curtype}, function(res) {
+						var html ='';
+						if(res.err) {
+							msg("加载失败");return;
+						}
+						var n =0;
+						$.each(res.data, function(k, v) {
+							n++;
+							html +='<div class="cp-it" id="'+v.id+'"><div class="hd">';
+							html +='<span class="amount">￥<b>'+v.amount+'</b></span>';
+							html +='<span class="amount_reached">满 '+v.amount_reached+'元 可用</span>';
+							html +='<span class="date">'+v.date_start+'-'+v.date_end+'</span></div>';
+							html +='<div class="bt"><div class="option">';
+							html +='<span><label>限品类</label>：<b class="tit" title="'+v.name+'">'+v.name+'</b></span>';
+							html +='<span><label>限平台</label>：'+v.client_name+'</span>';	
+							html +='<span><label>限等级</label>：'+v.grade_name+'<i class="tip-down"></i></span>';
+							html +='<span><label>券编号</label>：'+v.code+'</span></div>';
+							html +='<div class="opbtn">';
+							if(v.status_code == 'unused') {
+								html +='<a href="list.html?qid='+v.cid+'" class="btn" target="_blank">立即使用</a>';
+							} 
+							else
+							{
+								html +='<i class="quan-ico quan-'+ v.status_code +'"></i>';
+							}
+							
+							html +='</div></div><i class="i-arrow"></i></div>';
+						});
+						
+						if(is_count ==1)
+						{
+							is_count=0;
+							$.each(res.count, function(k, v){
+								$("#status-"+k).html(v);
+							});	
+						}
+						if (res.data.length==0) {
+							return;
+						}
+												
+						$(".list-"+curtype+" .couponlist").append(html);
+						$(".tab span.on").attr("data-page", parseInt(page)+1);
+					});	
+			}
+				  	
+ 			$(document).scroll(function() {
+				if($(document).scrollTop() == $(document).height() - $(window).height()) {
+					get_coupon_list();
+				}
+			});		
+        	
+        </script>
+
+	</body>
+
+</html>

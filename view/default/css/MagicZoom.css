@@ -1,0 +1,8 @@
+.MagicZoomBigImageCont img{width:800px;height:800px}
+.MagicZoomBigImageCont{border: 1px solid #91b817;background: #FFF;}
+.MagicZoomMain{text-align: center !important;width: 92px;}
+.MagicZoomMain div{padding: 0px !important;}
+.MagicZoomHeader{font: 10px Tahoma, Verdana, Arial, sans-serif;color: #fff;background: #91b817;text-align: center !important;}
+.MagicZoomPup{border: 0px solid #aaa;background: #ffffff;}
+.MagicZoomLoading{text-align: center;background: #ffffff;color: #444;border: 1px solid #ccc;opacity: 0.8;padding: 3px 3px 3px 3px !important;display: none;}
+.MagicZoomLoading img{padding-top: 3px !important;}

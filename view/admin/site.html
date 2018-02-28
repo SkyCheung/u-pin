@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>网站切换</title>
+<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div id="maintop"><div>你的位置：<span>网站切换 -> 网站列表</span></div></div>
+
+<!--
+<div id="mainnav"> 	<a class="button" href="./admin.html?do=site.add"><span>新建网站</span></a><a class="button" href="./admin.html?do=site"><span>网站列表</span></a></div>
+-->
+
+<div class="maintab" style="margin-top:15px;">
+<form method="post" id="form1" name="form1">
+  <ul>
+  
+  <li><strong>版本名称</strong></li> 
+  <li><strong>管理</strong></li>
+  <li style="width:100px;"><strong>编辑</strong> </li> 
+  <!--<li style="width:100px;"><strong>删除</strong> </li> -->
+ 
+  </ul>
+<!--{loop $row $p}-->
+  <ul>
+  
+  <li>{$p[c_sitename]}</li> 
+  <li><a href="./admin.html?do=site.on&amp;id={$p[c_code]}" {$p[isin]}>{$p[managetxt]}</a></li>
+  <li style="width:100px;"><a href="./admin.html?do=site.edit&amp;id={$p[c_code]}" class="edit"></a></li> 
+ <!-- <li style="width:100px;"><a href="./admin.html?do=site.delete&id={$p[c_code]}" class="del"></a></li>-->
+ 
+  </ul>
+<!--{/loop}-->
+
+
+</form>
+</div>
+
+
+
+
+
+
+</body>
+
+</html>

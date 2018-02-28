@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>售后服务 </title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>售后服务详情</span></div>
+		</div>
+		<div class="service">
+			<div class="nb">
+				<div class="center-rside pages-style">
+					<div class="service-details">
+						{if $res_data['refund_html'] ==''}
+						<form enctype="multipart/form-data" action="" id="form_service" method="post" onsubmit="return check();">
+						{/if}
+						<br /><br />
+						<p>服务单号：{$row[id]}<span style="margin-left: 50px;">订单号：<a href="admin.html?do=order.details&id={$row['order_sn']}" target="_blank">{$row['order_sn']}</a></span><span style="margin-left: 50px;">状态：<b style="color: #71b247;font-size: 16px;">{$row['status_name']}</b></span><span style="margin-left: 50px;">申请时间：{$row['addtime']}</span></p>
+						<br />
+						<div class="info">
+							<br />
+							<p>商品： <b class="co-orange" id="saleprice">{$row['price']}</b>元 <a href="{$row['url']}" target="_blank">{$row['name']} 
+							{if $row['speclist']}[<!--{loop $row['speclist'] $s}-->
+							<span>{$s['name']}：{$s['val']}</span>								
+							<!--{/loop}-->]{/if}
+							<span style="margin-left: 30px;"></span><img src="{$row['goods_thumb']}" width="60" height="60"/>
+							
+							</a>
+							</p>
+							<p>类型：{$row['type_name']}</p>						
+							<p>姓名：{$row['uname']}</p>
+							<p>手机：{$row['mobile']}</p>
+							<p>收货地址：{$row['address']}</p>
+							<p class="img">问题描述：{$row['content']}
+								<br /><br />
+							<!--{loop $row['thumb'] $p}-->
+							<a href="{$p}" target="_blank"><img src="{$p}" width="80" height="80"/></a>
+							<!--{/loop}--></p>
+						</div>
+						<div>
+							<br />
+							<br />
+							<p>处理：<!--{loop $lang_service $k $p}-->
+								<label><input type="radio" name="status" value="{$k}" {$cbk_status[$k]}/>{$p}  &nbsp;</label>
+								<!--{/loop}-->
+							</p>
+							<div id="mod-refund" {if $row['status'] != service_finish && $row['refund_no'] ==''}style="display:none;"{/if}>
+								<br />
+								退款：<input type="text" name="refund_fee" id="refund_fee" onkeyup="onlyAmount(this)" class="input" value="{if $row['status'] == service_finish}{$row['refund_fee']}{else}{if $row['type']==service_return}{$row['price']}{/if}{/if}" size="10" {if $row['refund_no'] !=''}readonly="readonly"{/if}/>元
+																										
+									{if $row['refund_no'] ==''}
+										<span style="margin-left: 20px;display: inline-block;"><a href="javascript:void(0);" class="lnk" id="create-refund">生成退款单</a></span>
+									{else}		
+										<span style="margin-left: 20px;display: inline-block;">
+										{if $row['trade_no'] =='' && $res_data}
+											{if $res_data['refund_html'] !=''}{$res_data['refund_html']}{else}<input type="button" value="确认退款" onclick="addRefund({$row['refund_no']}, {$row['refund_fee']}, $(this));" class="sub" id="btnreturn"/>&nbsp;&nbsp;{/if}
+										{elseif $row['trade_msg'] ==''} 
+											<b class="green">退款成功！</b>
+										{/if}
+										</span>
+										<span> 退款单号：{$row['refund_no']}&nbsp;&nbsp;</span>
+									{/if}																		
+								
+								<span id="msg">
+									{if $row['trade_msg'] !=''}退款失败：{$row['trade_msg']} &nbsp;
+									<!--<input type="hidden" name="action" value="service" />
+									<input type="submit" value=" 重新退款  " class="sub"/>-->									
+									{/if}
+								</span>
+							</div>
+							<br />
+							<p>
+								备注：<textarea style="width: 600px;height: 120px;vertical-align:top;" name="remark" maxlength="500">{$row['remark']}</textarea>
+								<span class="optip">将会在用户的 处理结果 里显示。</span>
+							</p>
+							<br />
+							
+							<p class="maincon">
+								<input type="hidden" name="goods_id" value="{$row['goods_id']}" />
+								<input type="hidden" name="spec" value="{$row['spec_name']}" />
+								<input type="hidden" name="order_sn" value="{$row['order_sn']}" />
+								<input type="hidden" name="refund_no" id="refund_no" value="{$row['refund_no']}" />							
+								<!--{if $row['status'] != service_finish && $row['status'] != service_cancel && $res_data['refund_html'] ==''}-->
+								<input type="hidden" name="action" value="service" />
+								<input type="submit" value=" 提交  " class="sub"/>
+								<!--{/if}-->
+							</p>
+							
+						</div>
+						{if $res_data['refund_html'] ==''}
+						</form>
+						{/if}
+					</div>
+					 
+				</div>
+			</div>
+		</div> 		
+		
+     <script type="text/javascript">
+     	$(function() {     		
+     		
+     		$("input[name='status']").change(function() {
+     			if ($(this).val() == '{service_finish}') {
+     				$("#mod-refund").show();
+     			}
+     			else{
+     				$("#mod-refund").hide();
+     			}
+     		});
+     		
+     		$("#create-refund").click(function() {
+     			var t = $("#create-refund");
+     			var refund_fee = $.trim($("#refund_fee").val()), saleprice = $("#saleprice").html();
+	     			refund_fee = refund_fee==''? 0 : parseFloat(refund_fee);
+	     			saleprice = saleprice==''? 0 : parseFloat(saleprice);
+	     		if (refund_fee =='' || refund_fee=='') {
+	     			msg("请先填写退款金额");
+	     			return false;
+	     		}
+	     		if (refund_fee >saleprice) {
+	     			msg("退款金额不能大于商品金额");
+	     			return false;
+	     		}
+	     			
+     			$.getJSON("./admin.html?do=service", {act:'add_refund',id: {$id}, order_sn:{$row['order_sn']}, refund_fee:refund_fee}, function (r) {
+     				if (r.err) {
+     					msg(r.err);return;
+     				}
+     				msg("生成成功"); 
+     				$("#refund_no").val(r.data.refund_no);
+     				$("<span>退款单号：" + r.data.refund_no + "&nbsp;&nbsp;</span>").insertBefore(t);
+     				if (r.data.refund_html !='') {
+     					t.replaceWith(r.data.refund_html);
+     					//t.attr({"href":r.data.refund_html, 'target':'_blank'}).html("确认退款").unbind("click");
+     				} else{
+     					t.html("确认退款").attr("data-paycode", r.data.pay_code).unbind("click").bind('click', function() {
+	     					addRefund(r.data.refund_no,refund_fee, t);
+	     				});
+     				}     				
+     			});
+     		});
+     	});
+     	
+     	function addRefund(refund_no,refund_fee, t)
+     	{
+     		$.getJSON("./admin.html?do=service", {act:'apply_refund', refund_no:refund_no, order_sn:{$row['order_sn']}, refund_fee:refund_fee}, function (r) 			{
+     			if (r.err) {
+     				msg(r.err);return;
+     			}
+     			
+     			if (r.data.trade_msg && r.data.trade_msg!='') {
+     				msg(r.data.trade_msg);
+     				$("#msg").html("退款失败：" + r.data.trade_msg);
+     				return;
+     			}
+     			msg("退款成功");     			
+     			$("#msg").html('<b class="green">退款成功！</b>');
+     			$("#btnreturn").remove();
+     		});	
+     	}
+     	
+     	var ok=false;
+     	function check(th) {
+     		if (ok) {
+     			return true;
+     		}
+     		if ($("input[name='status']:checked").val() == '{service_finish}') {
+     			var refund_fee = $.trim($("#refund_fee").val()), saleprice = $("#saleprice").html();
+     			refund_fee = refund_fee==''? 0 : parseFloat(refund_fee);
+     			saleprice = saleprice==''? 0 : parseFloat(saleprice);
+     			if (refund_fee >saleprice) {
+     				msg("退款金额不能大于商品金额");
+     				return false;
+     			}
+     			if (refund_fee >0 && $("#refund_no").val() =='') {
+     				msg("您填写了退款金额，请先生成退款单");
+     				return false;
+     			}
+     			
+     			top.layer.confirm("确定处理完成吗", function(index) { 
+     				ok = true;
+     				top.layer.close(index);
+     				$("#form_service").submit();
+     			});
+     			return false;
+     		}
+     		return true;
+     	}
+     	
+     </script>
+	
+	</body>
+
+</html>

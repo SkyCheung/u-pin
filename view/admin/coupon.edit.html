@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>制券</title>	
+	<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" /> 
+	<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+	<script type="text/javascript" src="{adm_tpl}/js/main.js"></script>	
+</head>
+<body>
+<div id="maintop">
+	<div>你的位置：<span>用户管理 -> 制券</span></div>
+</div>
+<div id="mainnav">
+	{if $act =='edit'}<a class="button" href="./admin.html?do=coupon&act=add"><span>制券</span></a>{/if}
+	<a class="button" href="./admin.html?do=coupon"><span>优惠券</span></a>
+</div>
+<div class="maincon" style="padding-bottom: 260px;">
+	<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1" onsubmit="return check();">
+		<div class="row"> <label class="row-name">券名：</label>
+			<div class="column"><input name="name" maxlength="30" type="text" id="name" value="{$row[name]}" size="30" /><span></span></div>
+		</div>
+		<div class="row"> <label class="row-name">面值：</label>
+			<div class="column"><input name="amount" type="text" size="10" value="{$row['amount']}" onkeyup="onlyAmount(this);"/>元 </div>
+		</div>
+		<div class="row"> <label class="row-name">使用条件：</label>
+			<div class="column">
+				满 <input name="amount_reached" type="text" maxlength="20" size="6"  value="{$row['amount_reached']}" onkeyup="onlyAmount(this);"/> 元使用 
+				<span></span>
+			</div>
+		</div>
+		<div class="row"> <label class="row-name">发行量：</label>
+			<div class="column">
+				<input name="num" type="text" maxlength="20" size="6" value="{$row['num']}"/> 张 
+				<span></span>
+			</div>
+		</div>
+		<div class="row"> 
+			<label class="row-name">发放方式：</label>
+			<div class="column">
+				<label><input name="get_type" value="1" type="radio" {if $row['get_type'] == 1}checked="checked"{/if}/>买家领取</label>
+				<label><input name="get_type" value="2" type="radio" {if $row['get_type'] == 2}checked="checked"{/if}/>平台发放</label>				
+				<span></span>
+			</div>
+		</div>
+		<div class="row"> <label class="row-name">有效期：</label>
+			<div class="column" id="date">
+				<p><label><input name="date_type" value="1" type="radio" {if $row['days'] == 0}checked="checked"{/if}/>绝对时间</label>
+				<input type="text" name="date_start" value="{$row['date_start']}" maxlength="10" readonly="readonly" class="time input wp110 ym_time"/>-<input type="text" name="date_end" value="{$row['date_end']}" readonly="readonly" maxlength="10" class="time input wp110 ym_time"/></p>
+				<p class="get_type_get"><br />
+				<label><input name="date_type" value="2" type="radio"  {if $row['days'] > 0}checked="checked"{/if}/>相对时间，</label>领取后<input type="text" name="days" value="{if $row['days'] > 0}{$row['days']}{/if}" maxlength="10" class="time input wp60"/>天</p>
+			</div>
+		</div>		
+		<div class="row get_type_get"> <label class="row-name">领取时间：</label>
+			<div class="column">
+				<input type="text" name="limit_start" value="{$row['limit_start']}" maxlength="10" readonly="readonly" class="time input wp110 ym_time"/>-<input type="text" name="limit_end" value="{$row['limit_end']}" readonly="readonly" maxlength="10" class="time input wp110 ym_time"/> 
+				<span></span>
+			</div>
+		</div>
+		<div class="row get_type_get"> 
+			<label class="row-name">限领：</label>
+			<div class="column">
+				每人限领 <input name="limit_num" type="text" maxlength="3" value="{if $act =='edit'}{$row['limit_num']}{else}1{/if}" size="3"/> 张，
+				每天限领 <input name="day_num" type="text" maxlength="3" value="{if $act =='edit'}{$row['day_num']}{else}0{/if}" size="3"/> 张，
+				每人每天限领 <input name="user_day_num" type="text" maxlength="3" value="{if $act =='edit'}{$row['user_day_num']}{else}1{/if}" size="3"/> 张
+				<span></span>
+			</div>
+		</div>
+						
+		<div class="row"> 
+			<label class="row-name">适用范围：</label>
+			<div class="column">
+				<label><input name="type" type="radio" value="1" {if $row['type'] ==coupon_type_cat || $row['type'] ==0}checked="checked"{/if}/>品类</label>
+				<label><input name="type" type="radio" value="2" {if $row['type'] ==coupon_type_goods}checked="checked"{/if}/>商品</label>
+				<span></span>
+			</div>
+		</div>
+		<div class="row c_type" {if $row['type'] ==coupon_type_goods}style="display: none;"{/if}><label class="row-name">品类范围：</label>
+			<div class="column" style="width: 880px;position: relative;">{tpl admin_cat}</div>
+		</div>
+		<div class="row c_type" {if $row['type'] ==coupon_type_cat || $row['type'] ==0}style="display: none;"{/if}><label class="row-name">商品范围：</label>
+			<div class="column"><input type="button"  size="6" maxlength="5" value="选择商品" class="sub" onclick="openGoodsMod();"/>
+			<input name="goods_ids" type="hidden" id="ids" value="{if $row['type'] ==coupon_type_goods}{$item_ids}{/if}"><span>已选择 <b id="ids_count" style="color: #E01C2C;font-size: 14px;">{if $goods_count}{$goods_count}{else}0{/if}</b> 个， 不选为全部。</span></div>
+		</div>
+		<div class="row">
+			<label class="row-name">使用平台：</label>
+				<div class="column">
+					<!--{loop $lang_client $k $p}-->
+					<label><input name="client" type="radio" id="client" value="{$k}" {if $k==$row['client']}checked="checked"{/if}/>{$p}</label>&nbsp;
+					<!--{/loop}-->
+				<span></span></div>
+		</div>
+		<div class="row">
+			<label class="row-name">会员范围：</label>
+				<div class="column">
+					<!--{loop $grade $p}-->
+					<label><input name="grade_ids[]" type="checkbox" value="{$p[grade_id]}" size="60" {if $grade_arr[0] == '0' || !$grade_arr}{$checked}{else}{$p['checked']}{/if}/>{$p['grade_name']}</label>
+					<!--{/loop}-->
+				<span></span></div>
+		</div>
+		<div class="row"><label class="row-name">状态：</label>
+				<div class="column">
+					<label><input name="status" type="radio" value="1" {if $act=='add'}checked="checked"{/if} {$cbk_status[1]}/>开启</label>
+					<label><input name="status" type="radio" value="0" {$cbk_status[0]}/>停用 </label><span></span>
+				</div>
+		</div>
+		
+		<div class="row"><label class="row-name"></label>
+			<div class="column">
+				<input type="submit" class="sub" value=" 提交 " /> 
+				<input name="action" type="hidden" value="coupon" /> 
+				<input name="grade_count" type="hidden" value="{$grade_count}" /> 
+				<input name="act" type="hidden" value="{$act}" />
+				<input name="id" type="hidden" value="{$id}" /> 				
+			</div>
+		</div>
+		<div class="clear"></div>
+	</form>
+	<br />
+</div>
+	<script src="{adm_tpl}/js/jquery.js" type="text/javascript"></script>
+	<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="./static/datepicker/css/jquery-ui.css" />
+	<script src="./static/datepicker/js/jquery-ui-1.10.4.custom.min.js"></script>
+	<script src="./static/datepicker/js/jquery.ui.datepicker-zh-CN.js"></script>	
+	
+	<script type="text/javascript">
+		$(function() {
+			$(".ym_time" ).datetimepicker();			
+			
+			$("input[name='type']").click(function() {
+				$(".c_type").eq($(this).parent().index()).show().siblings(".c_type").hide();
+			});
+			
+			$("input[name='get_type']").click(function() {
+				if ($(this).val() == 2) {
+					$(".get_type_get").hide();
+					$(".get_type_give").show();
+				} else{
+					$(".get_type_get").show();
+					$(".get_type_give").hide();
+				}
+			});
+			
+			$("input[name='get_type']:checked").trigger("click");
+		});
+		
+		function check() {
+			if($.trim($("#name").val()) =='')
+			{
+				msg("请填写券名");
+				return false;
+			}
+			return true;
+		}
+		
+		//编辑区域
+		    function openGoodsMod() {
+		    	var ii = top.layer.open({
+					type: 2,
+					title: '选择商品',
+					closeBtn: 1,
+					shift: 2,
+					fix:true,
+					shadeClose: false,
+					area: ['1000px', '590px'],
+					content: ['./admin.html?do=goods_select'],
+					end: function() {
+
+					}
+                 });
+		    }
+	</script>
+<style>.rolelist label{margin-left: 12px;}</style>
+</body>
+</html>

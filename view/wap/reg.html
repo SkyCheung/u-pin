@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>注册</title>
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/logreg.css" />
+		<style type="text/css">
+			.mui-input-row .mui-input-clear~.mui-icon-clear{padding-top:10px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" class="mui-pull-left mui-icon mui-icon-left-nav" onclick="history.go(-1);"></a>
+			<h1 class="mui-title" id="mytitle">注册</h1>
+			<a href="login.html" class="btn-arrow-right">登录</a>
+		</header>
+		<div class="mui-content register">	
+			<ul class="mui-table-view  inplab nextbot">
+				<li class="mui-table-view-cell mui-input-row">
+					<input type="tel" name="" id="mobile" value="" placeholder="手机号" class="mui-input-clear phoneinp" maxlength="11" onpaste="btnStyle();"/>
+				</li>
+				<li class="mui-table-view-cell vcodeli">
+					<input type="text" name="" id="smscode" value="" placeholder="短信验证码" class="mui-input-clear smsinp" disabled="disabled"/>
+					<input type="button" value="获取验证码" class="code-btn btn-grey" id="btnSendCode" />
+				</li>
+			</ul>
+			<div class="btn-box">
+				<a href="javascript:void(0);" class="btn btn-grey nextbot" id="save-btn">下一步</a>
+			</div>
+			
+			<ul class="mui-table-view inplab combot" style="display:none">
+				<li class="mui-table-view-cell mui-input-row">
+					<input type="password" name="" id="password" value="" placeholder="输入密码" class="phoneinp mui-input-password"/>
+				</li>
+				<li class="mui-table-view-cell mui-input-row">
+					<input type="password" name="" id="repassword" value="" placeholder="确认密码" class="phoneinp mui-input-password"/>
+				</li>
+			</ul>
+			<div class="btn-box combot" style="display:none">
+				<a href="javascript:void(0);" class="btn btn-grey" id="reg">完成</a>
+			</div>
+			
+			<p class="rule-box margin10"><span class="orange">*</span>注册代表同意<a href="/agreement.html" class="orange">《小白有品协议》</a></p>
+		</div>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/users.js"></script>
+		<script>
+		var return_url = '{$return_url}';
+		var $smscode=$("#smscode");
+		var $btnSendCode=$("#btnSendCode");
+			$(".nextbot").click(function() {
+				var v_code = $smscode.val();
+				if(v_code == "") {
+					mui.toast("请输入验证码");
+					return false;
+				}
+				$(".nextbot").hide();
+				$(".combot").show();
+				$('#mytitle').html('设置密码');
+				$('.btn-arrow-right').remove();
+			});
+			function btnStyle(){
+				$btnSendCode.css("background-color","#007cc3");
+			}
+			$("#mobile").keyup(function(){
+				if($("#mobile").val() != "" && is_mobile($("#mobile").val())){
+					$("#smscode").focus();
+					btnStyle();
+				}
+			});
+			$("#smscode").change(function(){
+				if($("#smscode").val()&&$("#mobile").val()){
+					$('#save-btn').css('background-color','#007cc3');
+				}else{
+					$('#save-btn').css('background-color','#d2d2d2');
+				}
+			})
+			$("#password").change(function(){
+				if($("#password").val()&&$("#repassword").val()){
+					$('#reg').css('background-color','#007cc3');
+				}else{
+					$('#reg').css('background-color','#d2d2d2');
+				}
+			})
+			$("#repassword").change(function(){
+				if($("#password").val()&&$("#repassword").val()){
+					$('#reg').css('background-color','#007cc3');
+				}else{
+					$('#reg').css('background-color','#d2d2d2');
+				}
+			})
+		</script>
+		<script type="text/javascript">
+			$(function() {
+				var wait = 60;
+				function time(o) {
+					if(wait == 0) {
+						o.removeAttribute("disabled");
+						o.value = "获取验证码";
+						wait = 60;
+					} else {
+						o.setAttribute("disabled", true);
+						o.value = "重新发送(" + wait + ")";
+						wait--;
+						setTimeout(function() {
+							time(o);
+						}, 1000)
+					}
+				}
+				$("#mobile").change(function() {
+					var mobile = $.trim($("#mobile").val());
+					if( is_mobile(mobile)) {
+						$.getJSON("index.html?p=user_api", {
+							act: 'check_mobile',
+							mobile: mobile
+						}, function(res) {
+							if(res.err && res.err != '') {
+								$("#btnSendCode").attr("disabled", true).removeClass("active");
+								$("#smscode").attr("disabled", true);
+								return;
+							}
+						});
+						$("#btnSendCode").attr("disabled", false);
+						$("#smscode").attr("disabled", false).css({
+							"background-color": "#fff"
+						});
+						$("#btnSendCode").attr("disabled", false).addClass("active");
+						document.getElementById("btnSendCode").onclick = function() {
+							if(wait != 60) {
+								mui.toast("请" + wait + "秒后再试！");
+								return;
+							}
+							if(mobile == '') {
+								mui.toast("请输入手机号码");
+								return;
+							}
+							$("#smscode").val("");
+							time(this);
+							$.getJSON("index.html?p=user_api", {
+								act: 'sms_reg',
+								mobile: mobile
+							}, function(res) {
+								if(res.err && res.err != '') {
+									mui.toast("发送失败，" + res.err, 4000);
+									return;
+								} else {
+									mui.toast("验证码已发送，5分钟内有效");
+									return;
+								}
+							});
+						}
+					} else {
+						$("#smscode").attr("disabled", true);
+						$("#btnSendCode").attr("disabled", true);
+						$("#btnSendCode").css("background-color", "#ccc");
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

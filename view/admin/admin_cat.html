@@ -1,0 +1,157 @@
+<div> <input type="button" value="选择品类" class="sub" size="8" id="cat_ids" /><span>已选择 <b id="cat_count" style="color: #E01C2C;font-size: 14px;">0</b> 个</span> 
+	<span id="selectedcat"><!--{loop $cat_selected $p}--><a href="javascript:void(0);" id="{$p[id]}" data-id="{$p[id]}" onclick="delcat(this)">{$p['name']}<i class="i-del"></i></a><!--{/loop}--></span> 
+	<div class="clear"></div>
+	<input name="cat_ids" type="hidden" value="{$item_ids}" />
+	<div id="catlist" class="winlayer" style="top:37px;">
+		<div id="cat-ct">
+			<div class="it" id="c1">
+				<ul>
+					<!--{loop $cat $p}-->
+					<li><input type="checkbox" value="{$p[id]}" data-id="{$p[id]}" name="cid" onchange="selectCat(this);" />
+						<a href="javascript:void(0);" data-id="{$p[id]}" onclick="getCat(this);">{$p[name]}</a>
+					</li>
+					<!--{/loop}-->
+				</ul>
+			</div>
+			<div class="it" id="c2">
+				<ul></ul>
+			</div>
+			<div class="it" id="c3">
+				<ul></ul>
+			</div>
+			<div class="it" id="c4">
+				<ul></ul>
+			</div>
+		</div>
+		<div style="text-align: center;display: none;"><input type="button" class="sub back" value="关闭" id="close"></div>
+	</div>
+</div>
+<style type="text/css">
+	#catlist{width: 880px;}
+	#catlist .it{margin-right: 0px;}
+	#cat-ct .it ul {height: 398px;overflow-y: scroll;}
+	#selectedcat{height: auto;}
+</style>
+
+<script type="text/javascript">
+	$(function() {
+		$("#selectedcat a").each(function() {
+			var id = $(this).data("id");
+			$("#c1 input[type='checkbox']").each(function() {
+				if($(this).val() == id) {
+					$(this).prop("checked", true).parent().addClass("on selected");
+				}
+			});
+		});		
+		set_cat_count();
+	});
+	
+	//已选品类数
+	function set_cat_count() {
+		$("#cat_count").html($("#selectedcat a").length);
+	}
+
+	function set_cid() {
+		var ids = "";
+		$("#selectedcat a").each(function() {
+			ids += "," + $(this).data("id");
+		});
+		if(ids.lastIndexOf(",") >= 0) {
+			ids = ids.substring(1, ids.length);
+		}
+		$("input[name='cat_ids']").val(ids);
+	}
+	//打开商品分类
+	$("#cat_ids").click(function(e) {
+		$(this).siblings(".winlayer").slideDown(200);
+		setTimeout(function() {
+			if($(".catlist .it").innerHeight() >= 345) {
+				$(".catlist .it").css({
+					"overflow-y": "scroll"
+				});
+			}
+		}, 200);
+		e.stopPropagation();
+	});
+
+	function delcat(th) {
+		$("#selectedcat a[id='" + $(th).data("id") + "']").remove();
+		$("#catlist input[type='checkbox']:checked").each(function() {
+			if($(this).data("id") == $(th).data("id")) {
+				$(this).prop("checked", false).parent("li").removeClass("on selected");
+			}
+		});
+		set_cat_count();
+	};
+
+	function getCat(t) {
+		var th = $(t);
+		var n = th.parents(".it").attr("id");
+		n = n.substring(1, n.length);
+		var i = parseInt(n); //当前层级
+		//去掉孙子级及以下
+		while(n < $("#catlist .it").length) {
+			n++;
+			$("#c" + n).each(function() {
+				if(n > i + 1) {
+					$(this).children("ul").html("");
+				}
+			});
+		}
+		$son = "";
+		$.ajax({
+			type: "post",
+			url: "./admin.html?do=ajax",
+			data: {
+				act: "getCats",
+				pid: th.data("id")
+			},
+			dataType: "json",
+			success: function(data) {
+				if(data.err == '') {
+					var m = 0;
+					$.each(data.data, function(k, v) {
+						var chk = "";
+						$("#selectedcat a").each(function() {
+							if($(this).data("id") == v.id) {
+								chk = "checked='checked'";
+							}
+						});
+						$son += '<li' + (chk != '' ? ' class="on selected"' : '') + '><input type="checkbox" ' + chk + ' value="' + v.id + '" data-id="' + v.id + '" name="cid" onclick="selectCat(this);"/><a href="javascript:void(0);" data-id="' + v.id + '" onclick="getCat(this);">' + v.name + '</a></li>';
+						m++;
+					});
+					if(m > 10) {
+						$("#c" + (i + 1) + " ul").css("overflow-y", "scroll");
+					}
+					$("#c" + (i + 1) + " ul").html($son);
+				} else {
+					alert(data.err);
+				}
+			},
+			complete: function(XMLHttpRequest, textStatus) {}
+		});
+	}
+	//选择分类
+	function selectCat(t) {
+		getCat(t);
+		var th = $(t);
+		var id = th.val();
+		th.parent().toggleClass("on selected");
+		if(th.prop("checked")) {
+			$("#selectedcat").append('<a href="javascript:void(0);" id="' + id + '" data-id="' + id + '" onclick="delcat(this)">' + th.siblings("a").html() + '<i class="i-del"></i></a>');
+		} else {
+			delcat(th);
+		}
+		set_cid();
+		set_cat_count();
+	};
+	$("#catlist").click(function(e) {
+		e.stopPropagation();
+	});
+	$("#close").click(function() {
+		$(this).parents(".winlayer").hide();
+	});
+	$(document).click(function() {
+		$(".winlayer").hide();
+	});
+</script>

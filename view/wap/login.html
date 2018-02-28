@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>{$ym_title}-欢迎登录</title>
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/logreg.css" />
+		<style type="text/css">
+		body{background: #fff;}
+		.login-quick .qq {background: url(view/wap/images/login_qq.png) no-repeat;background-size: 100%;}
+		.login-quick .wx {background: url(view/wap/images/login_wechat.png) no-repeat;background-size: 100%;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" class="mui-pull-left mui-icon mui-icon-left-nav" onclick="history.go(-1);"></a>
+			<h1 class="mui-title" id="mytitle">登录</h1>
+			<a href="reg.html" class="btn-arrow-right">注册</a>
+		</header>
+		<div class="mui-content">
+			<div class="register-container bd-container">
+				<form action="" method="post">
+					<div class="bind">
+						<!--{if $oauth_userinfo}-->
+						<!--{if $oauth_userinfo==''}-->
+						<div class="bind-oauth"><b class="red">获取授权失败</b></div>
+						<!--{else}-->
+						<div class="bind-oauth" style="text-align:center;margin:10px 0">
+							<input type="hidden" id="isOauth" value="1"/>
+							<img src="{$oauth_userinfo['avatar']}" id="oauth_avatar" height="60" width="60">
+							<span>尊敬的：<b>{$oauth_userinfo['nickname']}</b></span></div>
+						<label class="bind-exist" style="text-align:center;margin:0 auto;display:block">绑定已有账号</label>	
+						<!--{/if}-->
+						<!--{/if}-->
+					</div>
+					<div class="form-bd" style="padding:10px;">
+						<div class="mui-input-row">
+							<input name="username" id="loginname" type="text" class="mui-input-clear contact inpbor-bot" placeholder="用户名/手机号码" maxlength="20" datatype="*" autocomplete="off"/>
+						</div>
+						<div class="mui-input-row mui-password">
+							<input type="password" name="password" id="passw" class="mui-input-password inpbor-bot" placeholder="密码" maxlength="20" datatype="*" autocomplete="off">
+						</div>
+						<div class="mui-input-row regvocde yanm-div" style="display: none;">
+							<div class="enter-vcode">
+								<input maxlength="4" name="authcode" id="authcode" type="text" value="" class="mui-input-clear contact inpbor-bot" placeholder="验证码" nullmsg="请输入验证码！" datatype="*" onclick="showvode();"/>
+							</div>
+							<div class="codebox">
+								<img id="mx" style="cursor:pointer;" src="" alt="看不清？点击更换另一个验证码" border="1" onClick="refreshimage(this)" title="看不清？点击更换另一个验证码">
+							</div>
+						</div>
+					</div>
+					<div class="btn-box">
+						<a class="btn btn-grey" id="login">登录</a>
+					</div>
+					<input type="checkbox" id="autologin" value="1" class="zdlogin-btn" checked="checked" style="display:none"/>
+				</form>
+				<p class="centertext"><a href="findpwd.html" target="_blank">忘记密码？</a></p>
+				
+			</div>
+			<div class="login-quick">
+				<div class="quick-title">
+					<span>第三方账号快速登录</span>
+				</div>
+				<ul class="log-qui-ul flex">
+					{loop $row $p}
+					<li class="flex1">
+						<a href="{if $p['is_qrcode']==1}javascript:void(0);{else}/plugin.html?mod=oauth&c={$p['code']}{/if}">
+							<i class="icon-quick-log {$p['code']}"></i>
+							<span>{$p['name']}</span>
+						</a>
+						{if $p['is_qrcode']==1}
+						<div class="qrcode">
+							<img src="{$p['src']}"/>
+							<br />
+							<p>请用{$p['name']}扫描登陆</p>
+						</div>
+						{/if}
+					</li>
+					{/loop}
+				</ul>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/users.js"></script>
+		<script>
+		var return_url = '{$return_url}';
+			$(".form-bd input").each(function(){
+				$(this).keyup(function(){
+					var is=true;
+					$(".form-bd input").each(function(){
+						discss = $(this).parents(".mui-input-row").css('display');
+						if(($(this).val()=="")&&(discss!='none')){
+							is=false;
+							return false;
+						}
+				    });
+				    if (is) {
+				    	$("#login").removeClass("btn-grey");
+				    }else{
+				    	$("#login").addClass("btn-grey");
+				    }
+				});
+			});
+			function refreshimage(clickidimg)
+			{
+				clickidimg.src='/vcode-M.html'+'?'+Date.parse(new Date());
+			}
+			function showvode()
+			{
+				document.getElementById('mx').style.display='block';
+			}
+			document.getElementById('mx').src='/vcode-M.html'+'?'+Date.parse(new Date());
+			function refreshimage(clickidimg)
+			{
+				clickidimg.src=clickidimg.src+'?'+Date.parse(new Date());
+			}	
+		</script>
+	</body>
+</html>

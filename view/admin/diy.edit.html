@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>自定义内容</title>
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+		<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.config.js"></script>
+		<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.all.js">
+		</script>
+
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 新建引用内容</span></div>
+		</div>
+		<div id="mainnav">
+			<a class="button" href="./admin.html?do=diy.add"><span>新建引用内容</span></a><a class="button" href="./admin.html?do=diy"><span>内容列表</span></a></div>
+			
+		<div class="maincon" style="min-height: 800px;">
+			<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1" onsubmit="return check();">
+				<div class="row">
+					<label class="row-name">客户端类型：</label>
+					<div class="column">
+						<!--{loop $lang_client $k $p}-->
+						<label><input name="client" type="radio" id="client" value="{$k}" {if $k==$row['client']}checked="checked"{/if}/>{$p}</label>&nbsp;
+						<!--{/loop}-->
+						<span></span></div>
+				</div>
+				<div class="row">
+					<label class="row-name">标题名称：</label>
+					<div class="column"><input name="c_title" type="text" id="c_title" value="{$row[title]}" size="30" maxlength="40" /><span>不在前台网页显示，只作后台识别之用</span></div>
+				</div>
+				<div class="row"><label class="row-name">变量名称：</label>
+					<div class="column"><input type="text" readonly="readonly" value="diy_" style="width: 25px;"/> <input name="c_name" type="text" id="c_name" value="{$row[name]}" size="30" maxlength="20" />
+						<span>只能英文、数字、- 和 _ ，如新闻栏目：news，调用格式为<b style="color: #333333;font-size: 14px;"> &#123;$diy_news&#125;</b></span></div>
+				</div>
+				<div class="row">
+					<label class="row-name">类型：</label>
+					<div class="column">
+						<label><input name="diy_type" type="radio" value="goods" {if $diy_type['goods']==''}disabled="disabled"{else}{$diy_type['goods']}{/if}/>商品</label>
+						<label><input name="diy_type" type="radio" value="news" {if $diy_type['news']==''}disabled="disabled"{else}{$diy_type['news']}{/if}/>文章</label>
+						<label><input name="diy_type" type="radio" value="coupon" {if $diy_type['coupon']==''}disabled="disabled"{else}{$diy_type['coupon']}{/if}/>优惠券</label>	
+						<label><input name="diy_type" type="radio" value="custom" {if $diy_type['custom']==''}disabled="disabled"{else}{$diy_type['custom']}{/if}/>自定义内容</label><span></span>
+					</div>
+				</div>
+				<div class="row diy_quote">
+					<label class="row-name">引用推荐：</label>
+					<div class="column diy_quote_re">
+						<div style="display: block; position: relative;" id="diy_recom">
+							<label><input name="hot" type="checkbox" value="1" {$hot}/>热卖</label>
+							<label><input name="new" type="checkbox" value="1" {$new}/>新品 </label>
+							<label><input name="best" type="checkbox" value="1" {$best}/>精品 </label>
+							<label><input name="recommend" type="checkbox" value="1" {$recommend}/>推荐 </label>
+							<label><input name="freeshipping" type="checkbox" value="1" {$freeshipping}/>包邮 </label>
+							<label><input name="discount" type="checkbox" value="1" {$discount}/>促销活动 </label>
+							<span></span>
+						</div>
+						<div style="display: none;">
+							<label><input name="recom" type="checkbox" value="1" {$recom}/>引用推荐数据</label>
+							<label><input name="haspic" type="checkbox" value="1" {$haspic}/>引用有图数据</label>
+							<label><input name="hits" type="checkbox" value="1" {$hits}/>浏览次数排行</label>
+							<span></span>
+						</div>
+					</div>
+				</div>
+				<div class="row die_quote diy_discount" style="display: none;">
+					<label class="row-name">促销活动：</label>
+					<div class="column">
+						<input type="button" id="discount" value="选择活动" size="30" class="sub"  onclick="openMod('选择活动', './admin.html?do=promotion_select');"/>
+						<input type="hidden" value="{$row[promotion_ids]}" id="promotion_ids" name="promotion_ids" />
+						<span>已选择 <b id="promotion_ids_count" style="color: #E01C2C;font-size: 14px;">{if $row['promotion_count']}{$row['promotion_count']}{else}0{/if}</b> 个活动</span>
+					</div>
+				</div>
+				<div class="row diy_quote diy_cat"><label class="row-name">引用分类：</label>
+					<div class="column diy_quote_re">						
+						<div style="display: block; position: relative;">
+							<!--<label><input name="cat_ids" type="radio" value="each" {$cbk_cat_ids['each']}/>各自分类</label>-->
+							<label><input name="cat_ids" type="radio" value="all" {$cbk_cat_ids['all']}/>所有分类</label>
+							<label><input name="cat_ids" type="radio" value="{$row['cat_ids']}" id="cat_ids" {if $row['cat_ids']!='each' && $row['cat_ids']!='all'}checked="checked"{/if}/>自定分类</label>
+							<input type="button" id="cat_id" value="选择商品分类" size="30" class="sub" />
+							&nbsp;&nbsp;&nbsp;
+							<label><input type="radio" name="include_son" value="0" {$cbk_include_son[0]}/>不含下级</label>
+							<label><input type="radio" name="include_son" value="1" {$cbk_include_son[1]}/>含下一级</label>
+							<label><input type="radio" name="include_son" value="9" {$cbk_include_son[9]}/>含所有下级</label>
+							<span id="selectedcat" style="display: {if $row['cat_ids']!='each' && $row['cat_ids']!='all'}block{else}none{/if};margin-bottom: 5px;">
+								<!--{loop $cate $p}-->
+									<a href="javascript:void(0);" id="{$p[id]}" data-id="{$p[id]}" onclick="delcat(this)">{$p[name]}<i class="i-del"></i></a>
+								<!--{/loop}-->
+							</span>
+							<div id="catlist" class="winlayer" style="top:34px;">
+								<div id="brandcat">
+									<div class="it" id="c1">
+										<ul>
+											<!--{loop $cat $p}-->
+											<li><input type="checkbox" value="{$p[id]}" data-id="{$p[id]}" onchange="selectCat(this);" /> <a href="javascript:void(0);" data-id="{$p[id]}" onmouseover="getCat(this);">{$p[name]}</a></li>
+											<!--{/loop}-->
+										</ul>
+									</div>
+									<div class="it" id="c2">
+										<ul></ul>
+									</div>
+									<div class="it" id="c3">
+										<ul></ul>
+									</div>
+									<div class="it" id="c4">
+										<ul></ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div style="display: none;">
+							<select name="c_toid" id="c_toid">
+								<option value="all" {$cbk_cat_ids['all']}>所有分类</option>
+  								{$sortcon}
+							</select>
+							<span></span>
+						</div>
+					</div>	
+				</div>								
+				<div class="row diy_quote">
+					<label class="row-name">引用数量：</label>
+					<div class="column">
+						<input name="c_num" type="number" min="0" id="c_num" value="{$row[num]}" class="wp80" maxlength="3" />
+						<label class="quote_num"><input type="checkbox" name="is_eachnum" value="1" {$cbk_iseachnum[1]}/>各自分类</label>
+						<label class="quote_num"><input type="checkbox" name="is_childnum" value="1" {$cbk_is_childnum[1]}/>下一级子分类</label><span>勾选表示各自分类引用这个数量</span>
+					</div>
+				</div>
+				<div class="row diy_coupon" style="display: none;">
+					<label class="row-name">优惠券：</label>
+					<div class="column">
+						<input type="button" id="discount" value="选择优惠券" size="30" class="sub"  onclick="openMod('选择优惠券 - 买家领取','./admin.html?do=coupon_select');"/>
+						<input type="hidden" value="{if $row['diy_type'] =='coupon'}{$row['ids']}{/if}" id="coupon_ids" data-ismult="1" data-gettype="{coupon_gettype_get}" name="coupon_ids" />
+						<span>已选择 <b id="coupon_count" style="color: #E01C2C;font-size: 14px;">{if $row['diy_type'] =='coupon' && $row['ids_count']}{$row['ids_count']}{else}0{/if}</b> 个</span>
+					</div>
+				</div>
+				<div class="row diy_custom" style="display: none;"><label class="row-name">自定义内容：</label>
+					<label><input type="radio" value="0" name="cus_type" {$cus_type[0]}>默认</label>
+					<label><input type="radio" value="1" name="cus_type" {$cus_type[1]}>过滤html</label>
+					<label><input type="radio" value="2" name="cus_type" {$cus_type[2]}>只要图片url</label>
+					<div style="float: left; display: inline; color: #333;width:100%;margin-top: 10px;">
+						<script id="editor" name="c_body" type="text/plain" style="width:100%;height:350px;">{$row[body]}</script>
+					</div>
+				</div>
+				<div class="row"><label class="row-name"></label>
+					<div class="column"><input name="action" type="hidden" id="action" value="diy.edit" />
+					<input type="submit" class="sub" value=" 提交 " /></div>
+					<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=diy'"/>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript"> 
+			var ue;
+		    $(document).ready(function () {
+				ue = UE.getEditor('editor',{
+		    		autoHeightEnabled: false,
+		    		catname:'common'
+		    	});
+		    	
+		    	 ue.addListener('ready', function( editor ) {
+     				$(".edui-for-fullscreen").click(function () {
+     					if ($(this).children().eq(0).hasClass("edui-state-checked")) {
+     						top.document.getElementById('ym_main').width =document.body.scrollWidth-186;
+     					}
+     					else{
+     						top.document.getElementById('ym_main').width =document.body.scrollWidth+186;
+     					}
+		    		});		    		
+				 });
+				 ue.addListener("contentChange", function ( type, arg1, arg2 ) {
+     				top.document.getElementById('ym_main').height =top.document.getElementById('ym_main').contentWindow.document.documentElement.scrollHeight+ ue.iframe.scrollHeight;
+				 });				 
+				 
+				 //选择类型
+				 $("input[name='diy_type']").click(function() {
+				 	if ($(this).val()=='custom') {
+				 		$(".diy_quote,.diy_discount,.diy_coupon").hide();
+				 		$(".diy_custom").show();
+				 		top.setIframeHeight();
+				 	} 
+				 	else if($(this).val()=='coupon')
+				 	{
+				 		$(".diy_quote,.diy_discount,.diy_custom").hide();
+				 		$(".diy_coupon").show();
+				 		autoResize();
+				 	}
+				 	else{
+				 		$(".diy_custom,.diy_coupon").hide();
+				 		$(".diy_quote").show();
+				 		var n = $(this).parent().index();
+				 		$(".diy_quote_re").each(function(){
+				 			$(this).children("div").eq(n).show().siblings().hide();
+				 		});	
+				 		if (n==1) {
+				 			$(".quote_num,.diy_discount").hide();
+				 		}
+				 		else{
+				 			$(".quote_num").show();
+				 			if ($("input[name='discount']").is(":checked")) {
+				 				$(".diy_discount").show();
+				 				$(".diy_cat,.quote_num").hide();
+				 			}
+				 		}
+				 	}
+				 });
+				 
+				 $("#diy_recom input").each(function() {
+				 	$(this).change(function() {
+					 	if ($(this).attr("name") == 'discount') {
+					 		$(this).parent().siblings("label").children().attr("checked", false);
+					 		$(".diy_cat,.quote_num").hide();
+					 		$(".diy_discount").show();
+					 	} else{
+					 		$("input[name='discount']").attr("checked", false);
+					 		$(".diy_cat,.quote_num").show();
+					 		$(".diy_discount").hide();
+					 	}
+					 });
+				 });
+				 
+				 $("input[name='diy_type']:checked").trigger('click');
+				 
+				 {if $row['diy_type']=='goods'}
+				 {if $recommends['discount']==1}
+				 $(".diy_cat,.quote_num").hide()
+				 $(".diy_discount").show();
+				 {else}
+				 $(".diy_cat,.quote_num").show();
+				 $(".diy_discount").hide();
+				 {/if}
+				 {/if}
+		    });
+		    
+		    //打开选择窗
+		    function openMod(title,content) {
+		    	var ii = top.layer.open({
+					type: 2,
+					title: title,
+					closeBtn: 1,
+					shift: 2,
+					fix:true,
+					shadeClose: false,
+					area: ['1200px', '95%'],
+					content: [content],
+					end: function() {
+					}
+                 });
+		    }
+		    
+		    //商品分类
+			$("#cat_id").click(function(e) {					
+					$("input[name='cat_ids']").removeAttr("checked","");
+					$("#cat_ids").prop("checked","checked");
+					
+					$(".winlayer").hide();
+					$(this).siblings(".winlayer").slideDown(200);
+					setTimeout(function() {
+						if ($("#catlist .it").innerHeight() >= 375) {
+							$("#catlist .it").css({
+								"overflow-y": "scroll"
+							});
+						}
+					}, 200);
+					e.stopPropagation();
+			});	
+
+			function delcat(th) {
+				$("#selectedcat a[id='" + $(th).data("id") + "']").remove();
+					$("#catlist input[type='checkbox']:checked").each(function() {
+						if ($(this).data("id") == $(th).data("id")) {
+							$(this).prop("checked", false).parent("li").removeClass("on selected");
+						}
+					});	
+			};
+
+			function getCat(t) {
+					var th = $(t);
+					var n = th.parents(".it").attr("id");
+					n = n.substring(1, n.length);
+					var i = parseInt(n); //当前层级
+					//去掉孙子级及以下
+					while (n < $("#catlist .it").length) {
+						n++;
+						$("#catlist #c" + n).each(function() {
+							if (n > i + 1) {
+								$(this).children("ul").html("");
+							}
+						});
+					}
+					$son = "";
+					$.ajax({
+						type: "post",
+						url: "./admin.html?do=ajax",
+						data: {
+							act: "getCats",
+							pid: th.data("id")
+						},
+						dataType: "json",
+						success: function(data) {
+							if (data.err == '') {
+								var m = 0;
+								$.each(data.data, function(k, v) {
+									var chk = "";
+									$("#selectedcat a").each(function() {
+										if ($(this).data("id") == v.id) {
+											chk = "checked='checked'";
+										}
+									});
+									$son += '<li' + (chk != '' ? ' class="on selected"' : '') + '><input type="checkbox" ' + chk + ' value="' + v.id + '" data-id="' + v.id + '" onclick="selectCat(this);"/><a href="javascript:void(0);" data-id="' + v.id + '" onmouseover="getCat(this);">' + v.name + '</a></li>';
+									m++;
+								});
+								if (m > 10) {
+									$("#catlist #c" + (i + 1) + " ul").css("overflow-y", "scroll");
+								}
+								$("#catlist #c" + (i + 1) + " ul").html($son);
+							} else {
+								msg(data.err);
+							}
+						},
+						complete: function(XMLHttpRequest, textStatus) {}
+					});
+			}
+			
+			//选择分类
+			function selectCat(t) {
+					getCat(t);
+					var th = $(t);
+					var id = th.val();
+					th.parent().toggleClass("on selected");
+					if (th.prop("checked")) {
+						$("#selectedcat").append('<a href="javascript:void(0);" id="' + id + '" data-id="' + id + '" onclick="delcat(this)">' + th.siblings("a").html() + '<i class="i-del"></i></a>').css("display", "block");
+					} else {
+						delcat(th);
+					}
+			};
+                                    
+		    function check () {
+		     	if ($.trim($("#c_title").val())=='') {
+		     		msg("请填写标题名称");
+		     		return false;
+		     	}
+		     	if ($.trim($("#c_name").val())=='') {
+		     		msg("请填写变量名称");
+		     		return false;
+		     	}		     	
+		     	
+		     	var ids = "";
+				$("#selectedcat a").each(function() {
+					ids += "," + $(this).data("id");
+				});
+				if (ids.lastIndexOf(",") >= 0) {
+					ids = ids.substring(1, ids.length);
+				}
+				$("#cat_ids").val(ids);	
+				
+				switch ($("input[name='diy_type']:checked").val()){
+					case 'goods':
+						if ($("input[name='cat_ids']:checked").val()=='') {
+			     			msg('请选择分类');return false;
+			     		}
+			     		if ($.trim($("#c_num").val())=='') {
+			     			msg('请填写引用数量');return false;
+			     		}
+						break;
+					case 'news':
+						if ($.trim($("#c_num").val())=='') {
+			     			msg('请填写引用数量');return false;
+			     		}
+						break;
+					case 'coupon':
+						if ($.trim($("#coupon_ids").val())=='') {
+			     			msg('请填写优惠券');return false;
+			     		}
+						break;	
+					default:
+						break;
+				}
+		 		
+		 		//ue.execCommand('source');
+		 		//ue.sync();
+		        return true;
+		     }
+		    $(document).click(function() {
+				$(".winlayer").hide();
+			});
+			$(".winlayer").click(function(e) {
+				e.stopPropagation();
+			});
+		     
+		</script>
+	</body>
+
+</html>

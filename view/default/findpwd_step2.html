@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>找回密码 - {$ym_title}</title>
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" href="css/loginregister.css" />
+</head>
+<body>
+<!--{tpl header}-->
+<div class="nb">
+	<div class="find-passw-box">
+		<h3>找回密码</h3>
+		<div class="jindu">
+			<dl class="successdl"> <dt class="success">1</dt>
+				<dd>填写账户名</dd>
+			</dl>
+			<dl class="successdl"> <dt class="success">2</dt>
+				<dd>验证身份</dd>
+			</dl>
+			<dl> <dt>3</dt>
+				<dd>设置新密码</dd>
+			</dl>
+			<dl> <dt>4</dt>
+				<dd>完成</dd>
+			</dl>
+		</div>
+		<div class="findform-box">
+			<ul>
+				<li> <span class="label"><label for="fusername">身份验证方式：</label></span>
+					<label><input type="radio" name="authtype" id="authtype" value="1" checked="checked"/>手机号码</label>					
+					<span class="check-infor"></span> </li>
+				<li class="yyzpone">
+					<div class="fyzm-box"> <span class="label">已验证手机：</span>
+						<p>{$mobile}</p>
+					</div>
+				</li>
+				<li>
+					<div class="fyzm-box"> <span class="label"><label>验证码：</label></span> <input type="text" id="smscode" value="" class="jyphone" maxlength="8"/>
+						<div class="btn-yzm"> <input type="button" class="hq-yzm btn" id="btnSendCode" value="获取验证码" /> </div> <span class="check-infor"></span> 
+					</div><br>
+					<p class="tipmobile ptip" style="display: block;"></p>
+					<p class="tipemail ptip">信息已发送出去，请注意查收您的邮件</p>
+				</li>
+			</ul>
+			<div class="div-tj"> <input type="submit" value="提交" id="btnfindpwd" class="find-subbtn btn"/> </div>
+		</div>
+	</div>
+</div>
+<!--{tpl footer}-->
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+
+<script type="">
+		$(function () {
+			loadLayer();
+		});
+	$("#btnSendCode").click(function() {			
+		$(this).attr("disabled","disabled");
+		var InterValObj;
+		function SetRemainTime() {
+			if(sec > 0) {
+				sec--;
+				var second = Math.floor(sec % 60); // 计算秒     
+				var minite = Math.floor((sec / 60) % 60); //计算分 
+				$("#min").html(minite);
+				$("#sec").html(second);
+			} else { 
+				window.clearInterval(InterValObj);//剩余时间小于或等于0的时候，就停止间隔函数 				
+				$("#sec").html("0");
+				$(".tipmobile").html("");
+				$(this).removeAttr("disabled");
+				$("#btnfindpwd").removeAttr("disabled");
+			}
+		}
+		var authtype= $("input[name='authtype']").val();
+		if (authtype==1) {
+			var sec = 60;
+			$.getJSON("user_api.html", {act:'sms_findpwd'}, function(res){
+				if(res.err && res.err !='')
+				{
+					$(".tipmobile").html("发送失败，" + res.err);
+				}
+				else
+				{
+					$(".tipmobile").html('短信已发送，请查看手机，<span id="sec">60</span>秒之后可重新发送。');
+				}
+				InterValObj = window.setInterval(SetRemainTime, 1000); //间隔函数，1秒执行 
+			});
+		}
+		 	
+	});
+	
+	$("#btnfindpwd").click(function() {			
+		var authtype= $("input[name='authtype']").val();
+		var smscode = $.trim($("#smscode").val());
+		if (smscode =='') {
+			$(".tipmobile").html("请输入验证码");
+			return;
+		}
+		$(this).attr("disabled","disabled");
+		if (authtype==1) {
+			$.getJSON("user.html", {act:'findpwd_checkcode',smscode:smscode}, function(res){
+				if(res.err && res.err !='')
+				{
+					$(".tipmobile").html("操作失败，" + res.err);
+				}
+				else
+				{
+					window.location.href ="findpwd.html?step=3";
+				}
+				$(this).removeAttr("disabled");
+			});
+		}
+		 	
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>产品发布</title>
+
+<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+<style>
+
+body{margin-right:40px;}
+</style>
+
+</head>
+
+<body>
+<div id="maintop">
+  <div>你的位置：<span>{$title} -> 组图上传与管理</span></div></div>
+<div id="mainnav"></div>
+<div class="maincon">
+<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1"><input name="action" type="hidden" id="action" value="pic.upload" />
+
+  
+    
+<div class="row">
+      <label class="row-name">图片：</label><div class="column">	
+      
+   
+      
+      
+      <input id="file_upload" name="file_upload" type="file" multiple="true">
+      
+      </div></div>
+
+<div class="row"><label class="row-name">图片描述：</label><div class="column">
+    <input name="c_txt" type="text" id="c_txt" size="60" maxlength="200" />
+    <span></span></div>
+</div>
+
+  <div class="row"><label class="row-name">缩略图宽：</label><div class="column">
+    <input name="c_uw" type="text" id="c_uw" value="190" size="20" />
+    <span></span></div>
+
+ <label class="row-name">缩略图高：</label><div class="column"><input name="c_uh" type="text" id="c_uh" value="180" size="20" />
+    </div>
+
+</div>
+
+    
+<div class="row">
+      <label class="row-name"></label>
+      <div class="column" >
+	 
+	
+	  <input type="submit" class="sub" value="  上传图片  " />
+	
+<input type="hidden" name="type" id="type" value="{$type}" />
+      <input name="c_toid" type="hidden" id="c_toid" value="{$row[id]}"  /><br />
+    </div></div> 
+    
+    </form>
+    
+    
+ <!--
+    <div class="row">
+      <label class="row-name">是否推荐：</label><div class="column"> <label><input name="c_is" type="radio" id="radio" value="1" checked="checked" /> 是 </label> <label><input type="radio" name="c_is" id="radio" value="0" /> 否</label>
+      </div></div>
+      -->
+
+
+
+<form method="post" id="form1" name="form1">
+ <div class="row"><input name="action" type="hidden" id="action" value="pic.order" /><input type="hidden" name="type" id="type" value="{$type}" />
+ <!--{loop $ls $p}-->
+ 
+<div style="width:230px;float:left; clear:both;"> <input name="c_sort[]" type="text" id="c_sort[]" value="{$p[c_order]}" size="5" maxlength="5">
+<input name="h_id[]" type="hidden" id="h_id[]" value="{$p[id]}">
+{$p[c_title]} </div>
+<div style="width:230px;float:left;">   <a href="/upload/{$user_code}/img/{$p[c_bimg]}" target="_blank">{$p[c_bimg]} </a></div>
+
+<div style="width:100px;float:right;"> <a href="/admin.html?do={$type}.pic.delete&amp;id={$p[c_code]}">删除</a><br />
+ </div>
+ 
+ 
+ <div class="column"></div>
+ <!--{/loop}-->
+ 
+  <div class="clear" style="padding-top:20px;"><input type="submit" class="sub" value="  更新排序  " /></div>
+ 
+   </div>
+</form>
+  
+</div>
+
+
+
+
+
+
+</body>
+
+</html>

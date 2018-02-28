@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>找回密码 - {$ym_title}</title>
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" href="css/loginregister.css" />
+	</head>
+<body>
+<!--{tpl header}-->
+<div class="nb">
+	<div class="find-passw-box">
+		<h3>找回密码</h3>
+		<div class="jindu">
+			<dl class="successdl"> <dt class="success">1</dt>
+				<dd>填写账户名</dd>
+			</dl>
+			<dl> <dt>2</dt>
+				<dd>验证身份</dd>
+			</dl>
+			<dl> <dt>3</dt>
+				<dd>设置新密码</dd>
+			</dl>
+			<dl> <dt>4</dt>
+				<dd>完成</dd>
+			</dl>
+		</div>
+		<form action="" method="post">
+			<div class="findform-box">
+				<ul>
+					<li> <span class="label"><label for="fusername">账户名：</label></span> <input type="text" name="uname" id="uname" placeholder="用户名/手机号码" /> <span class="check-infor"></span> </li>
+					<li>
+						<div class="fyzm-box"> <span class="label"><label for="checkcode">验证码：</label></span> <input type="text" name="checkcode" id="checkcode" value="" /> <span class="check-infor"></span> </div>
+						<div class="fyzm-pic"> <img id="mx" style="cursor:pointer;" src="" alt="看不清？点击更换另一个验证码" border="1" onClick="refreshimage(this)" title="看不清？点击更换另一个验证码"> </div>
+					</li>
+				</ul>
+				<div class="div-tj"> <input type="button" value="提交" id="btnfindpwd" class="btn"/> </div>
+			</div>
+		</form>
+	</div>
+</div>
+<!--{tpl footer}-->
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript">
+	$(function() {
+		loadLayer();
+		$("#btnfindpwd").click(function() {
+			check_uname();
+		})
+	});
+
+	function check_uname() {
+		var checkcode = $.trim($("#checkcode").val());
+		var uname = $.trim($("#uname").val());
+		if(uname == '') {
+			msg("请填写用户名/手机号码");
+			return;
+		}
+		if(checkcode == '') {
+			msg("请填写验证码");
+			return;
+		}
+		$.getJSON("user.html", {
+			uname: uname,
+			checkcode: checkcode,
+			act: 'check_uname'
+		}, function(res) {
+			if(res.err && res.err != '') {
+				msg(res.err);
+			} else {
+				window.location.href = "findpwd.html?step=2";
+			}
+		});
+	}	
+
+	function refreshimage(clickidimg) {
+		//var cap =document.getElementById("captcha");
+		clickidimg.src = '/vcode-M.html' + '?' + Date.parse(new Date());
+	}
+
+	function showvode() {
+		document.getElementById('mx').style.display = 'block';
+	}
+	document.getElementById('mx').src = '/vcode-M.html' + '?' + Date.parse(new Date());
+
+	function refreshimage(clickidimg) {
+		//var cap =document.getElementById("captcha");
+		clickidimg.src = clickidimg.src + '?' + Date.parse(new Date());
+	}
+</script>
+</body>
+</html>

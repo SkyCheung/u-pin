@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{$name} - {$ym_endtitle}</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/help.css" />
+		<style type="text/css">
+			body{background-color:#fff;}
+		</style>
+	</head>
+	<body>
+		<div class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav" href='javascript:void(0);' onclick="javascript:history.go(-1);"></a>
+			<h1 class="mui-center mui-title">{$channel_name}</h1>
+		</div>
+		<div class="mui-content-top">
+			<div class="help-list">
+			<!--{loop $row $p}-->
+				<a href="{$p['url']}">
+					<span class="help-word">{$p['name']}</span>
+					<span class="right">{$p['time']}</span>
+				</a>
+			<!--{/loop}-->
+			</div>
+		</div>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+	</body>
+</html>

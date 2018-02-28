@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>{$ym_title}-欢迎登录</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/loginregister.css" />
+		<link rel="stylesheet" href="css/valifrom.css" />
+		<style>.form-box .input-box {overflow: hidden;}</style>
+	</head>
+	
+	<body onkeypress="if(event.keyCode==13){document.getElementById('login').click();return false;}">
+		<div class="ny-header">
+			<div class="nb">
+				<div class="logo">
+					<a href="/index.html"><img src="{$ym_logo}" alt="" /></a>
+				</div>
+				<div class="right login-right">
+					<span>您好！欢迎光临{$ym_name} ！</span>
+					<a href="/n-help.html">帮助中心</a>
+				</div>
+			</div>
+		</div>
+		<div class="nb">
+			<div class="ny-body ny-zsy">
+				<div class="left">
+					<img src="images/login-pic.jpg" alt="" />
+				</div>
+				<div class="right">
+					<div class="form-box">
+						
+					<form action="" method="post">
+						<h3>{$ym_name}用户登录</h3>
+						<div class="bind">
+							<!--{if $oauth_userinfo}-->
+							<!--{if $oauth_userinfo==''}-->
+							<div class="bind-oauth"><b class="red">获取授权失败</b></div>
+							<!--{else}-->
+							<div class="bind-oauth">
+								<input type="hidden" id="isOauth" value="1"/>
+								<img src="{$oauth_userinfo['avatar']}" id="oauth_avatar" height="60" width="60">
+								<span>尊敬的：<b>{$oauth_userinfo['nickname']}</b></span></div>
+							<label class="bind-exist">绑定已有账号</label>	
+							<!--{/if}-->
+							<!--{/if}-->
+							<a href="/reg.html{if $return_url}?return_url={$return_url_encode}{/if}" class="blue">注册账号</a>
+						</div>
+						<div class="input-box input-box1 onfocusstyle user-word">
+							<label for="loginname" class="icon-user"></label>
+							<input type="text" name="username" id="loginname" value="" placeholder="用户名/手机号码" class="position-input"  maxlength="20" datatype="*" autocomplete="off"/>
+							<div class="Validform_checktip formtip">
+								<span class=""><i></i><label></label></span>
+							</div>
+						</div>
+						<div class="input-box onfocusstyle passw-word">
+							<label for="passw" class="icon-passw"></label>
+							<input type="password" name="password" id="passw" value=""  placeholder="密码" class="position-input" maxlength="20" datatype="*" autocomplete="off"/>
+							<div class="Validform_checktip formtip">
+								<span class=""><i></i><label></label></span>
+							</div>
+						</div>
+						<div class="input-box onfocusstyle yanm-div" style="display: none;">
+							<label for="authcode" class="icon-passw"></label>
+							<input type="text" maxlength="4" name="authcode" id="authcode" value=""  placeholder="验证码" class="position-input" nullmsg="请输入验证码！" datatype="*" onclick="showvode();"/>
+							<img id="mx" style="cursor:pointer;" src="" alt="看不清？点击更换另一个验证码" border="1" onClick="refreshimage(this)" title="看不清？点击更换另一个验证码">
+							<div class="Validform_checktip formtip">
+								<span class=""><i></i><label></label></span>
+							</div>
+						</div>
+						<div class="check">
+							<span class="mh-checkbox checkbox-stylemh"><input type="checkbox" id="autologin" value="1" class="zdlogin-btn" checked="checked"/></span>&nbsp;&nbsp;<label for="autologin">自动登录</label>
+							<a href="findpwd.html" target="_blank">忘记密码？</a>
+						</div>
+						<div class="input-box sub-box">
+							<input type="button" id="login" value="登录" />
+						</div>
+					</form>
+					<div class="hezuo oauth">
+						<h4>合作网站帐号登录</h4>
+						<ul>
+							{loop $row $p}
+							<li><a href="{if $p['is_qrcode']==1}javascript:void(0);{else}/plugin.html?mod=oauth&c={$p['code']}{/if}" class="{$p['code']}">{$p['name']}</a>
+								{if $p['is_qrcode']==1}
+								<div class="qrcode">
+									<img src="{$p['src']}"/>
+									<br />
+									<p>请用{$p['name']}扫描登陆</p>
+								</div>
+								{/if}
+							</li>
+							
+							{/loop}
+						</ul>
+						 
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="ny-footer">
+               <div class="link">
+					<a href="/" target="_blank">首页</a>
+					<!--{loop $nav_footer $p}-->
+					| <a href="{$p[url]}" {if $p['target']==1}target="_blank"{/if}>{$p[name]}</a>
+					<!--{/loop}-->
+				</div>
+				<div class="copyright">
+					<p>{$diy_copyright}</p>
+				</div>
+			</div>
+		</div>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js" ></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/users.js"></script>
+
+
+<script>
+		$(function () {
+			loadLayer();
+		});
+	var return_url = '{$return_url}';
+	
+	$(".hezuo li:last-child").css("margin-right",0);
+	$(".position-input").focus(function(){
+		$(this).parent(".onfocusstyle").css({"border-color":"#abcdef"}).siblings().css({"border-color":"#dedede"});
+	});
+	$(".position-input").blur(function(){
+		$(this).parent(".onfocusstyle").css({"border-color":"#dedede"}).siblings().css({"border-color":"#dedede"});
+	});
+	$(".mh-checkbox").on("click",function(){
+		if($(this).hasClass("checkbox-stylemh")){
+			$(this).removeClass("checkbox-stylemh");
+			$(".zdlogin-btn").attr("checked",false);
+		}
+		else{
+			$(this).addClass("checkbox-stylemh");
+			$(".zdlogin-btn").attr("checked",true);
+		}		
+	});	 
+	if ((navigator.userAgent.indexOf('MSIE') >= 0 && navigator.userAgent.indexOf('MSIE 10') == -1) && (navigator.userAgent.indexOf('Opera') < 0)){  
+		var a=navigator.userAgent;
+		$(".passw-word").append("<span>密码</span>");	
+		$(".user-word").append("<span>用户名</span>");	
+		$("#passw,#loginname").blur(function(){		
+			if($("#passw").val()==""){
+				$(".passw-word").append("<span>密码</span>");
+			}
+		});
+		$("#loginname").blur(function(){		
+			$(".user-word").append($("#loginname").val()==""?"<span>用户名</span>":"");
+		});
+		
+		$("#passw").focus(function(){
+			$(".passw-word span").remove();
+		});
+		$("#loginname").focus(function(){
+			$(".user-word span").remove();
+		});
+	}
+ 
+	function refreshimage(clickidimg)
+	{
+		clickidimg.src='/vcode-M.html'+'?'+Date.parse(new Date());
+	}
+	function showvode()
+	{
+		document.getElementById('mx').style.display='block';
+	}
+	document.getElementById('mx').src='/vcode-M.html'+'?'+Date.parse(new Date());
+	function refreshimage(clickidimg)
+	{
+		clickidimg.src=clickidimg.src+'?'+Date.parse(new Date());
+	}								
+</script>
+<p style="display: none;">{if $ym_site_statice}{$ym_site_statice}{/if}</p>
+	</body>
+
+</html>

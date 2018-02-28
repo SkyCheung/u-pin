@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{$ym_title}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/common.css?v=20171107" />
+		<link rel="stylesheet" href="css/swiper.css" />
+		<link rel="stylesheet" href="css/phone.css" />
+		<style type="text/css">
+			body{background-color:#ebebeb;}
+			.mui-bar{border-bottom:none;}
+			.mui-bar .mui-search:before {
+	        margin-top: -10px
+           }
+
+		</style>
+	</head>
+	<body>
+      
+		<div class="mui-content-bot">
+			<div class="banner mui-content-top">
+				<div class="swiper-container swiper-container-banner">
+			        <div class="swiper-wrapper">
+						<!--{loop $mobileindexbanner $p}-->
+			            <div class="swiper-slide"><a href="{$p[url]}"><img src="{$p[img]}"/></a></div>
+						<!--{/loop}-->
+			        </div>
+			        <div class="swiper-pagination swiper-pagination-banner"></div>
+			    </div>
+			</div>
+
+			<div class="martb15 ind-prolist">
+				{$diy_mobileindexhuo}
+			</div>
+			<!--{if $diy_timespike}-->
+			<!--{loop $diy_timespike $v}-->
+			<!--{if (($v[start_time]<time())&&($v[end_time]>time()))}-->
+			<div class="indtimelimit">
+				<div class="">
+					<a class="yec-navgation prelative" href="timespike.html">
+						<h3>限时抢购</h3>
+						<p id="time1" data-time="{if ($time = $v[end_time]-time())}{$time}{/if}">
+							<span id="v_day1">0</span>天<span id="v_hour1">0</span>小时<span id="v_minute1">0</span>分<span id="v_second1">0</span>秒
+						</p>
+					</a>
+				</div>
+				<div class="prostyleall swiper-container-limit swiper-container">
+					<ul class="prostyleall-ul swiper-wrapper">
+					<!--{loop $v["goods"] $p}-->
+						<li class="swiper-slide">
+							<a href="{$p[url]}" class="picbox"><img src="{$p[thumb]}" alt=""></a>
+							<a href="{$p[url]}" class="title single-elli">{$p[name]}</a>
+							<a href="{$p[url]}" class="price">￥<span>{$p[price]}</span></a>
+						</li>
+					<!--{/loop}-->
+					</ul>
+					<div class="swiper-pagination swiper-pagination-limit " style="display:none;"></div>
+				</div>
+			</div>
+			<!--{/if}-->
+			<!--{/loop}-->
+			<!--{/if}-->
+			<!--{if $remmend_goods}-->
+			<div class="indguesslike prostyleall">
+				<div class="title-cen">
+					<h3>猜你喜欢</h3>
+				</div>
+				<ul class="prostyleall-ul">
+					<!--{loop $remmend_goods $p}-->
+					<li>
+						<div class="nr">
+							<a href="{$p[url]}" class="picbox"><img src="{$p[thumb]}" alt=""></a>
+							<div class="word">
+								<a href="{$p[url]}" class="title" style="display: block;height: 42px;overflow: hidden;color:#323232;margin:5% 0">{$p[name]}</a>
+								<a href="{$p[url]}" class="price">￥<span>{$p[price]}</span></a>
+							</div>
+						</div>
+					</li>
+					<!--{/loop}-->
+				</ul>
+			</div>
+			<!--{/if}-->
+		</div>
+		<div id="totop" class="totop"><img src="images/totop.png" alt="" style="width: 40px;"/></div>
+		<!--{tpl fixnavbar}-->
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/swiper.min.js" ></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script>
+		$(".navbar_b1").parents('li').addClass("on");
+		$('#word').change(function(){
+			$(".search").submit();
+		})
+		$('.fix-navbar .fix-bar-ul li').eq(0).addClass('on');
+		/*indbanner*/
+		    var swiper = new Swiper('.swiper-container-banner', {
+		        pagination: '.swiper-pagination-banner',
+		        paginationClickable: true,
+		        autoplay: 2000
+		    });
+		    /*indnews*/
+		    var swiper = new Swiper('.slidenews', {
+		        pagination: '.swiper-pagination-new',
+		        paginationClickable: true,
+		        direction: 'vertical',
+		        autoplay: 3000
+		    });
+		    //多图滚动
+			var swiper = new Swiper('.swiper-container-limit', {
+			    pagination: '.swiper-pagination-limit',
+			    slidesPerView: 'auto',
+			    paginationClickable: true,
+			    spaceBetween: 1,
+			    freeMode: true
+			});
+			//倒计时
+			InterValObj1 = window.setInterval(function () {
+			 	SetRemainTime(1);
+			}, 1000); 	
+			totop();
+	    </script>
+	</body>
+</html>

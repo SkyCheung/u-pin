@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{$ym_title}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/swiper.css" />
+		<link rel="stylesheet" href="css/phone.css" />
+		<style type="text/css">
+			body{background-color:#ebebeb;}
+			.mui-bar{border-bottom:none;}
+			.mui-bar .mui-search:before {
+	margin-top: -10px
+}.mui-input-row.mui-search .mui-icon-clear {
+	top: 7px
+}
+
+.mui-input-row.mui-search .mui-icon-speech {
+	top: 5px
+}.mui-search {
+	position: relative
+}
+
+.mui-search input[type=search] {
+	padding-left: 30px
+}
+
+.mui-search .mui-placeholder {
+	font-size: 16px;
+	line-height: 34px;
+	position: absolute;
+	z-index: 1;
+	top: 2px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: inline-block;
+	height: 34px;
+	text-align: center;
+	color: #999;
+	border: 0;
+	border-radius: 6px;
+	background: 0 0
+}
+
+.mui-search .mui-placeholder .mui-icon {
+	font-size: 20px;
+	color: #333
+}
+
+.mui-search:before {
+	font-size: 20px;
+	font-weight: 400;
+	position: absolute;
+	top: 50%;
+	right: 50%;
+	display: none;
+	margin-top: -18px;
+	margin-right: 31px;
+}
+
+.mui-search.mui-active:before {
+	font-size: 20px;
+	right: auto;
+	left: 5px;
+	display: block;
+	margin-right: 0
+}
+
+.mui-search.mui-active input[type=search] {
+	text-align: left
+}
+
+.mui-search.mui-active .mui-placeholder {
+	display: none
+}
+.mui-icon-search:before,.mui-search:before{content: '\e632';font-family: 'iconfont';font-size: 17px !important;font-weight: bold;color:#666;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar">
+		<form name="search" class="search" action="/list.html">
+			<div class="mui-input-row mui-search indsearch">
+				<input type="search" name="word" id="word" value="{$word}" class="mui-input-clear paddaround10" placeholder="搜索" style="margin-bottom:0;">
+				<input type="hidden" name="action" value="list" />
+			</div>
+		</form>
+		</header>
+		<div class="mui-content-bot">
+			<div class="banner mui-content-top">
+				<div class="swiper-container swiper-container-banner">
+			        <div class="swiper-wrapper">
+						<!--{loop $mobileindexbanner $p}-->
+			            <div class="swiper-slide"><a href="{$p[url]}"><img src="{$p[img]}"/></a></div>
+						<!--{/loop}-->
+			        </div>
+			        <div class="swiper-pagination swiper-pagination-banner"></div>
+			    </div>
+			</div>
+			<div class="indfun">
+				<div class="nb">
+					<ul class="fundisplay flex">
+					<!--{loop $indexicon $p}-->
+						<li class="flex1">
+							<a href="{$p[url]}">
+								<i class="icon-display1 yunicon" style="background-image: url({$p[img]});"></i>
+								<span>{$p[txt]}</span>
+							</a>
+						</li>
+					<!--{/loop}-->
+					</ul>
+					<div class="indnews">
+						<h3 class="indnew-title"><a href="n-news.html"><img src="images/title_ind_new.png" alt="new"/></a></h3><i class="line"></i>
+						<div class="swiper-container slidenews">
+							<div class="swiper-wrapper">
+								<!--{loop $diy_mobiletuisong $p}-->
+						        <div class="swiper-slide"><a href="{$p[url]}">{$p[name]}</a></div>
+								<!--{/loop}-->
+						    </div>
+						    <div class="swiper-pagination-new" style="display:none;"></div>
+					   </div>
+					</div>
+				</div>
+			</div>
+			<div class="martb15 ind-prolist">
+				{$diy_mobileindexhuo}
+			</div>
+			<!--{if $diy_timespike}-->
+			<!--{loop $diy_timespike $v}-->
+			<!--{if (($v[start_time]<time())&&($v[end_time]>time()))}-->
+			<div class="indtimelimit">
+				<div class="">
+					<a class="yec-navgation prelative" href="timespike.html">
+						<h3>限时抢购</h3>
+						<p id="time1" data-time="{if ($time = $v[end_time]-time())}{$time}{/if}">
+							<span id="v_day1">0</span>天<span id="v_hour1">0</span>小时<span id="v_minute1">0</span>分<span id="v_second1">0</span>秒
+						</p>
+					</a>
+				</div>
+				<div class="prostyleall swiper-container-limit swiper-container">
+					<ul class="prostyleall-ul swiper-wrapper">
+					<!--{loop $v["goods"] $p}-->
+						<li class="swiper-slide">
+							<a href="{$p[url]}" class="picbox"><img src="{$p[thumb]}" alt=""></a>
+							<a href="{$p[url]}" class="title single-elli">{$p[name]}</a>
+							<a href="{$p[url]}" class="price">￥<span>{$p[price]}</span></a>
+						</li>
+					<!--{/loop}-->
+					</ul>
+					<div class="swiper-pagination swiper-pagination-limit " style="display:none;"></div>
+				</div>
+			</div>
+			<!--{/if}-->
+			<!--{/loop}-->
+			<!--{/if}-->
+			<!--{if $remmend_goods}-->
+			<div class="indguesslike prostyleall">
+				<div class="title-cen">
+					<h3>猜你喜欢</h3>
+				</div>
+				<ul class="prostyleall-ul">
+					<!--{loop $remmend_goods $p}-->
+					<li>
+						<div class="nr">
+							<a href="{$p[url]}" class="picbox"><img src="{$p[thumb]}" alt=""></a>
+							<div class="word">
+								<a href="{$p[url]}" class="title" style="display: block;height: 42px;overflow: hidden;color:#323232;margin:5% 0">{$p[name]}</a>
+								<a href="{$p[url]}" class="price">￥<span>{$p[price]}</span></a>
+							</div>
+						</div>
+					</li>
+					<!--{/loop}-->
+				</ul>
+			</div>
+			<!--{/if}-->
+		</div>
+		<div id="totop" class="totop"><img src="images/totop.png" alt="" style="width: 40px;"/></div>
+		<!--{tpl fixnavbar}-->
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/swiper.min.js" ></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script>
+		$(".navbar_b1").parents('li').addClass("on");
+		$('#word').change(function(){
+			$(".search").submit();
+		})
+		$('.fix-navbar .fix-bar-ul li').eq(0).addClass('on');
+		/*indbanner*/
+		    var swiper = new Swiper('.swiper-container-banner', {
+		        pagination: '.swiper-pagination-banner',
+		        paginationClickable: true,
+		        autoplay: 2000
+		    });
+		    /*indnews*/
+		    var swiper = new Swiper('.slidenews', {
+		        pagination: '.swiper-pagination-new',
+		        paginationClickable: true,
+		        direction: 'vertical',
+		        autoplay: 3000
+		    });
+		    //多图滚动
+			var swiper = new Swiper('.swiper-container-limit', {
+			    pagination: '.swiper-pagination-limit',
+			    slidesPerView: 'auto',
+			    paginationClickable: true,
+			    spaceBetween: 1,
+			    freeMode: true
+			});
+			//倒计时
+			InterValObj1 = window.setInterval(function () {
+			 	SetRemainTime(1);
+			}, 1000); 	
+			totop();
+	    </script>
+	</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的订单 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<div class="center-body">
+			<div class="nb">
+				<div class="center-lside">
+					<!--{tpl usermenu}-->
+				</div>
+				<div class="center-rside">					
+					<div class="cen-center center1">
+						<div class="centerbar">
+							<div class="lside">
+								<ul>
+									<li><a href="/myorder.html"{if !$t} class="cur"{/if}>全部订单</a><i class="line-grey"></i></li>
+									<li><a href="/myorder.html?t=1"{if $t==1} class="cur"{/if}>待付款</a><i class="line-grey"></i></li>
+									<li><a href="/myorder.html?t=2"{if $t==2} class="cur"{/if}>待收货</a><i class="line-grey"></i></li>
+									<li><a href="/myorder.html?t=3"{if $t==3} class="cur"{/if}>待评价</a><i class="line-grey"></i></li>
+								</ul>
+							</div>
+							<form action="" method="post">
+							<div class="rside">
+								下单时间 <input type="text" name="trade_start_date" value="" maxlength="10" readonly="readonly" class="time"/>-<input type="text" name="trade_end_date" value="" readonly="readonly" maxlength="10" class="time"/>
+								<div class="set-box">
+									<div class="search-box">								
+										<input type="txt" name="keyword" id="" value="" placeholder="订单号/商品名称"  class="btn-search"/>
+										<input type="submit" value=""  class="btn-sub"/>										
+									</div>
+								</div>
+							</div>							
+							</form>
+						</div>
+						<div class="dingdan">
+							<!--{if $order}-->
+							<!--{loop $order $p}-->
+							<div class="dd-list">
+								<div class="dd-title">
+									<p>下单时间：<span>{$p['add_time']}</span></p>
+									<p>订单编号：<span>{$p['order_sn']}</span></p>
+									<!--<i class="icon-del"></i>-->
+								</div>
+								<div class="dd-detail">
+									<ul>
+										<li class="dd-col1">
+											<!--{loop $p['goods'] $v}-->
+											<div class="more-pro">
+												<div class="box">
+													<a href="{$v['url']}" target="_blank" class="pro-pic"><img src="{$v['thumb']}" width="80" height="80" alt=""/></a>
+											         <div class="pro-details">
+												        <a href="{$v['url']}" target="_blank">
+												         <h3>{$v['name']}</h3>
+												         <p class="qiangrey"><!--{loop $v['spec'] $s}-->
+											<span>{$s['name']}：{$s['val']}</span>
+											<!--{/loop}--></p>
+												       </a>
+											       </div>
+												</div>
+											    <div class="price">
+											    	￥{$v['price']}
+											    </div>
+											    <div class="num">
+											    	{$v['num']}
+											    </div>
+											    <div class="function">
+											    	<!--{if $p['status']==order_finish}-->
+											    	<a href="applyservice.html?oid={$v['order_sn']}&gid={$v['goods_id']}&spec={$v['spec_name']}" class="qiangrey" target="_blank">申请售后</a>
+											    	<!--{/if}-->
+											    </div>
+											</div>
+											<!--{/loop}-->
+										</li>
+										<li class="dd-col2">
+											<b>￥{$p['amount']}</b>
+											<p class="qiangrey"></p>
+										</li>
+										<li class="dd-col3">
+											<p class="qiangrey">{$p['status_name']}</p>
+											<a href="details.html?oid={$p['order_sn']}" class="qiangrey" target="_blank">查看详情</a>
+										</li>
+										<li class="dd-col4">
+											<!--{if $p['status']==order_finish}-->
+											{if $p['is_comment']==0}											
+											<a href="comment.html?oid={$p['order_sn']}" target="_blank">评价</a>
+											{/if}											
+											<!--{elseif $p['status']==order_paying}-->
+											<a href="pay.html?oid={$p['order_sn']}" target="_blank" style="border-color: #de342f;color: #de342f;">付款</a>
+											<a href="javascript:void(0);" onclick="order_cancel({$p['order_sn']});">取消订单</a>
+											<!--{elseif $p['status']==order_receiving}-->	
+											<a href="details.html?oid={$p['order_sn']}" target="_blank" style="border-color: #de342f;color: #de342f;">确认收货</a>
+											<!--{/if}-->
+											<!--{if $p['status'] !=order_paying}-->
+											<a href="javascript:void(0);" onclick="addcartMult('{loop $p['goods'] $v}{$v['goods_id']}- {/loop}',1,1,'');">再次购买</a><!--{/if}-->
+										</li>
+									</ul>
+								</div>
+							</div>
+							<!--{/loop}-->
+							<!--{else}-->
+	                    	<div style="width: 100%; height: 200px;padding-top: 50px; background-color: #FFF;text-align: center;font-size: 16px;">
+	                    		没有符合条件的订单。
+	                    	</div>
+	                    	<!--{/if}-->
+	                    	<div class="pages"><!--{$pages['pages']}--></div>
+						</div>
+					</div>
+			
+				</div>
+			</div>
+		</div>
+		 
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<link rel="stylesheet" type="text/css" href="./static/datepicker/css/jquery-ui.css" />
+		<script src="./static/datepicker/js/jquery-ui-1.10.4.custom.min.js"></script>
+		<script src="./static/datepicker/js/jquery.ui.datepicker-zh-CN.js"></script>
+		
+		
+      <script type="text/javascript">
+      	$(".advance").click(function(){
+      		$(".slidedown-advance").slideToggle(300);
+      	});
+      	$(".i.icon-del").each(function(){
+      		$(this).click(function(){
+      			$(this).parentsUntil(".dd-list").hide();
+      		});           
+      	});
+      	$(function () {
+      		$("input[name='trade_start_date'],input[name='trade_end_date']" ).datetimepicker();
+ 			loadLayer();
+ 		});
+      </script>
+
+	</body>
+
+</html>

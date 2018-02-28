@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>个人信息 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<div class="center-body">
+			<div class="nb">
+				<div class="center-lside">
+					<!--{tpl usermenu}-->
+				</div>
+				<div class="center-rside">
+					<div class="center2 center-title-sig">
+						   <h3>个人信息设置</h3>
+					</div>
+					<div class="edit-user-infor">
+							<ul>
+								<li class="set-touxiang">
+									<p><label for="cpicture2">头像：</label></p>
+									<div class="pic-tx picker">
+										<p>编辑头像</p>
+										<div class="filePicker preview" data-uploaddir="avatar" data-isthumb="1" data-filename="{$filename}" id="mainpicker">
+											<!--{if $user['img']!=''}-->
+											<img src="{$user['img']}" alt="头像不正确"/>
+											<!--{else}--><img src="images/avatar.jpg"/><!--{/if}-->
+										</div>
+										<input type="hidden" value="{$user['img']}" name="img" id="img"/>
+										<input type="hidden" value="{$user['thumb']}" name="thumb" id="thumb"/>										
+									</div>
+								</li>
+								<li>
+									<p>用户名：</p><input type="text" value="{$user['uname']}" id="username"/>
+								</li>								
+								<li>
+									<p><span class="red">*</span><label for="cloginname2">手机号码：</label></p>
+									{if $user['mobile']}
+									<input type="text" id="mobile" data-old="{$user['mobile']}" value="{$user['mobile']}" class="input unedit" style="width: 120px;" readonly="readonly"/>
+									<a href="updatepwd.html?change=1" class="lnk">更换手机</a>
+									{else}
+									<a href="updatepwd.html" class="lnk"> 绑定手机</a>
+									{/if}									
+								</li>
+								<li>
+									<p><span>性别：</span></p>
+							         <input type="radio" name="sex" id="cboy" value="1" {if $user['sex']==1}checked="checked"{/if}/><label for="cboy">男</label>&nbsp;
+							         <input type="radio" name="sex" id="cgirl" value="2" {if $user['sex']==2}checked="checked"{/if}/><label for="cgirl">女</label>
+								</li>
+								<li>
+									<p>生日：</p>
+									<input type="text" id="birthday" value="{$user['birthday']}" maxlength="10" readonly="readonly" class="time"/>
+								</li>
+								<li>
+									<p>邮箱：</p>
+									<input type="email" id="email" value="{$user['email']}" class="input" maxlength="30"/>
+								</li>
+								<li>
+									<p>真实姓名：</p>
+									<input type="text" id="realname" class="input" value="{$user['realname']}" maxlength="20"/>
+								</li>
+							</ul>
+							<input type="button" class="btn" value="提交" id="btnEditUser"/>
+					</div>					
+				</div>
+			</div>
+		</div>
+		
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="./static/webuploader/webuploader.js"></script>
+		<script type="text/javascript" src="./static/webuploader/uploader.js"></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script type="text/javascript" src="js/users.js" ></script>
+		<link rel="stylesheet" type="text/css" href="./static/datepicker/css/jquery-ui.css" />
+		<script src="./static/datepicker/js/jquery-ui-1.10.4.custom.min.js"></script>
+		<script src="./static/datepicker/js/jquery.ui.datepicker-zh-CN.js"></script>
+
+      <script type="text/javascript">
+	      
+      	$(function () {
+      		$("#birthday").datetimepicker({yearRange: '1940:+0'});
+      		$("#birthday").change(function() {
+      			var v= $(this).val();
+      			if (v.length>10) {
+      				$(this).val(v.substr(0,10));
+      			}
+      		});
+      		$("#btnEditUser").click(function() {
+      			edit_userinfo();
+      		});
+ 			loadLayer();
+ 			
+ 			$(".filePicker").each(function() {
+				upFile($(this));
+			});
+ 		});
+      	$(".advance").click(function(){
+      		$(".slidedown-advance").slideToggle(300);
+      	});
+      	$(".i.icon-del").each(function(){
+      		$(this).click(function(){
+      			$(this).parentsUntil(".dd-list").hide();
+      		});           
+      	});
+      	
+      	//更换手机号码
+      	function changeMobile(th)
+	    {
+	    	var mobile= $("#mobile");
+	    	var t = $(th);
+	      	mobile.toggleClass("unedit");
+	      	
+	      	if (mobile.hasClass("unedit")) {
+	      		mobile.val(mobile.data("old")).attr("readonly","readonly");
+	      		t.html("更改");
+	      		$(".smscode").hide();
+	      	}
+	      	else
+	      	{
+	      		mobile.removeAttr("readonly");
+	      		t.html("取消");
+	      		$(".smscode").show();
+	      	}
+	    }
+		
+		$("#btnSendCode").click(function() {
+			var mobile= $.trim($("#mobile").val()),
+			oldMobile= $("#mobile").data("old");
+			if (mobile == '') {
+				msg("请输入手机号码");
+				return ;
+			}
+			else if(!is_mobile(mobile))
+		 	{
+		 		msg("手机号码不正确");
+				return ;
+		 	}
+		 	else if(mobile == oldMobile)
+		 	{
+		 		msg("手机号码和原来的相同，不需要短信验证码");
+				return ;
+		 	}
+		 	$.getJSON("user_api.html", {act:'sms_changemobile',mobile:mobile}, function(res){
+				if(res.err && res.err !='')
+				{
+					msg("发送失败，" + res.err, 4000);
+					return;
+				}
+				else
+				{
+					msg("验证码已发送，5分钟内有效");
+					return;
+				}
+			});
+		});
+		
+		
+      </script>
+
+	</body>
+
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>添加App版本</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 添加App版本</span></div>
+		</div>
+
+		<div class="maincon base" style="min-height: 800px;">
+			<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+				<div class="row">
+					<label class="row-name">设备类型：</label>
+					<div class="column">
+						<label><input name="type" type="radio" id="type" value="1" {if $act=='add' || 1==$row['type']}checked="checked"{/if}/>安卓</label>&nbsp;
+						<label><input name="type" type="radio" id="type" value="2" {if 2==$row['type']}checked="checked"{/if}/>苹果IOS</label>&nbsp;
+						<span></span></div>
+				</div>
+				<div class="row"><label class="row-name">App版本：</label>
+					<div class="column"><input name="version" id="version" type="text" value="{$row['version']}" size="50" maxlength="50"/><span></span></div>
+				</div>
+				<div class="row"><label class="row-name">url地址：</label>
+					<div class="column"><input name="c_url" type="text" value="{$row['url']}" size="50" maxlength="50" /><span></span></div>
+				</div>								
+ 				<div class="row"><label class="row-name">描述：</label>
+					<div class="column">
+						<textarea  name="memo" maxlength="10000" style="width: 700px;height: 100px;padding: 7px;">{$row['memo']}</textarea><span></span></div>
+				</div>
+				<div class="row"><label class="row-name"></label>
+					<div class="column">
+						<input type="submit" class="sub" value="提交 " />
+						<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=app&type='+ $('[name=type]:checked').val();"/>
+						<input name="action" type="hidden" id="action" value="app">
+						<input name="act" type="hidden" id="act" value="{$act}">
+					</div>
+				</div>
+			</form>
+		</div>
+ 
+		<script type="text/javascript"> 
+		    $(document).ready(function () {
+		    	
+		    });
+            
+		    function check () {
+		     	if ($.trim($("#version").val())=='') {
+		     		msg("请填写App版本");
+		     		return false;
+		     	}
+		     		     	
+		        return true;
+		    }
+		    
+		    
+		</script>
+	</body>
+
+</html>

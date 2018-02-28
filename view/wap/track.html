@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>我的足迹 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav" onclick="javascript:history.go(-1);"></a>
+			<h1 class="mui-center mui-title">我的足迹</h1>
+		</header>
+		<div class="mui-content track">
+			<ul class="track-ul">
+			<!--{loop $history $p}-->
+				<li style="margin: 10px 0;">
+					<a class="clickbox" href="../{$p['code']}-g.html">
+						<span class="picbox"><img src="{$p['thumb']}" alt="" width="100" height="100"/></span>
+						<div class="good-infor">
+							<span class="title">{$p['name']}</span>
+							<div class="pricebox">
+								<span class="price">￥<span>{$p['price']}</span></span>
+							</div>
+						</div>
+					</a>
+				</li>
+			<!--{/loop}-->
+			</ul>
+		</div>
+	</body>
+</html>

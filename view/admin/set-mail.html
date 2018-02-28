@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>邮箱设置</title>
+<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div id="maintop"><div>你的位置：<span>系统设置 -> 邮箱设置</span></div></div>
+
+<div id="mainnav"> 	<a class="button" href="./admin.html?do=set&tab=base" onclick="this.blur();"><span>基本设置</span></a><a class="button" href="./admin.html?do=set-display" onclick="this.blur();"><span>通用缩略图设置</span></a><a class="button" href="./admin.html?do=set-mail" onclick="this.blur();"><span>邮箱设置</span></a></div>
+
+
+<div class="maincon">
+<form action="" method="post" id="form1" name="form1">
+	<div class="row">
+	  <input name="action" type="hidden" id="action" value="set-mail" />
+    <label class="row-name">功能开关：</label><div class="column"><input name="" class="nob" type="radio" value="" />开启 <input name="" class="nob"  type="radio" value="" />关闭</div></div>    
+
+	<div class="row"><label class="row-name">SMTP服务器：</label><div class="column"><input type="text" size="50" /><span>如：smtp.×××.com</span></div></div>
+
+	<div class="row"><label class="row-name">SMTP端口：</label><div class="column"><input type="text" size="50" /><span>一般默认为25</span></div></div>
+	<div class="row"><label class="row-name">发信地址：</label><div class="column"><input type="text" size="50" /><span></span></div></div>
+	<div class="row"><label class="row-name">登录账户：</label><div class="column"><input type="text" size="50" /><span></span></div></div>
+
+	<div class="row"><label class="row-name">登录密码：</label><div class="column"><input type="text" size="50" /><span></span></div></div>
+    
+<div class="row">
+  <label class="row-name">邮件通知地址：</label>
+  <div class="column"><input name="c_mail" type="text" id="c_mail" value="{$row[c_mail]}" size="50" /><span>用于接收系统通知的邮箱地址；如订单、留言等</span></div></div>
+
+    <div class="row"><label class="row-name"></label><div class="column"><a href="javascript:void(0);" onclick="javascript:dosub('form1');"  class="submit">提交</a> <a href="javascript:void(0);" class="submit blue">测试发信设置</a></div></div>
+</form>
+</div>
+
+
+
+
+
+
+</body>
+
+</html>

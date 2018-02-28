@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>栏目内容管理</title>
+	<link href="css/css.css" rel="stylesheet" type="text/css" />
+	<script src="js/main.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="maintop">
+	<div>你的位置：<span>系统设置</span></div>
+</div>
+<div id="mainnav">
+	<a class="button" href="./admin.html?do=set&tab=base" onclick="this.blur();"><span>基本设置</span></a>
+	<a class="button" href="./admin.html?do=set-display" onclick="this.blur();"><span>显示设置</span></a>
+	<a class="button" href="./admin.html?do=set-mail" onclick="this.blur();"><span>邮件设置</span></a>
+</div>
+<div class="maincon">
+	<form action="" method="post">
+		<div class="row"><label class="row-name">公司名称：</label>
+			<div class="column"><input type="text" size="50" /><span>填写公司名称，用于调用与显示</span></div>
+		</div>
+		<div class="row"><label class="row-name">首页标题：</label>
+			<div class="column"><input type="text" size="50" /><span>优化首页搜索结果标题，SEO优化</span></div>
+		</div>
+		<div class="row"><label class="row-name">附加标题：</label>
+			<div class="column"><input type="text" size="50" /><span>首页以外的页面标题附加，增加搜索可能性，SEO优化</span></div>
+		</div>
+		<div class="row"><label class="row-name">网站描述：</label>
+			<div class="column"><input type="text" size="50" /><span>写一个简单的网站描述，显示于搜索结果。SEO优化</span></div>
+		</div>
+		<div class="row"><label class="row-name">网站关键词：</label>
+			<div class="column"><input type="text" size="50" /><span>填写网站/产品相关关键词，利于SEO优化</span></div>
+		</div>
+		<div class="row"><label class="row-name">域名绑定：</label>
+			<div class="column"><input type="text" size="50" readonly="readonly" /><span>如要修改，请联系服务商</span></div>
+		</div>
+		<div class="row"><label class="row-name">邮箱通知地址：</label>
+			<div class="column"><input type="text" size="50" /><span>用于接收系统通知的邮箱地址；如订单、留言等</span></div>
+		</div>
+		<div class="row"><label class="row-name">ICP备案号：</label>
+			<div class="column"><input type="text" size="50" /><span>填写工信部备案编号</span></div>
+		</div>
+		<div class="row"><label class="row-name"></label>
+			<div class="column">
+				<a href="javascript:void(0);" class="submit">提交</a>
+			</div>
+		</div>
+	</form>
+</div>
+</body>
+</html>

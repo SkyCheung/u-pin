@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<html style="height:100%;">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>云EC</title>
+	<script>
+		if(top.frames.length > 0) {
+			top.location.href = "admin.html";
+		}
+	</script>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			font-family: "微软雅黑";
+		}
+		body {
+			height: 100%;
+			padding: 0;
+			margin: 0;
+			background: #f9f9f9;
+			font-size: 12px;
+			color: #585858;
+		}
+		ol, ul, li {
+			list-style: none;
+		}
+		label {
+			font-size: 12px;
+		}
+		img {
+			border: none;
+		}
+		a {
+			text-decoration: none;
+			font-size: 12px;
+			color: #626262;
+			transition: 500ms;
+		}
+		.top {
+			width: 100%;
+			height: 25%
+		}
+		.topleft {
+			position: absolute;
+			bottom: 15%;
+			right: 30%;
+		}
+		.topr {
+			width: 100%;
+			height: 100%;
+			/*background: url($images/new/toprb.jpg) 0 0 no-repeat;*/
+		}
+		.topright {
+			position: absolute;
+			bottom: 15%;
+			left: 10%;
+		}
+		.left {
+			width: 35%;
+			height: 100%;
+			float: left;
+			position: relative;
+		}
+		.right {
+			width: 60%;
+			height: 100%;
+			float: left;
+			position: relative;
+		}
+		.middle {
+			width: 100%;
+			height: 45%;
+		}
+		.midleft {
+			width: 100%;
+			height: 100%;
+		}
+		.midright {
+			width: 100%;
+			height: 100%;
+		}
+		.midright .on {
+			width: 50%;
+			height: 100%;
+			background: #fff;
+			box-shadow: 2px 2px 2px #ddd;
+		}
+		.midright .on form {
+			width: 100%;
+			height: 100%;
+		}
+		.midright .on img {
+			display: block;
+		}
+		.midright .on .login_div {
+			height: 90%;
+			width: 97%;
+			padding-top: 10%;
+			padding-left: 3%
+		}
+		.midright .on .login_div div {
+			width: 100%;
+			overflow: hidden;
+			height: 20%;
+		}
+		.midright .on .login_div div p {
+			float: left;
+			font-size: 14px;
+			color: #585858;
+			width: 20%;
+			margin-right: 1%;
+			line-height: 35px;
+			text-align: right;
+		}
+		.midright .on .login_div div input {
+			float: left;
+			height: 40%;
+			width: 50%;
+			border: 1px solid #d1d1d1;
+			padding: 1%;
+		}
+		.midright .on .login_div .buttom {
+			width: 54%;
+			height: 16%;
+			display: block;
+			font-size: 18px;
+			line-height: 44px;
+			text-align: center;
+			color: #fff;
+			/*background: url($images/new/login_a.jpg) repeat-x;*/
+			cursor: pointer;
+			margin-left: 20%;
+			background-size: auto 100% !important;
+			-moz-background-size: auto 100% !important;
+		}
+		.midright .on .login_div span {
+			float: left;
+			margin: 2% 0 0 1%;
+		}
+		.midright .on .login_div .xx {
+			width: 13px;
+			height: 13px;
+			margin: 0;
+		}
+		.midright .on .bq {
+			margin: 45px 0 0 40px;
+			color: #909090;
+			line-height: 20px;
+		}
+		.bottom {
+			width: 100%;
+			height: 30%;
+		}
+		.botright {
+			width: 100%;
+			height: 100%;
+			float: right;
+			/*background: url($images/new/botrb.jpg) left top no-repeat;*/
+			overflow: hidden;
+		}
+		.botright span {
+			padding: 30px 0 0 40px;
+			display: block;
+			line-height: 24px;
+		}
+		.midright .on .login_div .buttom {
+			width: 54%;
+			height: 15%;
+			display: block;
+			font-size: 15px;
+			line-height: 20px;
+			text-align: center;
+			color: #fff;
+			background-color: #007bd7;
+			cursor: pointer;
+			margin-left: 20%;
+			border: none;
+			border-radius: 4px;
+		}
+		.midright .on .login_div .buttom:hover {
+			background-color: #0072C6;
+		}
+		.topleft {
+			position: absolute;
+			bottom: 15%;
+			right: 18%;
+		}
+		.topright {
+			position: absolute;
+			bottom: 15%;
+			left: 5%;
+		}
+		#mx {
+			float: left;
+			margin-left: 13px;
+			margin-top: 1px;
+			display: none;
+		}
+		/*动画*/
+		
+		@keyframes animate-scaleout {
+			from {
+				transform: scale(1, 1);
+				opacity: 0.4;
+			}
+			to {
+				transform: scale(1.3, 1.3);
+				opacity: 0;
+			}
+		}
+		@-webkit-keyframes animate-scaleout {
+			from {
+				-webkit-transform: scale(1, 1);
+				opacity: 0.4;
+			}
+			to {
+				-webkit-transform: scale(1.3, 1.3);
+				opacity: 0;
+			}
+		}
+	</style>
+</head>
+<body onkeypress="if(event.keyCode==13){document.getElementById('login').click();return false;}">
+<div class="top">
+	<div class="left">
+		<div class="topleft"> </div>
+	</div>
+	<div class="right">
+		<div class="topr">
+			<div class="topright"> <img src="./view/admin/images/logo.png"> </div>
+		</div>
+	</div>
+</div>
+<div class="middle">
+	<div class="left"> </div>
+	<div class="right">
+		<div class="midright">
+			<div class="on">
+				<form name="vform1" class="vform1" action="" method="post">
+					<div class="login_div">
+						<div><input type="password" style="width: 1px;height:1px;border: none;float: right;">
+							<p>用户名：</p><input name="c_user" class="input" id="c_user" value="{$adminname}" size='30'><span> <label style="display: none;"><input name="login_yes" type="checkbox" id="login_yes" value="1" class="xx" {$checked}>记住用户名</label></span></div>
+						<div>
+							<p>密 码：</p> <input name="c_pwd" type="password" class="input" id="c_pwd" value="" size='30' /></div>
+						<div>
+							<p>验证码：</p><input style="width:105px;" name="vcode" type="text" class="input" id="vcode" value="" size="6" maxlength="4" onclick="showvode();" onfocus="showvode();" autocomplete="off" datatype="s4-4" nullmsg="请输入验证码！" errormsg="请输入验证码！" /> <input name="action" type="hidden" id="action" value="login"> <img id="mx" style="cursor:pointer;" src="" alt="看不清？点击更换另一个验证码。" border="1" onClick="refreshimage(this)" title="看不清？点击更换另一个验证码。"></div><input name="action" type="hidden" id="action" value="login"> <input type="button" class="buttom" value="登录" id="login"> </div>
+				</form>
+				<script src="/static/js/jquery.js" type="text/javascript"></script>
+				<script src="/static/js/layer/layer.min.js"></script>
+				<script type="text/javascript">
+					function refreshimage(clickidimg) {
+						clickidimg.src = '/vcode-M.html' + '?' + Date.parse(new Date());
+					}
+
+					function showvode() {
+						document.getElementById('mx').style.display = 'block';
+					}
+					document.getElementById('mx').src = '/vcode-M.html' + '?' + Date.parse(new Date());
+					layer.config({
+						skin: 'layer-msg'
+					});
+					$(function() {
+						//登录
+						$("#login").click(function() {
+							var c_user = $.trim($("#c_user").val());
+							var c_pwd = $.trim($("#c_pwd").val());
+							var vcode = $.trim($("#vcode").val());
+							if(c_user == '') {
+								layer.msg("请填写用户名");
+								return;
+							}
+							if(c_pwd == '') {
+								layer.msg("请填写密码");
+								return;
+							}
+							if(c_pwd.length < 6) {
+								layer.msg("密码不正确");
+								return;
+							}
+							if(vcode == '') {
+								layer.msg("请填写验证码");
+								return;
+							}
+							$.getJSON("/admin.html?do=login", {
+								c_user: c_user,
+								c_pwd: c_pwd,
+								vcode: vcode
+							}, function(res) {
+								if(res.err) {
+									layer.msg("登录失败，" + res.err);
+									return;
+								} else {
+									layer.msg("登录成功");
+									var return_url = '{$return_url}';
+									window.location.href = return_url != '' ? return_url : 'admin.html';
+								}
+							});
+						});
+					})
+					if(navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i)) {
+						document.write("<style>.left{display:none;}.right{width:100%;}.midright .on{width:100%;}</style>");
+						document.write('<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="format-detection" content="telephone=no">');
+					}
+				</script>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="bottom">
+	<div class="left"></div>
+	<div class="right">
+		<div class="botright"><span>Powered by ©2017 <a href="http://www.yunec.cn" target="_blank">佛山市云迈电子商务有限公司</a>  版权所有。版本：v{$ym_version}</span></div>
+	</div>
+</div>
+</body>
+</html>

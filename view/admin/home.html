@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>云EC电商系统</title>
+<meta name="author" content="www.yunec.cn" />
+<link href="{adm_tpl}/css/base.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div class="top">
+	<div class="logo"><a href="/" target="_blank"><img src="images/logo.png" alt="云EC"/></a></div>
+		<ul class="top_left" id="mainnav">
+			<!--{loop $menu $p}-->
+			<li class="{$p['ico']}"><a href="javascript:void(0);" id="{$p['url']}" target='ym_main'>{$p['name']}</a></li>
+			<!--{/loop}-->
+		</ul>
+		<ul class="top_right">
+			<li class="r1">
+				<a class="top_right_a">{$adminname}</a>
+				<ul class="infolist">
+					<li><a href="./admin.html?do=pwd" target='ym_main'>修改密码</a></li>
+					<li class="r2" style="display: none;"><a href="./admin.html?do=msg" target='ym_main'>消息</a></li>
+					<li class="r3"><a href="./admin.html?do=loginout">退出</a></li>
+				</ul>
+			</li>						
+		</ul>
+</div>
+<div class="left">
+	<iframe src="./admin.html?do=home&act=left" name="ym_menu" id="ym_menu" width="100%" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"></iframe>
+</div>
+<a href="javascript:void(0);" id="box-menu" title="收起左边菜单">&lt;</a>
+<div class="right">	
+	<div class="bottom">
+		<iframe src="./admin.html?do=goods" name="ym_main" id="ym_main" width="100%" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" onload="setIframeHeight();"></iframe>
+		<div class="left_bottom" style="line-height:38px; border-top: dashed 1px #ddd;margin-top: 20px; padding-left: 20px;">
+			Powered by <a href="http://www.yunec.cn" title="云EC电商系统官方网站" target="_blank">&copy;2017 佛山市云迈电子商务有限公司</a> 版本：v{$ym_version}<br/>
+		</div>
+	</div>
+</div>
+
+<script src="{adm_tpl}/js/jquery.js"></script>
+<script src="./static/js/layer/layer.min.js"  type="text/javascript"></script>
+<script src="./static/js/jquery.SuperSlide.2.1.1.js"  type="text/javascript"></script>
+<script type="text/javascript">	
+	 function setIframeHeight() {
+	 	top.document.getElementById('ym_main').height = document.getElementById("ym_main").contentWindow.document.documentElement.scrollHeight;
+	 }
+	
+	//菜单
+	var menu={if $menu_json}{$menu_json}{else}''{/if};
+	$("#mainnav a").click(function() {
+		var id = $(this).attr("id");
+		$(this).parent().addClass("cur").siblings().removeClass("cur");
+		initSubMenu(id);
+	});
+	
+	function initSubMenu(id) {
+		if (menu=='') {
+			return;
+		}
+		$.each(menu, function(k, v) {
+			if (v['url'] == id) {
+				if (v.child) {
+					ym_menu.window.initMenu(v.child);
+				}
+				else
+				{
+					ym_main.location.href ="./admin.html?do="+id;
+				}
+				return false;
+			}
+		});
+	}
+	
+	$(document).ready(function() {					
+		//--left自适应高度
+		$("#ym_menu").css("height", $(window).innerHeight());
+
+		$('.top_left .l2').hover(function(){
+			$(this).find('ul').stop(true,true)
+			$(this).find('ul').fadeIn(500)
+		},function(){
+			$(this).find('ul').stop(true,true)
+			$(this).find('ul').fadeOut(500)
+		});
+		
+		$('.top_right .r1').hover(function(){
+			$(this).find('ul').stop(true,true);
+			$(this).find('ul').fadeIn(500)
+		},function(){
+			$(this).find('ul').stop(true,true)
+			$(this).find('ul').fadeOut(500)
+		});
+		
+		//收起左边菜单
+		$("#box-menu").click(function() {
+			$(this).siblings(".left").toggle(200);
+		})
+	});
+
+	layer.config({
+	    extend: ['skin/moon/style.css'], //加载新皮肤
+	    skin: 'layer-ext-moon' //一旦设定，所有弹层风格都采用此主题。
+	});
+</script>
+</body>
+
+</html>

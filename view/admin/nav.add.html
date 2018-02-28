@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>增加导航栏</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 增加导航栏</span></div>
+		</div>
+
+		<div class="maincon base" style="min-height: 800px;">
+			<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+				<div class="row" style="display: none;"><label class="row-name">快捷选择：</label>
+					<div class="column">
+						<select id="system">
+							<option value="user.html">用户中心</option>
+							<option value="cat.html">商品分类</option>
+						</select>
+						<span></span></div>
+				</div>
+				<div class="row"><label class="row-name">名称：</label>
+					<div class="column"><input name="name" type="text" id="name" size="50" maxlength="50" /><span></span></div>
+				</div>
+				<div class="row"><label class="row-name">网址：</label>
+					<div class="column"><input name="c_url" type="text" size="50" maxlength="255"/><span>本站网址建议填写相对地址，如user.html，站外填写完整地址，如：http://www.yunmai.net</span></div>
+				</div>
+				 <div class="row"><label class="row-name">是否显示：</label>
+					<div class="column">
+						<label><input name="status" type="radio" checked="checked" value="1" />是</label>
+						<label><input name="status" type="radio" value="0" />否 </label><span>是否在导航栏上显示</span>
+					</div>
+				</div>					
+				<div class="row"><label class="row-name">是否新窗口打开：</label>
+					<div class="column">
+						<label><input name="target" type="radio" value="1" />是</label>
+						<label><input name="target" type="radio" checked="checked" value="0" />否 </label><span>链接是否在新窗口打开</span>
+					</div>
+				</div>
+				<div class="row"><label class="row-name">类型：</label>
+					<div class="column">
+						<label><input name="type" type="radio" value="top" />头部导航栏</label>
+						<label><input name="type" type="radio" checked="checked" value="mid" />主导航栏 </label>
+						<label><input name="type" type="radio" value="bot" />底部导航栏 </label><span></span>
+					</div>
+				</div>
+				<div class="row" style="display: none;"><label class="row-name">样式：</label>
+					<div class="column"><input name="style" type="text" id="style" size="50" maxlength="255" /><span>设置该导航有样式，可用于重点推荐</span></div>
+				</div>
+				<div class="row"><label class="row-name">排序：</label>
+					<div class="column"><input name="c_sort" type="number" min="0" max="255" id="c_sort" value="10" size="50" maxlength="5" /><span>数字</span></div>
+				</div>
+				<div class="row"><label class="row-name"></label>
+					<div class="column">
+						<input type="submit" class="sub" value="提交 " />
+						<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=nav'"/>
+						<input name="action" type="hidden" id="action" value="nav">
+						<input name="act" type="hidden" id="act" value="add">
+					</div>
+				</div>
+			</form>
+		</div>
+ 
+		<script type="text/javascript"> 
+		    $(document).ready(function () {
+		    	if ($("#c2 li").size()>9) {
+		    		$("#c2").css("overflow-y","scroll");
+		    	}		    		    	
+		    });
+            
+		    function check () {
+		     	if ($.trim($("#name").val())=='') {
+		     		msg("请填写导航栏名称");
+		     		return false;
+		     	}
+		     	/*var ids="";
+		     	$("#selectedcat a").each(function  () {
+		     		ids+="," + $(this).data("id");	     		
+		     	});
+		     	if (ids.lastIndexOf(",")>=0) {
+		     		ids=ids.substring(1, ids.length);
+		     	}
+		     	$("input[name='c_cat_ids']").val(ids);*/
+		     	
+		     	//alert(ids);
+		        return true;
+		     }
+		     //打开商品分类
+			$("#c_cat_ids").click(function (e) {
+				$(this).siblings(".winlayer").slideDown(200);
+				setTimeout(function() {
+					if ($(".catlist .it").innerHeight()>=345) {
+						$(".catlist .it").css({"overflow-y":"scroll"});
+			       	}				  
+				},200);
+								 			
+				e.stopPropagation();
+			});
+			
+			function getCat(t) {
+				var th = $(t);
+				var n = th.parents(".it").attr("id");				
+				n = n.substring(1, n.length);
+				var i = parseInt(n);//当前层级
+				//去掉孙子级及以下
+				while (n < $("#catlist .it").length){
+					n++;
+					$("#c"+n).each(function () {						
+						if (n>i+1) {
+							$(this).children("ul").html("");
+						}
+					});				
+				}
+				
+				$son ="";
+				$.ajax({
+					type:"post",
+					url:"./admin.html?do=ajax",
+					data:{act:"getCats", pid:th.data("id")},
+					dataType: "json",
+					success:function(data)
+					{
+						if (data.err=='') {
+							var m=0;
+							$.each(data.data, function(k,v) {
+								var chk="";
+								$("#selectedcat a").each(function  () {
+		     						if ($(this).data("id")==v.id) {
+		     							chk="checked='checked'";
+		     						}	     		
+		     					});
+								$son +='<li'+(chk!=''?' class="on selected"':'') +'><input type="checkbox" '+chk+' value="'+v.id+'" data-id="'+v.id+'" name="cat_ids" onclick="selectCat(this);"/><a href="javascript:void(0);" data-id="'+v.id+'" onclick="getCat(this);">'+v.name+'</a></li>';
+							    m++;
+							});
+							if (m> 10) {
+								$("#c"+(i+1)+" ul").css("overflow-y","scroll");
+							}
+							$("#c"+(i+1)+" ul").html($son);
+						} else{
+							msg(data.err);
+						}
+					},
+					error: function(data, t) {
+		msg(t);
+	},
+					complete: function(XMLHttpRequest, textStatus){             			
+          			}
+				});	
+			}
+			
+			//选择分类
+			function selectCat(t) {
+				getCat(t);
+				var th = $(t);
+				var id = th.val();
+				th.parent().toggleClass("on selected");
+				
+				if (th.prop("checked")) {
+					$("#selectedcat").append('<a href="javascript:void(0);" id="'+ id+'" data-id="'+ id+'" onclick="delcat(this)">'+ th.siblings("a").html()+'<i class="i-del"></i></a>');									
+				}
+				else
+				{
+					delcat(th);
+				}								
+			};
+			
+			$("#catlist").click(function(e) {
+				e.stopPropagation();
+			});
+			$("#close").click(function  () {
+				$(this).parents(".winlayer").hide();
+			});
+		     	
+			$(document).click(function () {
+				$(".winlayer").hide();
+			});
+		</script>
+	</body>
+
+</html>

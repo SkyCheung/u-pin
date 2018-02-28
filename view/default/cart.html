@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的购物车 - {$ym_endtitle}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/animate.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/cart.css"/>		
+	</head>
+
+	<body>
+		<div class="ny-header">
+			<div class="nb">
+				<div class="logo">
+					<a href="../index.html"><img src="{$ym_logo}" alt="" /></a>
+				</div>
+				<div class="right cart-center">
+					{if $ym_uname!=''}<a href="/user.html" class="red">{$ym_uname}</a>&nbsp;&nbsp;<a href="/user.html?act=logout" >退出</a> {else}<a href="login.html" class="red login">马上登录</a>
+						<a href="/reg.html" class="red">免费注册</a>{/if}
+					<a href="/myorder.html">我的订单</a>
+					<a href="/help.html">客户服务</a>
+				</div>
+			</div>
+		</div>
+		<div class="cart-box">
+			<div class="nb">
+				<div class="cart-step">
+					<ul>
+						<li class="cart1"><i></i>购物车</li>
+						<li class="cart2 "><i></i>确认订单</li>
+						<li class="cart3"><i></i>付款</li>
+						<li class="cart4"><i></i>支付成功</li>
+					</ul>
+				</div>
+				<form>
+				<div class="cart-detail">
+					<div class="cart-thead">
+						<div class="cart-th cart-one">
+							<label><input type="checkbox" id="btncheckall"  onclick="checkall(this,'#list');" class="btn-checkall"/>&nbsp;全选</label>
+						</div>
+						<div class="cart-th cart-two">
+							商品信息
+						</div>
+						<div class="cart-th cart-three">
+							单价（元）
+						</div>
+						<div class="cart-th cart-four">
+							数量
+						</div>
+						<div class="cart-th cart-five">
+							小计（元）
+						</div>
+						<div class="cart-th cart-six">
+							操作
+						</div>
+					</div>
+					<div class="cart-tbody" id="list">
+						<!--{loop $cart['goods'] $p}-->
+						<div class="cart-tr {if $p['status']==1}it-selected{/if}" id="{$p['goods_id']}" data-spec="{$p['spec_name']}">
+							<div class="cart-td checksingle  cart-one">
+								<input type="checkbox" name="chk_list" {if $p['status']==1}checked="checked"{/if} />
+							</div>
+							<div class="cart-td pro-details  cart-two">
+								<div class="pic-box">
+									<a href="{$p['url']}" target="_blank"><img src="{$p['thumb']}" width="80" height="80" alt="商品图片未上传"/></a>
+								</div>
+								<div class="pro-describ">
+									<a href="{$p['url']}" target="_blank">{$p['name']}</a>
+									<p>
+									<!--{loop $p['spec'] $v}-->
+									<span>{$v['name']}：{$v['val']}</span>
+									<!--{/loop}-->
+									</p>
+								</div>
+							</div>
+							<div class="cart-td  cart-three">
+								￥<b class="g-price">{if $p['user_price']!=0}{$p['user_price']}{else}{$p['price']}{/if}</b>
+							</div>
+							<div class="cart-td  cart-four btn-add-reduce">
+								<a class="reduce" href="javascript:void(0);">-</a><input type="text" data-max="{$p['number']}" value="{$p['num']}" class="pro-number result" maxlength="3"/><a class="add" href="javascript:void(0);">+</a>
+							</div>
+							<div class="cart-td orange-bold  cart-five">
+								￥<b class="subtotal">{if $p['user_amount']!=0}{$p['user_amount']}{else}{$p['amount']}{/if}</b>
+							</div>
+							<div class="cart-td  cart-six">
+								{if $p['favid']==0}<a href="javascript:void(0);" class="addfav">加入收藏</a>{else}<span>已收藏</span>{/if}
+								<a href="javascript:void(0);" class="removeGoods">删除</a>
+							</div>
+						</div>
+						<!--{/loop}-->
+					 </div>
+				</div>
+				<div class="account">
+					<div class="left">
+						<div class="check-all">
+						    <input type="checkbox" onclick="checkall(this,'#list');" class="btn-checkall"/>&nbsp;全选
+					    </div>
+				         <a href="javascript:void(0);" id="removebatch">删除选中商品</a>
+					</div>
+					<div class="right">
+						<div class="r-lside">
+							<div class="yunfei"><p class="yixuan">已选商品<span class="orange-bold" id="selectnum">0</span>件</p><p>总价：<span class="orange-bold big">￥<b id="total">0</b></span></p></div>							
+						</div>
+						<div class="r-rside">
+							<a href="javascript:void(0);" onclick="gotoOrder();" class="btn-jiesuan">去结算</a>
+						</div>
+					</div>					
+				</div>
+				</form>
+				<div class="tab-pro-like" style="display: none;">
+					<div class="slide-like-pro">
+						<div class="hd">
+							<ul>
+								<li><a href="#">特惠商品</a></li>
+								<li><a href="#">猜您喜欢</a></li>
+							</ul>
+						</div>
+						<div class="bd">
+							<div class="like-tehui">
+								<ul class="ul-pro-box">
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	
+                    	
+                    </ul>
+							</div>
+							<div class="like-guess">
+								<ul class="ul-pro-box">
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	<li>
+                    		<div class="probox">
+                    			<div class="top-pic">
+                    				<a href="#">
+                    					<img src="images/jingpin.jpg" alt=""/>
+                    					<i class="icon-look"></i>
+                    					<i class="mask"></i>
+                    					<p>仟湖龙鱼-坦克紫艳</p>
+                    				</a>
+                    			</div>
+                    			<div class="center">
+                    				<h3><a href="#">仟湖龙鱼-坦克紫艳</a><span>￥8500.00</span></h3>
+                    				<div class="word elli">
+                    					<p>仟湖精品即使那个蓝色短裤--董事局副科级大家仟湖精品即使那个蓝色短裤--董事局副科级大家</p>
+                    				</div>
+                    			</div>
+                    			
+                    		</div>
+                    		<div class="bottom">
+                    				<a href="#" class="buy">立即购买</a><i class="line"></i>
+                    				<a href="#" class="addcart">加入购物车</a>
+                    			</div>
+                    	</li>
+                    	
+                    	
+                    </ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		 
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>		
+		<script type="text/javascript" src="js/jquery.SuperSlide.2.1.1.js" ></script>				
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script type="text/javascript" src="js/cart.js" ></script>
+		<script type="text/javascript" src="js/jquery.cookie.min.js" ></script>
+		<script type="text/javascript">
+			$(function(){
+				loadLayer();
+				$(".ul-pro-box li").each(function(){
+					if($(this).index()%3==2){
+						$(this).css("margin-right","0");
+					}		
+				});
+				$(".slide-like-pro").slide({});
+				
+				sumShopping();
+				setall(".btn-checkall", "#list");
+			});
+		</script>		
+	</body>
+
+</html>

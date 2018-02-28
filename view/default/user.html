@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的账户 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		
+		<div class="center-body">
+			<div class="nb">
+				<div class="center-lside">
+					<!--{tpl usermenu}-->					
+				</div>
+				<div class="center-rside">
+					<div class="cen-top">
+						<div class="user-cart">
+							<div class="user-detail">
+								<div class="headvsname">
+								<a class="touxiang" href="/userinfo.html">
+									<!--{if $user['img']!=''}-->
+											<img src="{$user['img']}" alt="{$user['uname']}" width="80" height="80"/>
+											<!--{else}--><img src="images/avatar.jpg"/><!--{/if}-->
+								</a>
+								<p class="username">您好！{$user['uname']}</p>
+								</div>
+								<div class="user-info">
+									<div class="left">
+										<p>会员等级：<a href="#">{$user['grade_name']}</a></p>
+										<p>余额：<a href="/mymoney.html">￥{$user['balance']}</a></p>
+									</div>
+									<div class="right">
+										<p>积分：<a href="/mypoint.html">{$user['point']}</a></p>
+										<!--<p>优惠券：<a href="#">3</a></p>-->
+									</div>
+								</div>
+							</div>
+							<div class="user-function">
+								<ul>
+									<li class="odd marbot">
+										<a href="/myorder.html?t=1">
+											<i class="icon-payment"></i>
+											<span>待付款 {$count_unpay}</span>
+										</a>
+									</li>
+									<li class="marbot">
+										<a href="/myorder.html?t=4">
+											<i class="icon-shipments"></i>
+											<span>待发货 {$count_deliver}</span>
+										</a>
+									</li>
+									<li class="odd">
+										<a href="/myorder.html?t=2">
+											<i class="icon-receipt"></i>
+											<span>待收货 {$count_receiving}</span>
+										</a>
+									</li>
+									<li>
+										<a href="/myorder.html?t=3">
+											<i class="icon-evaluate"></i>
+											<span>待评价 {$count_comment}</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="cen-center center1">
+						<h2 class="borbot"><i class="icon-redline"></i>最近订单<a href="/myorder.html" class="view-more">全部订单&gt;</a></h2>
+						<div class="dingdan">
+							<!--{loop $order $p}-->
+							<div class="dd-list">
+								<div class="dd-title">
+									<p>下单时间：<span>{$p['add_time']}</span></p>
+									<p>订单编号：<span>{$p['order_sn']}</span></p>
+									<!--<i class="icon-del"></i>-->
+								</div>
+								<div class="dd-detail">
+									<ul>
+										<li class="dd-col1">
+											<!--{loop $p['goods'] $v}-->
+											<div class="more-pro">
+												<div class="box">
+													<a href="{$v['url']}" target="_blank" class="pro-pic"><img src="{$v['thumb']}" width="80" height="80" alt=""/></a>
+											         <div class="pro-details">
+												        <a href="{$v['url']}" target="_blank">
+												         <h3>{$v['name']}</h3>
+												         <p class="qiangrey"><!--{loop $v['spec'] $s}-->
+											<span>{$s['name']}：{$s['val']}</span>
+											<!--{/loop}--></p>
+												       </a>
+											       </div>
+												</div>
+											    <div class="price">
+											    	￥{$v['price']}
+											    </div>
+											    <div class="num">
+											    	{$v['num']}
+											    </div>											    
+											</div>
+											<!--{/loop}-->
+										</li>
+										<li class="dd-col2">
+											<b>￥{$p['amount']}</b>
+											<p class="qiangrey"></p>
+										</li>
+										<li class="dd-col3">
+											<p class="qiangrey">{$p['status_name']}</p>
+											<a href="details.html?oid={$p['order_sn']}" class="qiangrey" target="_blank">查看详情</a>
+										</li>
+										<li class="dd-col4">
+											<!--{if $p['status']==order_finish}-->
+											{if $p['is_comment']==0}											
+											<a href="comment.html?oid={$p['order_sn']}" target="_blank">评价</a>
+											{/if}											
+											<!--{elseif $p['status']==order_paying}-->
+											<a href="pay.html?oid={$p['order_sn']}" target="_blank" style="border-color: #de342f;color: #de342f;">付款</a>
+											<!--{elseif $p['status']==order_receiving}-->	
+											<a href="details.html?oid={$p['order_sn']}" target="_blank" style="border-color: #de342f;color: #de342f;">确认收货</a>
+											<!--{/if}-->
+											
+											<a href="javascript:void(0);" onclick="addcartMult('{loop $p['goods'] $v}{$v['goods_id']}- {/loop}',1,1);">再次购买</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<!--{/loop}-->
+							 
+						</div>
+					</div>
+					<div class="cen-bottom" id="slide-change">
+						<h2 class="borbot"><i class="icon-redline"></i>最近浏览<a href="javascript:void(0);" class="view-more next">换一组&gt;</a></h2>
+						<div class="bd">
+						<div class="dlList">
+							{loop $history $p}
+							<dl>
+								<dt>
+									<a href="{$p[url]}"><img src="{$p[thumb]}" width="175" height="175" alt=""/></a>
+								</dt>
+								<dd>
+									<a href="{$p[url]}">
+										<span class="lltitle">{$p[name]}</span>
+										<span class="price">￥{$p[price]}</span></a>
+								</dd>
+							</dl>
+							 {/loop}
+						</div>
+					</div>
+						</div>
+				</div>
+			</div>
+		</div>
+		
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/jquery.SuperSlide.2.1.1.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+      <script>
+      	$(".center-menu li.title").each(function(){
+      		$(this).click(function(){
+      		
+      		});
+      	});
+		$(function () {
+			loadLayer();
+		});
+      	$("#slide-coupon").slide({titCell:".hd ul",mainCell:".bd ul",autoPage:true,effect:"left",vis:1});
+      	$("#slide-change").slide({ mainCell:".dlList", effect:"leftLoop",autoPage:true,scroll:5,vis:5});	
+      </script>
+
+	</body>
+
+</html>

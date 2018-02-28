@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>帮助中心 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/help.css" />
+		<style type="text/css">
+			body{background-color:#fff;}
+		</style>
+	</head>
+	<body>
+		<div class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-center mui-title">{$name}</h1>
+		</div>
+		<div class="mui-content-top">
+			<!--{loop $help $p}-->
+			<div class="help-list">
+				<a href="{if $p['son']}javascript:void(0);{else}{$p['url']}{/if}" class="nli"><span class="help-word">{$p['name']}</span></a>
+				<ul class="mess-nb-ul help hide">
+					<!--{loop $p['son'] $v}-->
+					<li>
+						<a href="{$v['url']}">{$v['name']}</a>
+					</li>
+					<!--{/loop}-->
+				</ul>
+			</div>
+			<!--{/loop}-->
+		</div>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+		<script>
+			mui('body').on('tap','.help li a',function(){
+				var a = this;
+				var href = a.href;
+				if(href != 'javascript:void(0);'){
+					window.location.href = href;
+				}
+			});
+			mui('body').on('tap','.mui-icon-left-nav',function(){
+				history.go(-1);
+			});
+			mui('body').on('tap','a',function(){
+				var Ulhelp=$(this).siblings();
+				if(Ulhelp.hasClass("hide")){
+					$(this).next("ul.help").slideDown(100);
+					$(this).addClass("on");
+					Ulhelp.removeClass("hide");
+				}else{
+					$(this).next("ul.help").slideUp(100);
+					$(this).removeClass("on");
+					Ulhelp.addClass("hide");
+				}
+			});
+		</script>
+	</body>
+</html>

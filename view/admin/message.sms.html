@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>短信配置</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 短信配置</span></div>
+		</div>
+		<div id="mainnav" class="tabhd">
+			<ul>
+				{loop $row $i $p}
+				<li {if $p['status']==1}class="cur"{/if}><a href="javascript:void(0);" title="">{$p['name']}</a></li>
+				{/loop}
+			</ul>
+		</div>
+		<div class="tabbd" style="min-height: 800px;">
+			{loop $row $i $p}
+			 <div class="maincon tabit tpl-theme" style="{if $p['status']==1}display: block;{else}display: none;{/if}">
+				<br />
+				<div class="list">
+					<form action="" method="post" id="form1" enctype="multipart/form-data" name="form{$i}" onsubmit="return check();">
+					<div class="row"><label class="row-name">服务商：</label>
+						<div class="column"><input name="name" id="name" type="text" value="{$p['name']}" size="50" maxlength="50" /><span>短信服务商名称</span></div>
+					</div>
+					<div class="row"><label class="row-name">签名：</label>
+						<div class="column"><input name="signname" id="signname" type="text" value="{$p['signname']}" size="50" maxlength="50" /><span>显示在手机短信上的签名</span></div>
+					</div>
+					<div class="row"><label class="row-name">是否启用：</label>
+						<div class="column">
+							<label><input name="status" type="radio" {if $p['status'] ==1}checked="checked"{/if} value="1" />是</label>
+							<label><input name="status" type="radio" {if $p['status'] ==0}checked="checked"{/if}  value="0" />否 </label><span></span>
+						</div>
+					</div>
+					<!--{loop $p['config'] $v}-->
+					<div class="row"><label class="row-name">{$v[value]}：</label>
+						<div class="column"><input name="{$v[name]}" type="text" value="{$v['val']}" size="50"  maxlength="1000"/><span>{$v[desc]}</span></div>
+					</div>
+					<!--{/loop}-->
+					<div class="row"><label class="row-name"></label>
+						<div class="column">
+							<input type="submit" class="sub" value="提交 " />
+							<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=message.sms&id=1'"/>
+							<input name="action" type="hidden" id="action" value="message">
+							<input name="code" type="hidden" value="{$p['code']}">
+							<input name="act" type="hidden" id="act" value="sms">
+						</div>
+					</div>
+					</form>
+				</div>
+			</div>
+			{/loop}
+		</div>
+		<style type="text/css">.maincon .row .row-name{width: 300px;}</style>
+ 
+		<script type="text/javascript"> 	 
+ 
+		    function check () {
+		     	if ($.trim($("#name").val())=='') {
+		     		msg("先填写服务商");return false;
+		     	}
+		        return true;
+		    }		   
+			 
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>商品销售排行</title>
+		<link rel="stylesheet" href="{adm_tpl}/css/chart.css" />
+	</head>
+	<body>
+		<div class="stat stat_sale_top">
+			<h3 class="title">商品销售排行</h3>
+			
+			<div class="hd">
+				<div class="op-date">
+					<div class="ladder-mod" data-ismult="0" style="display: block;">
+							<input type="hidden" id="days" value="30">
+							<div class="it-list" style="float:left;">
+								<span data-id="7">最近7天</span>
+								<span data-id="30" class="selected">最近30天</span>
+								<span data-id="365">最近一年</span>
+								
+							</div>		
+							<div style="float:left;margin-left: 15px;">
+								自定义：
+								<input type="text" id="start_date" value="{$start_date}" maxlength="10" readonly="readonly" class="time input wp100" size="10"/> - <input type="text" id="end_date" value="{$end_date}" readonly="readonly" maxlength="10" class="time input wp100" size="10"/>
+							</div>
+							<div style="float: left; margin-left: 15px;">
+								排行数量：<div class="select-mod">
+										<input type="hidden" id="num" value="20"/>
+										<span id="cur" data-id="20">20</span>
+										<div class="it-list">
+											<p id="10">10</p>						
+											<p id="20">20</p>
+											<p id="30">30</p>
+											<p id="50">50</p>
+											<p id="100">100</p>
+										</div>					
+									</div>
+							</div>
+					</div>	
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="bd">
+				<ul class="infolist">
+				</ul>	
+				<div class="clear"></div>
+			</div>			
+		</div>
+		 
+		 
+		<link rel="stylesheet" type="text/css" href="./static/datepicker/css/jquery-ui.css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js" ></script>
+		<script type="text/javascript" src="{adm_tpl}/js/main.js" ></script>
+		<script src="./static/datepicker/js/jquery-ui-1.10.4.custom.min.js"></script>
+		<script src="./static/datepicker/js/jquery.ui.datepicker-zh-CN.js"></script> 
+		<script type="text/javascript">
+			$(document).ready(function(){					
+				$("#start_date,#end_date" ).datetimepicker({showTimepicker:false});
+
+				query_salenum();//加载图表数据
+				var topNum = getCookie("stat_sale_top");
+				if (topNum) {
+					$("#num").val(topNum).siblings("#cur").html(topNum);	
+				}				
+				
+				$("#query").click(function() {
+					query_salenum();
+				});
+				
+				//ui-datepicker-close
+				$("#start_date,#end_date").change(function() {
+					$(".ladder-mod .it-list span").removeClass("selected");
+					$("#days").val('');
+					query_salenum();	
+				});
+				
+				$(".ladder-mod .it-list span").click(function() {
+            		query_salenum();
+           		 });		
+				
+				function query_salenum() {
+					var num = $("#num").val(), days =$("#days").val(); 					
+					
+					$.getJSON("admin.html?do=stat_sale_top", {act:"get_sale_top",days:days, start_date:$("#start_date").val(), end_date:$("#end_date").val(),num:num}, function(res) {
+							var html ='';
+							if (res.data && res.data.length>0) {
+								$.each(res.data, function(k, v) {
+									html +='<li><a href="'+v.url+'" target="_blank"><img src="'+v.thumb+'"/>'+v.name+'</a><b>'+v.total+'</b></li>';
+								});
+							}
+							$(".infolist").html(html);
+					});
+				}
+				
+				$(".select-mod .it-list p").click(function() {
+					setCookie("stat_sale_top", $("#num").val(), 3650);
+					query_salenum();
+				});				
+			});
+		</script>
+	</body>	
+</html>

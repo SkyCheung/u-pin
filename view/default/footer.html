@@ -1,0 +1,43 @@
+<div class="footer">
+			<div class="nb">
+{$diy_indexfoot}
+				<div class="foot-navson">
+					<div class="navsonbox">
+						<!--{loop $help $p}-->
+						<dl>
+							<dt><a href="{$p['url']}" target="_blank">{$p['name']}</a></dt>
+							<!--{loop $p['son'] $v}-->
+							<dd><a href="{$v[url]}" target="_blank">{$v[name]}</a></dd>
+							<!--{/loop}-->
+						</dl>
+						<!--{/loop}-->
+					</div>
+					<div class="foot-service">
+						<p>客服电话</p>
+						<div class="tel">{$diy_mobile}</div>
+						<a href='javascript:;' onclick='easemobim.bind({configId: "ee6e6e9e-47e8-4114-b38c-15cee8e04b25"})' class="btn-service">在线客服</a>
+					</div>
+				</div>
+				<div class="foot-sortnav">
+					<div class="box"><a href="/" target="_blank">首页</a></div>
+					<!--{loop $nav_footer $p}-->
+					<div class="box"><a href="{$p[url]}" {if $p['target']==1}target="_blank"{/if}>{$p[name]}</a></div>
+					<!--{/loop}-->
+				</div>
+				{if $link2}
+				<div class="foot-sortnav">
+					<!--{loop $link $p}-->
+					<a href="{$p[url]}" {if $p['target']==1}target="_blank"{/if}>
+						<img src="{$p['img']}" width="120" height="60"/>
+						<br />
+						{$p['title']}</a>
+					<!--{/loop}-->
+				</div>
+				<!--{/if}-->
+				<div class="copyright">
+					<p>{$diy_copyright}</p>
+				</div>
+			</div>
+		</div>
+		<p style="display: none;">{if $ym_site_statice}{$ym_site_statice}{/if}</p>
+		<script src='//kefu.easemob.com/webim/easemob.js'></script>

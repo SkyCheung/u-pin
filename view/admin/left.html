@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>云EC</title>
+<meta name="author" content="www.yunec.cn" />
+<link href="{adm_tpl}/css/base.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body style="height:100%;">
+
+<div class="left" id="leftmenu" style="position: relative;">
+	<div class="left_nav">	
+		<ul id="menu"></ul>
+	</div>
+	
+	
+</div>
+<script src="{adm_tpl}/js/jquery.js"></script>
+<script type="text/javascript">
+	//初始化菜单
+	function initMenu(data) {
+		var html='';
+		$.each(data, function(k, v) {
+			html +='<li><a href="./admin.html?do='+ v.url +'" target="ym_main">'+ v.name +'</a></li>';
+		});
+		$("#menu").html(html);
+		//$("#menu li").eq(0).trigger("click"); //默认显示第一个
+		$("#menu li").first().addClass("cur");
+		top.document.getElementById('ym_main').src = $("#menu a").first().attr("href");
+	}
+	$("#menu").on("click","li",function() {
+		$(this).addClass("cur").siblings().removeClass("cur");
+	});
+	window.onload=function () {
+		parent.initSubMenu('goods');
+		$("#leftmenu").css("height", $(window).height()-51);
+	}
+</script>
+
+</body>
+
+</html>

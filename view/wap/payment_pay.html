@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>输入支付密码</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style>
+			.paymentcode input{margin-bottom:10px;}
+			.btn-box{margin:10px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="" class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title">输入支付密码</h1>
+		</header>
+		<div class="mui-content-top payment">
+			<div class="paymentcode">
+				<input type="password" name="" id="setpassw" value="" placeholder="请输入支付密码"/>
+			</div>
+			<div class="btn-box">
+				<input type="submit" class="btn btn-grey btn-single-click" id="save-btn" value="下一步">
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script src="js/mui.min.js"></script>
+		<script>
+			//判断验证码
+		$(function () {
+			$("#save-btn").click(function(){
+				if ($("#setpassw").val()=="") {
+					$("#setpassw").focus();
+					mui.toast("请输入支付密码");
+					return false;
+				}
+			});	
+				$("#setpassw").keyup(function(){
+					if ($(this).val()!="") {
+						$("#save-btn").removeClass("btn-grey");
+					}
+					else{
+						$("#save-btn").addClass("btn-grey");
+					}
+					$(this).next().focus();
+	       	    });    	
+		});
+		</script>
+	</body>
+</html>

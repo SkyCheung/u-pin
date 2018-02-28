@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>支付订单 - {$ym_endtitle}</title>
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" type="text/css" href="css/cart.css" /> 
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+<div class="ny-header">
+	<div class="nb">
+		<div class="logo">
+			<a href="/"><img src="{$ym_logo}" alt="" /></a>
+		</div>
+		<div class="right cart-center"> {if $ym_uname!=''}
+			<a href="/user.html" class="red">{$ym_uname}</a>&nbsp;&nbsp;
+			<a href="/user.html?act=logout">退出</a> {else}
+			<a href="login.html" class="red login">马上登录</a>
+			<a href="/reg.html" class="red">免费注册</a>{/if}
+			<a href="/myorder.html">我的订单</a>
+			<a href="/help.html">客户服务</a>
+		</div>
+	</div>
+</div>
+<div class="cart-box">
+	<div class="nb">
+		<!--{if !$order_type || $order_type==0}-->
+		<div class="cart-step">
+			<ul>
+				<li class="cart1"><i></i>购物车</li>
+				<li class="cart2 oncart2"><i></i>确认订单</li>
+				<li class="cart3 oncart3"><i></i>付款</li>
+				<li class="cart4"><i></i>支付成功</li>
+			</ul>
+		</div>
+		<!--{else}-->
+		 <br />
+		<!--{/if}-->
+		<div class="cart3-body">
+			<div class="cart3-zf-box">
+				<h3 style="margin-bottom: 100px;text-align: center;font-size: 20px;padding-left: 0;">支付中心</h3>
+				<!--{if !$order_type || $order_type==0}--> 
+					<p style="font-size: 16px;">订单提交成功，请您尽快付款！</p>
+					<p style="font-size: 16px;">订单号：{$oid}</p>
+					<!--{if $order['pay_code']!='cod'}--><p style="font-size: 14px;display: none;">请您在提交订单后<b class="red">24小时</b>内完成支付，超时后订单会自动取消。</p><!--{/if}-->
+					<!--{if $order['payble_amount']}--><span class="zf-price">应付金额&nbsp;<b class="orange-bold" id="payble_amount">{$order['payble_amount']}</b><span>元</span>
+						<!--{if $ym_split_pay}-->
+						<span style="margin-left: 20px;color: #666;display: none;">银行卡限额？<a href="javascript:void(0);" style="display: inline-block;font-size: 16px;" class="lnk" id="splitpay" data-splitpay="0">分批支付</a></span>
+						<div id="splitpay-mod" style="margin: auto; {if !$pay_id}display: none;{/if}">
+							<br /><br />
+							<form enctype="multipart/form-data" method="post" onsubmit="return checkSplit();">
+								<span>本次支付：{if !$pay_id}<input type="text" class="input" style="width: 101px;" id="split_amount" name="pay_amount" onkeyup="onlyAmount(this)" maxlength="8" value="{$pay_amount}"  />{else}<label style="width: 101px;font-size: 20px;color: #de342f;" id="split_amount">{$pay_amount}</label>元 {/if}
+									<span style="margin-left: 15px;">还需支付：<label style="display: inline-block;text-align: left;"><b style="font-weight: normal;font-size: 14px;" id="remain_amount">0</b>元</label></span>
+								</span>
+							
+								<br /><br />
+								<div>
+									<input type="hidden" value="{if $order_type}{$order_type}{else}0{/if}" name="order_type"/>
+									<input type="hidden" value="{if $pay_id}1{else}0{/if}" name="iscancel" id="iscancel"/>
+									<input type="submit" class="btn" name="submit" value="{if $pay_id}取消分批{else}确定{/if}" style="width: 80px;" id="btnsplitpay"/></div>
+							</form>
+							
+							<script type="text/javascript">
+								calcRemainAmt();
+								
+								//本次支付
+								$("#split_amount").keyup(function() {
+									calcRemainAmt();									
+								});
+								
+								function calcRemainAmt() {
+									var t = $("#split_amount");
+									{if !$pay_id}
+									var split_amount = $.trim(t.val());
+									{else}
+									var split_amount = $.trim(t.html());
+									{/if}
+									
+									split_amount = split_amount =='' ? 0 : parseFloat(split_amount);
+									var	payble_amount = parseFloat($("#payble_amount").html()),
+										remain_amount = payble_amount-split_amount
+										if(remain_amount<0) {
+											t.val(payble_amount);
+											remain_amount = 0;
+										}
+									$("#remain_amount").html(remain_amount);
+								}
+								
+								//开启/取消分批支付
+								$("#splitpay").click(function() {
+									if($(this).data('splitpay') == 1) {
+										$("#splitpay-mod").hide();
+										$(".box-code").show();
+										$(this).html("分批支付").data('splitpay', 0);
+									}
+									else
+									{
+										$("#splitpay-mod").show();
+										$(".box-code").hide();
+										$(this).html("不用分批").data('splitpay', 1);										
+									}
+								});
+								
+								//确定分批支付
+								$("#btnsplitpay").click(function() {
+									 
+									$(".box-code").show();									
+								});		
+								
+								function checkSplit() {
+									if($("#iscancel").val()==1) {
+										return true;
+									}
+									
+									var split_amount = $.trim($("#split_amount").val());
+									if(split_amount =='' || split_amount ==0) {
+										msg("请填写本次支付金额");
+										return false;
+									}
+									return true;
+								}
+							</script>
+						</div>	
+						<!--{/if}-->
+					</span>					
+					<!--{/if}-->
+				<!--{else}-->
+					<form enctype="multipart/form-data" method="post" onsubmit="return check();">
+						<div style="margin-bottom: 50px;margin-left: 238px;">
+							充值金额：<input type="text" class="input" id="pay_amount" onkeyup="onlyAmount(this, 2);" name="pay_amount" maxlength="6" size="8" style="text-align: center;" value="{$pay_amount}" {if $pay_amount}readonly="readonly"{/if}> 元						
+							<input type="hidden" class="single-slider" value="0" /><span class="tip" style="margin-left: 30px;">拖动滑块选择金额</span>						
+						</div><br />
+						{if $order_type==1 && $pay_amount==0}<input type="submit" name="submit" class="btn" id="next" value="下一步"/>{/if}
+					</form>
+				<!--{/if}-->
+				
+				{if $err}
+				 <br />
+				 <p style="font-size: 20px;color: #de342f;">{$err}</p>
+				{/if} 
+				{if $pay_again==1}<a href="/myorder.html" class="btn" style="width: 120px;margin: 50px auto;">重新支付</a>{/if}
+				{if $payable==1}			 				
+				<div class="box-code">
+					<div id="boxcode">{$payhtml}</div>
+					{if $is_qrcode==1}
+					<div>
+						<p id="pay_time">二维码<span class="deep-red" id="wxmin">2</span>分<span class="deep-red" id="wxsec">0</span>秒后过期</p>
+						<p id="pay_newqrcode"><a href="javascript:void(0);" onclick="get_pay_qrcode('{$pay_code}');">二维码已过期，重新获取二维码</a></p>
+					</div>
+					<script type="text/javascript">$(function(){check_paystatus('{$pay_code}');})</script>
+					{/if}
+					<input type="hidden" id="txnTime" value="{$order['pay_time']}" />
+				</div>
+				{/if}
+			</div>
+			{if $payable==1}
+			<div class="zhifu-box" style="border: none;border-top: dashed 1px #ddd;{if $order_type==1 && $pay_amount==0}display: none;{/if}">
+					<ul class="zfb" id="paylist">
+							<li style="line-height: 53px;">选择付款方式</li>
+							<!--{loop $payment $p}-->
+							<li>
+								<i class="icon-check-zf" {if $pay_code==$p['pay_code']}style="display: block;"{/if}></i>
+								<a href="pay.html?oid={$oid}&pay_code={$p['pay_code']}&order_type={$order_type}&pay_amount={$pay_amount}{if $pay_id}&pay_id={$pay_id}{/if}" id="{$p['pay_code']}" {if $pay_code==$p['pay_code']}class="selected"{/if}><img src="{upload_img}/payment/{$p['pay_code']}.png" />{$p['pay_name']}</a>
+							</li>
+							<!--{/loop}-->
+					</ul>
+		    </div>
+		    {/if}
+		    {if $pay_code == 'unionpay'}
+		    <script type="text/javascript">$(function(){check_paystatus('{$pay_code}');})</script>
+		    {/if}
+		</div>
+	</div>
+</div>
+<!--{tpl footer}-->
+<!--{tpl toolbar}-->
+
+<script type="text/javascript" src="js/jquery.SuperSlide.2.1.1.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/cart.js"></script>
+<script type="text/javascript" src="js/jquery.range.js"></script>
+<link rel="stylesheet" href="css/jquery.range.css">  
+<style>.slider-container{display: inline-block; margin-left: 50px;}</style>
+
+<script>
+	var s = 120;
+	var inter;
+	var order_type ='{$order_type}';
+	
+	$(function() {
+		$(".ul-pro-box li").each(function() {
+			if($(this).index() % 3 == 2) {
+				$(this).css("margin-right", "0");
+			}
+		});
+		
+		inter = window.setInterval(setRemainTime, 1000); //间隔函数，1秒执行 							
+		$(".slide-like-pro").slide({});		
+		loadLayer();
+		
+		var jrange = $('.single-slider').jRange({ 
+	        from: 0, //滑动范围的最小值，数字，如0 
+	        to: 5000, //滑动范围的最大值，数字，如100 
+	        step: 100,//步长值，每次滑动大小 
+	        scale: [0,1000,2000,3000,4000,5000],//滑动条下方的尺度标签，数组类型，如[0,50,100] 
+	        format: '%s',//数值格式 
+	        width: 300, //滑动条宽度 
+	        showLabels: true,// 是否显示滑动条下方的尺寸标签 
+	        showScale: true, //是否显示滑块上方的数值标签 
+	        onstatechange: function() { 
+	        	if ($("#pay_amount").prop("readonly")===false) {
+	        		$("#pay_amount").val($(".single-slider").val()); 
+	        	}	        	
+	        }
+	    }); 
+	    
+	});
+	
+	function check() {
+	    	var pay_amount = $.trim($("#pay_amount").val());
+	    	if (pay_amount == '' || parseFloat(pay_amount)==0) {
+	    		msg("请填写充值金额");return false;
+	    	}
+	    	$(".zhifu-box").show();
+	    	$("#pay_amount").attr("readonly",true).css({"background-color":"transparent",'border': 'none'});
+	    	return true;
+	    	$(this).remove();
+	};
+	
+	/*$("#paylist li a").click(function() {
+		
+	})*/
+		
+	//将时间减去1秒，计算天、时、分、秒 
+	function setRemainTime() {
+		if(s > 0) {
+			s--;
+			var second = Math.floor(s % 60); // 计算秒     
+			var minite = Math.floor((s / 60) % 60); //计算分 
+			$("#wxmin").html(minite);
+			$("#wxsec").html(second);
+			
+		} else { 
+			window.clearInterval(inter);
+			$("#pay_newqrcode").show().siblings().hide();
+		}
+	}	
+	
+	//获得支付二维码
+	function get_pay_qrcode(pay_code) {
+			$.getJSON("pay.html",{oid:'{$oid}',act:'get_payhtml',pay_code:pay_code},function (res) {
+				if (!res || res.data==null) {
+					msg("获取二维码失败，请刷新页面后重试，或选择其它支付方式", 5000);
+				}
+				if(res.err && res.err != '') {
+					msg(res.err);
+					if(res.url && res.url != '') {
+						setTimeout(function(){window.location.href = res.url;},3000);
+					}
+					else
+					{
+						setTimeout(function(){window.location.reload();},3000);
+					}
+					return;
+				}
+				 
+				if (res.err_code && res.err_code=='ORDERPAID') {
+					window.location.href = order_type =='1' ? "mymoney.html" : "payresult.html?oid={$oid}";
+				} else{
+					$("#boxcode").html(res.data.pay_html);
+					if (res.data.result_code !='') {
+						$("#pay_newqrcode").hide().siblings().hide();
+					} else{
+						$("#pay_newqrcode").hide().siblings().show();
+						s = 120;inter = window.setInterval(setRemainTime, 1000);	
+					}					
+				}				
+			});			
+	};
+	
+	//检测是否支付
+	function check_paystatus(pay_code) {
+		var pay_int =window.setInterval(function() {			
+			$.getJSON("pay.html",{oid:'{$oid}', act:'check_paystatus',pay_code:pay_code, order_type:order_type, pay_time: $("#txnTime").val()},function (res) {
+					/*if (res.res &&  res.res =='FAIL') {
+						clearInterval(pay_int);
+					}*/
+					if(res.err && res.err != '') {
+						//msg(res.err);
+						if(res.url && res.url != '') {
+							setTimeout(function(){window.location.href = res.url;},3000);
+						}
+						
+						return;
+					}					
+					 
+					if (res==1) {
+						window.location.href=order_type =='1' ? "mymoney.html" : "payresult.html?oid={$oid}";
+					}			
+			});
+		}, 5000);
+	}
+</script>
+</body>
+</html>

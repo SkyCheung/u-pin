@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>售后服务</title>
+	<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+	<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+	<script src="{adm_tpl}/js/api.js"></script>
+</head>
+<body>
+<div id="maintop">
+	<div>你的位置：<span>退换货管理</span></div>
+</div>
+<div class="maintab">
+	<ul class="rowtit">
+		<li class="w10"><strong>退换货编号</strong></li>
+		<li class="w10"><strong>订单号</strong></li>
+		<li class="w40 center"><strong>商品名称</strong></li>
+		<li class="w10"><strong>申请时间</strong></li>
+		<li class="w10"><strong>状态</strong></li>
+		<li class="w15"><strong>操作</strong></li>
+	</ul>
+	<!--{loop $row $p}-->
+	<ul>
+		<li class="w10"> [{$lang_service_type[$p['type']]}] {$p['id']} </li>
+		<li class="w10">
+			<a href="admin.html?do=order.details&id={$p['order_sn']}" target="ym_main">{$p['order_sn']}</a>
+		</li>
+		<li class="w40 center">
+			<a href="{$p['url']}" target="_blank">{$p['name']}</a>
+		</li>
+		<li class="w10"> {$p['addtime']} </li>
+		<li class="w10"> {$lang_service[$p['status']]} </li>
+		<li class="w10">
+			<a href="admin.html?do=service.details&id={$p['id']}" class="lnk">查看</a>
+		</li>
+	</ul>
+	<!--{/loop}-->
+</div>
+<div class="page">
+	<!--{$pages['pages']}-->
+</div>
+
+ 
+</body>
+</html>

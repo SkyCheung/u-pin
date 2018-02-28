@@ -1,0 +1,30 @@
+/*counpon yunec.cn*/
+body{background-color: #fff;}
+
+.btn{background-color: #fff !important;width: 100px;border: solid 1px #74d2d4;color: #2ab6b9;padding-top: 8px;padding-bottom: 8px;}
+.btn:hover{background-color: #74d2d4 !important;color: #fff;}
+.couponlist{position: relative;overflow: hidden; margin-top: 20px;padding-top: 20px; border-top: dashed 1px #ddd;margin-bottom: 60px;}
+.couponlist .cp-it{width:213px;float: left;margin-right: 33px;margin-bottom: 33px;border:solid 1px #74d2d4;border-radius: 4px;position: relative;overflow: hidden;}
+.couponlist .last{margin-right: 0px !important;}
+.couponlist .cp-it .hd{height: 100px;background-color: #74d2d4;}
+.couponlist .cp-it .bt{height: 150px;background-color: #fdfdfd;}
+.couponlist .cp-it span{display: block;}
+.couponlist .cp-it .hd span{text-align: center;color: #fff;}
+.couponlist .cp-it .hd span.amount{font-size: 28px;padding-top: 5px;}
+.couponlist .cp-it .hd span.amount_reached{margin-top: 6px;}
+.couponlist .cp-it .hd span.date{color: #075456;margin-top: 8px;}
+.couponlist .cp-it .bt .option{padding: 10px;line-height: 24px;}
+.couponlist .cp-it .bt span{color: #333;font-size: 12px;height: 24px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.couponlist .cp-it .bt span label{color: #666;}
+.couponlist .cp-it .bt .tit{font-weight: normal;}
+.couponlist .cp-it .opbtn{text-align: center;}
+.couponlist .cp-it .opbtn .btn{margin-top: 8px;}
+.discount .couponlist .cp-it{margin-right: 8px;cursor: pointer;}
+.discount .couponlist .cp-it .bt{height: 113px;}
+#couponselected{display: inline-block;margin-left: 30px;border: solid 1px #D02626;color: #D02626; padding: 3px 10px;font-size: 12px;border-radius: 5px;}
+#couponselected b{font-size: 14px;}
+.couponlist .selected{border: solid 1px #E01C2C;}
+.couponlist .selected i.icon-check-zf{display: inline-block;}
+.couponlist .disabled{border-color: #ccc;cursor: not-allowed !important;}
+.couponlist .disabled .hd{background-color: #ccc;}
+.couponlist .disabled .hd span.date{color: #fff;}

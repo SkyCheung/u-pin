@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>售后服务 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<div class="center-body">
+			<div class="nb">
+				<div class="center-lside">
+					<!--{tpl usermenu}-->
+				</div>
+				<div class="center-rside pages-style">
+					<div class="center-title-sig">
+						<h3>申请服务详情</h3>
+					</div>
+					<div class="edit-user-infor service-details">
+						<h3>服务单号：{$row[id]}<span class="status">状态：<b style="color: #71b247;font-size: 16px;" >{$row['status_name']}</b></span><span>申请时间：{$row['addtime']}</span>{if $row['status']!=service_cancel && $row['status']!=service_finish && $row['status']!=service_failed}<span><a href="javascript:void(0);" onclick="cancel_service({$row[id]},this);" class="btn">取消服务单</a></span>{/if}
+						</h3>
+						<br />
+						<div style="border: 1px solid #ffccaa;background: #fffcf1;border-radius: 3px;padding: 10px">
+							处理结果：{$row['remark']}
+						</div>
+						<div class="info">
+							<p>商品：<a href="{$row['url']}" target="_blank"><img src="{$row['goods_thumb']}" width="60" height="60"/></a> <a href="{$row['url']}" target="_blank">{$row['name']} <span style="margin-left: 30px;"></span>
+							{if $row['speclist']}[<!--{loop $row['speclist'] $s}-->
+							<span>{$s['name']}：{$s['val']}</span>								
+							<!--{/loop}-->]{/if}
+							</a>	
+								
+							</p>
+							<p>类型：{$row['type_name']}</p>						
+							<p>姓名：{$row['uname']}</p>
+							<p>手机：{$row['mobile']}</p>
+							<p>收货地址：{$row['address']}</p>
+							<p class="img">问题描述：{$row['content']}
+								<br /><br />
+							<!--{loop $row['thumb'] $p}-->
+							<a href="{$p}" target="_blank"><img src="{$p}" width="80" height="80"/></a>
+							<!--{/loop}--></p>
+						</div>												
+					</div>
+					 
+				</div>
+			</div>
+		</div>
+		
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="js/main.js" ></script>
+        <script type="text/javascript" src="js/users.js" ></script>
+     
+		<script type="text/javascript">
+		$(function () {
+			loadLayer();
+		});
+		</script>
+	</body>
+
+</html>

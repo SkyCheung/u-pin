@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>更新配送方式</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+		<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.config.js"></script>
+    	<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.all.min.js"> </script>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 更新配送方式</span></div>
+		</div>
+		<div class="maincon base express" style="min-height: 800px;">
+			<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+				<div class="row"><label class="row-name">快递名称：</label>
+					<div class="column"><input name="name" type="text" id="express_name" value="{$row[name]}" size="50" maxlength="30" {if $row['code']=='pickup'}readonly="readonly"{/if}/><span></span></div>
+				</div>
+				<div class="row"><label class="row-name">快递代码：</label>
+					<div class="column"><input name="code" type="text" id="express_code" value="{$row[code]}" size="50" maxlength="30" {if $row['code']=='pickup'}readonly="readonly"{/if}/><span>请设置标准的快递公司代码，以便系统物流跟踪。</span></div>
+				</div>
+				<div class="row"><label class="row-name">快递代码2：</label>
+					<div class="column"><input name="code2" type="text" id="express_code2" value="{$row[code2]}" size="50" maxlength="30" {if $row['code']=='pickup'}readonly="readonly"{/if}/><span>快递鸟接口使用该代码。<a href="{plugin}express/kdniao/ExpressCode.xls" class="lnk">下载快递代码表</a></span></div>
+				</div>
+				<div class="row"><label class="row-name">是否启用：</label>
+					<div class="column">
+						<label><input name="status" type="radio" {$cbk_status[1]} value="1" />是</label>
+						<label><input name="status" type="radio" {$cbk_status[0]}  value="0" />否 </label><span></span>
+					</div>
+				</div>
+				<div class="row"><label class="row-name">排序：</label>
+					<div class="column"><input name="c_sort" type="number" min="0" max="255" id="c_sort" value="{$row[sort]}" size="50" maxlength="5" /><span>数字</span></div>
+				</div>
+				<input name="express_type" type="hidden"  value="{if $row[code]=='pickup'}1{else}2{/if}" />
+				<div id="delivery" class="clear" {if $row['code']=='pickup'}style="display: none;"{/if}>
+					<table class="tb tb-border">
+						<thead>
+							<tr>
+								<th class="w50">配送区域</th>
+								<th class="w10">首重(克)</th>
+								<th class="w10">首费(元)</th>
+								<th class="w10">续重(克)</th>
+								<th class="w10">续费(元)</th>
+								<th class="w5"></th>
+							</tr>
+						</thead>
+						<tbody id="exp-district">					
+							{if $row[code]!='pickup'}
+							{if $details}
+							{loop $details $p}
+							<tr>
+								<td class="w50"><label id="citylist" style="display:block;{if $p[district_id]!='100000'}text-align:left;{/if}">{$p[district_names]}</label><input type="hidden"  id="district_id" name="district_id[]" value="{$p[district_id]}"/>{if $p[district_id]!='100000'}<a href="javascript:;" onclick="editDistrict(this)" class="lnk">选择区域</a>{/if}</td>
+								<td><input type="number" name="first_weight[]" maxlength="8" min="0" value="{$p[first_weight]}" class="wp80"/></td>
+								<td><input type="text" name="first_price[]" maxlength="8" onkeyup="onlyAmount(this,2);" value="{$p[first_price]}" class="wp80"/></td>
+								<td><input type="number" name="added_weight[]" maxlength="8" min="0" value="{$p[added_weight]}" class="wp80"/></td>
+								<td><input type="text" name="added_price[]" maxlength="8" onkeyup="onlyAmount(this);" value="{$p[added_price]}" class="wp80"/></td>
+								<td><i class="i-del" title="删除" onclick="delDistrict(this);"></i>&nbsp;</td>
+							</tr>
+							{/loop}
+							{else}
+							<tr>
+								<td class="w50">全国<input type="hidden" name="district_id[]" value="100000"/></td>
+								<td><input type="number" name="first_weight[]" maxlength="8" min="0" value="1000" class="wp80"/></td>
+								<td><input type="text" name="first_price[]" maxlength="8" onkeyup="onlyAmount(this,2);" value="" class="wp80"/></td>
+								<td><input type="number" name="added_weight[]" maxlength="8" min="0" value="1000" class="wp80"/></td>
+								<td><input type="text" name="added_price[]" maxlength="8" onkeyup="onlyAmount(this);" value="" class="wp80"/></td>
+								<td>&nbsp;</td>
+							</tr>
+							{/if}
+							{/if}
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="6" align="left">
+									<input type="button" value="+ 增加配送区域" class="sub" id="addDistrict" /><span class="optip">（根据重量来计算运费，当商品重量≤首重时，按首费计算；超过部分的费用=续重x续费）</span>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<div id="pickup" {if $row['code']!='pickup'}style="display: none;"{/if}>
+					<div class="row"><label class="row-name">自提点：</label>
+					<div style="margin-bottom: 10px;">
+						<div id="distpicker">
+							 <select name="province" class="select"></select>
+							 <select name="city" class="select"></select><span style="padding-left: 15px;" id="pickupcount"></span>
+						</div>
+						
+					</div>	
+					 <table class="tb tb-border" style="width: 90%;">
+					 	<thead>
+					 		<tr>
+					 			<th class="w50">自提地址</th>
+					 			<th class="w15">联系人</th>
+					 			<th class="w15">联系电话</th>
+					 			<th class="w15">取货时间</th>
+					 			<th>&nbsp;</th>
+					 		</tr>
+					 	</thead>
+					 	<tbody id="picksite">					 		
+					 	</tbody>
+					 	<tfoot>
+							<tr>
+								<td colspan="5" align="left">
+									<input type="button" value="+ 增加自提点" class="sub" id="addpicksite" />
+								</td>
+							</tr>
+						</tfoot>
+					 </table>
+					</div>
+				</div>
+				<div class="row"><label class="row-name"></label>
+					<div class="column">
+						<br>
+						<input type="submit" class="sub" value="提交 ">
+						<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=express'"/>
+						<input name="action" type="hidden" id="action" value="express">
+						<input name="act" type="hidden" id="act" value="edit">
+						<input name='express_id' type="hidden" value="{$row[id]}" />
+						<input name='old_express_type' type="hidden" value="{$row['express_type']}" />
+					</div>
+				</div>
+			</form>
+		</div>
+		 
+ 		<input type="hidden" id="city_ids" value="" />
+ 		<input type="hidden" id="city_names" value="" />
+ 		<input type="hidden" id="layer_res" value="" />
+ 		<input type="hidden" id="selected_city_ids" value="" />
+ 		
+ 		<script src="./static/js/district.js"></script>
+	  	<script src="./static/js/distpicker.js"></script>
+	  	
+		<script type="text/javascript"> 		 		
+		    $(document).ready(function () {
+		    	addPicksite();
+				
+				$("#addDistrict").click(function() {
+					addDistrict();
+				});
+				$("#addpicksite").click(function() {
+					addPicksite();
+				});										 
+				
+				//加载自提点
+				$("[name='province'],[name='city'],[name='district']").change(function() {
+					var province = $("select[name='province']").val();
+					var city = $("select[name='city']").val();
+					//var district = $("select[name='district']").val();
+					
+					if(province ==undefined || province == '' || city =='')
+					{
+						return;
+					}
+					
+					$.ajax({
+						type: "post",
+						url: "./admin.html?do=express.edit",
+						data: {
+							act: 'get_pickup',
+							province: province,
+							city: city
+							//,district: district
+						},
+						dataType: "json",
+						success: function(res) {
+							if (res.err != '') {
+								$("#picksite").html('加载自提点失败：' + res.err);
+							}
+							else{
+								var html='';
+								if (res.data.length==0) {
+									$("#picksite").html('');
+									addPicksite();					
+								} 
+								else{
+									$.each(res.data, function(k, v) {
+										html+='<tr><th><input type="text" name="address[]" value="'+v.address+'" maxlength="255" class="w90"/></th>';
+										html+='<th><input type="text" name="picker[]" value="'+v.picker+'" maxlength="50" class="wp120"/></th>';
+										html+='<th><input type="text" name="tel[]" value="'+v.tel+'" maxlength="50" class="wp120"/></th>';
+										html+='<th><input type="text" name="picktime[]" value="'+v.picktime+'" maxlength="100" class="wp120"/></th>';
+										html+='<th><i class="i-del" title="删除" onclick="delPicksite(this);"></i></th></tr>';
+									});								
+									
+									$("#picksite").html(html);
+								}	
+								$("#pickupcount").html("共 <b class='co-orange'>"+res.data.length+ "</b> 个");
+								top.setIframeHeight();
+							}
+						},
+						error:function(data,t){
+							$("#picksite").html('加载自提点失败');
+						} ,
+						complete: function(XMLHttpRequest, textStatus){}
+					});
+				});		    		    	
+		    });
+		    
+		    //增加区域
+		    function addDistrict() {
+		    	getDistricIds();
+		    	var ii = top.layer.open({
+					type: 2,
+					title: '选择区域',
+					closeBtn: 0,
+					shadeClose: true,
+					area: ['933px', '550px'],
+					content: ['./admin.html?do=district_select'],
+					end: function() {
+						var ids='';
+						var names='';
+						if($("#layer_res").val()=='ok')
+						{
+							ids=$("#city_ids").val();
+							names=$("#city_names").val();
+						}
+						var html='<tr><td><label id="citylist" style="display:block;text-align:left;">'+names+'</label><input type="hidden" name="district_id[]" id="district_id" value="'+ids+'"/><a href="javascript:;" onclick="editDistrict(this)" class="lnk">选择区域</a></td>';
+						html+='<td><input type="number" name="first_weight[]" maxlength="8" min="0" value="1000" class="wp80"/></td>';
+						html+='<td><input type="text" name="first_price[]" maxlength="8" onkeyup="onlyAmount(this);" class="wp80"/></td>';
+						html+='<td><input type="number" name="added_weight[]" maxlength="8" min="0" value="1000" class="wp80"/></td>';
+						html+='<td><input type="text" name="added_price[]" maxlength="8" onkeyup="onlyAmount(this);" class="wp80"/></td>';
+						html+='<td><i class="i-del" title="删除" onclick="delDistrict(this);"></i></td></tr>';
+						$("#exp-district").append(html);
+						$("#city_ids").val('');
+						$("#city_names").val('');
+						$("#layer_res").val('');
+						$("#selected_city_ids").val('');
+						top.setIframeHeight();
+					}
+                 });
+		    }
+		    //编辑区域
+		    function editDistrict(th) {
+		    	var t=$(th);
+		    	getDistricIds(t);
+		    	 
+		    	$("#city_ids").val(t.siblings("#district_id").val());
+		    	var ii = top.layer.open({
+					type: 2,
+					title: '选择区域',
+					closeBtn: 0,
+					shadeClose: true,
+					area: ['933px', '550px'],
+					content: ['./admin.html?do=district_select'],
+					end: function() {
+						if($("#layer_res").val()=='ok')
+						{
+							var tb=$("#exp-district").children().eq(t.parents("tr").index());
+							tb.find("#district_id").val($("#city_ids").val());
+							tb.find("#citylist").html($("#city_names").val());
+						}	
+						$("#city_ids").val('');
+						$("#city_names").val('');
+						$("#layer_res").val('');	
+						$("#selected_city_ids").val('');
+					}
+                 });
+		    }
+            
+            //移除
+            function delDistrict(th) {
+            	$(th).parents("tr").remove();
+            	msg("已移除");
+            }
+            
+            //获取除当前和全国之外的已选区域
+            function getDistricIds(cur) {
+				var curIds='';
+            	if (cur!=undefined) {
+            		curIds=cur.siblings("#district_id").val();            		
+            	}
+            	var ids='';
+            	$("input[name='district_id[]']").each(function () {
+            		if ($(this).val()!='100000' && $(this).val() != curIds) {
+            			ids+=$(this).val();
+            		}            		
+            	});
+            	$("#selected_city_ids").val(ids);
+            }
+            
+            function addPicksite() {
+            	var html='<tr><th><input type="text" name="address[]" maxlength="255" class="w90"/></th>';
+					html+='<th><input type="text" name="picker[]" maxlength="50" class="wp120"/></th>';
+					html+='<th><input type="text" name="tel[]" maxlength="50" class="wp120"/></th>';
+					html+='<th><input type="text" name="picktime[]" maxlength="100" class="wp120"/></th>';
+					html+='<th><i class="i-del" title="删除" onclick="delPicksite(this);"></i></th></tr>';
+				$("#picksite").append(html);
+				top.setIframeHeight();
+            }
+            function delPicksite(th) {
+            	$(th).parents("tr").remove();
+            	msg("已移除");
+            }
+            
+		    function check() {
+		     	if ($.trim($("#express_name").val())=='') {
+		     		msg("请填写快递名称");
+		     		return false;
+		     	}
+		     	if ($.trim($("#express_code").val())=='') {
+		     		msg("请填写快递代码");
+		     		return false;
+		     	}
+		     	if($.trim($("#express_code").val())=='pickup')
+		 		{
+		 			var province = $("select[name='province']").val();
+					var city = $("select[name='city']").val();
+		 			if(province ==undefined || province == '')
+		 			{
+		 				msg("请选择省份");
+		     			return false;
+		 			}
+		 			if(city ==undefined|| city ==''){
+		 				msg("请选择城市");
+		     			return false;
+		 			}
+		 			$is_fill=false;
+		 			$("[name='address[]']").each(function () {
+		 				if ($.trim($(this).val())!='') {
+		 					$is_fill = true;
+		 					return false;
+		 				}
+		 			});
+		 			if ($is_fill == false) {
+		 				msg("请填写自提地址");
+		 				return false;
+		 			}
+		 		}
+		 		
+		 		 toTop();
+		        return true;
+		      }
+		     
+		</script>
+	</body>
+
+</html>

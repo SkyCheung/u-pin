@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>订单详情 - {$ym_title}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/animate.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/cart.css"/>
+		<link rel="stylesheet" type="text/css" href="css/center.css"/>
+	</head>
+
+	<body>
+		<div class="ny-header">
+			<div class="nb">
+				<div class="logo">
+					<a href="/"><img src="{$ym_logo}" alt="" /></a>
+				</div>
+				<div class="right cart-center">
+					{if $ym_uname!=''}<a href="/user.html" class="red">{$ym_uname}</a>&nbsp;&nbsp;<a href="/user.html?act=logout" >退出</a> {else}<a href="login.html" class="red login">马上登录</a>
+						<a href="/reg.html" class="red">免费注册</a>{/if}
+					<a href="/myorder.html">我的订单</a>
+					<a href="/help.html">客户服务</a>
+				</div>
+			</div>
+		</div>
+		<div class="center-body">
+			<div class="nb">
+				<div class="center-lside">
+					<!--{tpl usermenu}-->
+				</div>
+				<div class="center-rside">
+				<div class="cart-box">
+					<div class="nb ">
+						<h3 class="position-dw"><a href="/myorder.html">我的订单</a></h3>
+						<div class="buy-view">
+						 <div class="wuliu">
+						 	<p>订单号：<span class="red" style="padding-right: 50px;">{$oid}</span>
+							 		<!--{if $order['status']==order_finish}-->
+										订单已完成，感谢您在{$ym_title}购物，欢迎您对本次购物进行评价。
+									<!--{elseif $order['status']==order_paying}-->
+										该订单会为您保留24小时（从下单时算起），超时还未付款，系统将自动取消该订单。
+									<!--{elseif $order['status']==order_deliver}-->
+										{if $order['pay_code']=='cod'}您选择的是货到付款{else}付款完成{/if}，我们正在安排给您发货。
+									<!--{elseif $order['status']==order_receiving}-->	
+										您的订单已发货，很快将送到您的手中。
+									<!--{elseif $order['status']==order_cancel}-->
+										该订单已取消，您可以再次购买。
+									<!--{/if}-->						 								 		
+						 	</p>
+						 	<div class="wuliu-detail">
+						 		<ul>
+						 			<li class="wuliu1">
+						 				<div class="icon-box">
+						 					<i class="icon-wuliu1 icon-success1"></i>
+						 					<!--{if $order['status']==order_paying && $order['pay_status']==pay_unpayed && $order['pay_code']!='cod'}-->
+						 				    <i class="icon-success-c3"></i>
+						 				    <!--{/if}-->
+						 				</div>
+						 				<p class="stepword">提交订单</p>
+						 				<p>{$order['add_time']}</p>
+						 			</li>
+						 			<li class="next-line line-success<!--{if $order['status']==order_paying}--> delivernow<!--{/if}-->"></li>
+						 			<li class="wuliu2">
+						 				<div class="icon-box">
+						 					<i class="icon-wuliu2 <!--{if $order['status']>=order_deliver}-->icon-success2{else}icon-grey2<!--{/if}-->"></i>
+						 					<!--{if $order['status']==order_deliver}-->
+						 				    <i class="icon-success-c3"></i>
+						 				    <!--{/if}-->
+						 				</div>
+						 				<p class="stepword">正在发货</p>
+						 				<p>{$order['deliver_time']}&nbsp;</p>
+						 			</li>
+						 			<li class="next-line <!--{if $order['status']==order_receiving}-->  line-success<!--{elseif $order['status']==order_deliver}--> delivernow<!--{else}-->nodeliver<!--{/if}-->"></li>
+						 			<li class="wuliu5">
+						 				<div class="icon-box">
+						 					<i class="icon-wuliu4 <!--{if $order['status']>=order_receiving}-->icon-success5{else}icon-grey5{/if}"></i>
+						 					<!--{if $order['status']==order_receiving}-->
+						 				    <i class="icon-success-c3"></i>						 				    	
+						 				    <!--{/if}-->
+						 				</div>
+						 				<p class="stepword">等待收货</p>
+						 				<p>&nbsp;</p>
+						 			</li>
+						 			<li class="next-line <!--{if $order['status']==order_finish}-->line-success<!--{elseif $order['status']==order_receiving}-->delivernow{else}nodeliver<!--{/if}-->"></li>
+						 			<li class="wuliu6">
+						 				<div class="icon-box">
+						 					<i class="icon-wuliu4 <!--{if $order['status']==order_finish}-->icon-success6{else}icon-grey6{/if}"></i>
+						 					<!--{if $order['status']==order_finish}-->
+						 				    <i class="icon-success-c3"></i>
+						 				    <!--{/if}-->
+						 				</div>
+						 				<p class="stepword">完成</p>
+						 				<p>{$order['receiving_time']}&nbsp;</p>
+						 			</li>
+						 		</ul>
+						 	</div>
+						 </div>
+						 <div class="pro-wl-process">
+						 	
+						 	<div class="pwlp-td">
+						 		<div class="lside" id="order_status">
+						 			<!--{if $order['is_comment']!=1}--><h3>订单状态：<b>{$order['status_name']}</b></h3><!--{/if}-->
+							        <div class="dd-zt">								         								         
+								       <!--{if $order['status']==order_paying}-->
+								       	<p>剩余 <span class="red">{$order['remain_time']['hour']}小时{$order['remain_time']['min']}分 </span></p>
+								        <a href="pay.html?oid={$order['order_sn']}" target="_blank">付款</a>
+								       <!--{elseif $order['status']==order_receiving}--> 
+								      	<a href="javascript:void(0);" onclick="confirm_receiving({$order['order_sn']})">确认收货</a>
+								       <!--{elseif $order['status']==order_finish}-->
+								         <!--{if $order['is_comment']==1}-->
+								         <b style="font-size: 32px;color: #71b247;">完成</b>
+								         <!--{else}-->
+								         <a href="comment.html?oid={$order['order_sn']}">评价</a>
+								         <!--{/if}-->
+								       <!--{/if}-->
+							        </div>
+						 	    </div>
+						 	    <div class="rside">
+						 	    	<div style="padding: 5px 10px;" id="track-list">
+						 				<!--{loop $delivery $i $p}-->
+						 				<span data-expcode="{if $ym_exp_sp=='kdniao'}{$p['exp_code2']}{else}{$p['exp_code']}{/if}" {if $i==0}class="cur"{/if}>{$p['exp_name']}{if $p['exp_no']}：{/if}<b>{$p['exp_no']}</b></span>
+						 				<!--{/loop}-->
+						 			</div>
+						 			<div class="track-list">
+						 				<!--{loop $delivery $i $p}-->
+					                    <ul style="{if $i==0}display: block;{else}display: none;{/if}">
+					                    	<!--{loop $p['order_log'] $v}-->					                    
+						                    <li>
+						                    	<i class="node-icon"></i>
+						                    	<span class="time">{$v['addtime']}</span>
+						                    	<span class="txt">{$v['msg']}</span>
+						                    </li>
+						                    <!--{/loop}-->	                   
+					                    </ul>
+					                    <!--{/loop}-->
+					                </div>
+						 		</div>
+						 	</div>						 	
+						 </div>						 						
+						 <div class="infor-buy-view">
+						<div class="lside infordd">
+							<h3>收货人信息</h3>
+							<div class="detail-box">
+								<ul>
+									<li><span>收货人：</span><p>{$order['cnee_name']}</p></li>
+									<li><span>收货地址：</span><p>{$order['cnee_addr']}</p></li>									
+									<li><span>手机号码：</span><p>{$order['cnee_mobile']}</p></li>
+								</ul>
+							</div>
+						</div>
+						<div class="pay-xx lside">
+							<h3>付款信息</h3>
+							<div class="detail-box">
+							<ul>
+									<li><span>付款方式：</span><p>{$order['pay_name']}</p></li>
+									<li><span>商品总额：</span><p>￥{$order['goods_amount']}</p></li>
+									<li><span>运费：</span><p>￥{$order['exp_amount']}</p></li>
+									<li><span>应支付金额：</span><p>￥{$order['amount']}</p></li>
+									<li><span>余额支付：</span><p>￥{$order['balance_amount']}</p></li>
+									<li><span>积分支付：</span><p>￥{$order['point_amount']}</p></li>
+									<li><span>优惠券：</span><p>￥{$order['coupon_amount']}</p></li>									
+							</ul>
+						</div>
+						</div>
+						<div class="wuliu-xx lside">
+							<h3>物流信息</h3>
+							<div class="detail-box">
+								<ul>
+									<li><span>配送方式：</span><p>{$order['exp_name']}</p></li>
+									<li><span>运费：</span><p>￥{$order['exp_amount']}</p></li>
+									<li><span>发货日期：</span><p>{$order['deliver_time']}</p></li>
+								</ul>
+							</div>
+							{if $ym_is_invoice==1}
+							<h3 style="border-top: dashed 1px #ddd;margin-top: 20px;">发票信息</h3>
+							<div class="detail-box" style="margin-top: 0px;">
+								<ul>
+									<li><span>发票抬头：</span><p>{$order['invoice_title']}</p></li>
+									<li><span>发票内容：</span><p>{$order['invoice_con']}</p></li>
+								</ul>
+							</div>
+							{/if}
+						</div>
+					</div>	
+					    <div class="dd-infor-end">
+					    	<div class="pwlp-th">
+						 		<ul class="thead">
+						 			<li class="td1">商品</li>
+						 			<li class="td2">单价（元）</li>
+						 			<li class="td3">数量</li>
+						 			<li class="td4">金额</li>
+						 		</ul>
+						 	</div>
+					    	<ul>
+					    		<!--{loop $order['goods'] $p}-->
+						 		<li class="td1">
+						 		   <div class="pro-det">
+						 		    	<a class="pic-box" href="{$p['url']}" target="_blank">
+						 		    		<img src="{$p['thumb']}" width="50" height="50"/>
+						 		    	</a>
+						 		        <div class="pic-describ">
+						 		    	    <h3><a href="{$p['url']}" target="_blank">{$p['name']}</a></h3>
+						 		    	    <p>
+											<!--{loop $p['spec'] $v}-->
+											<span>{$v['name']}：{$v['val']}</span>
+											<!--{/loop}-->
+											</p>
+						 		        </div>
+						 		    </div>
+						 		    <div class="pic-price">
+						 		    	{$p['price']}
+						 		    </div>
+						 		    <div class="pic-num">
+						 		    	{$p['num']}
+						 		    </div>
+						 		    <div class="pic-yh">
+						 		    	{$p['amount']}
+						 		    </div>
+						 		</li>
+						 		<!--{/loop}-->
+						 	</ul>
+					    </div>
+						</div>					
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+	 	<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/cart.js"></script>
+		<script type="text/javascript">			
+			$("#track-list span").click(function() {
+				$(this).addClass("cur").siblings().removeClass("cur");
+				$(".track-list ul").eq($(this).index()).show().siblings().hide();
+				if($(this).hasClass("loaded")==false) {
+					var t = $(this);
+					$.getJSON("order.html", {act:'get_exp_track',exp_code:t.data("expcode"), exp_no:t.children("b").html()}, function(data) {
+						 var html='';
+						 $.each(data.data, function(k, v) {
+						 	html +='<li><i class="node-icon"></i><span class="time">'+v.AcceptTime+'</span><span class="txt">'+v.AcceptStation+'</span></li>';
+						 });
+						 $(".track-list ul").eq(t.index()).prepend(html);
+					});
+					$(this).addClass("loaded");	
+				}							
+			});
+			
+			$(function() {
+				loadLayer();	
+				$("#track-list span").eq(0).trigger("click");
+			});
+		</script>
+	</body>
+
+</html>

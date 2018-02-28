@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的收藏 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<div class="center-body">
+			<div class="nb">
+				<div class="center-lside">
+					<!--{tpl usermenu}-->
+				</div>
+				<div class="center-rside">					
+					<!--{if $fav}-->
+						<ul class="yourlike favul nobottompad">
+                    	<!--{loop $fav $p}-->
+                    	<li>
+							<a href="{$p['url']}" class="picbox">
+								<img src="{$p['thumb']}" alt="">
+							</a>
+							<div class="elli">
+								<a href="{$p['url']}">{$p['name']}</a>
+							</div>
+							<a href="{$p['url']}" class="price">￥<span>{$p['price']}</span></a>
+							<div class="probottom">
+                    			<a href="javascript:void(0);" onclick="delFav({$p['goods_id']}, '{$p['spec']}',this);" class="buy">取消收藏</a><i class="line"></i>
+                    			<a href="javascript:void(0);" onclick="addCart({$p['goods_id']},0,1);" class="addcart">加入购物车</a>
+                    		</div>
+						</li>
+                    	<!--{/loop}-->
+                    	</ul>
+                    <div class="pages"><!--{$pages['pages']}--></div>
+                    <!--{else}-->
+                    	您没有收藏商品哦        
+                    <!--{/if}-->
+				</div>
+			</div>
+		</div>
+		
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+    	<script type="text/javascript" src="js/cart.js" ></script>
+		<script type="text/javascript">
+     	$(function(){
+			loadLayer();		
+		});
+       </script>
+	</body>
+
+</html>

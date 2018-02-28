@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>打印快递单  - 云EC</title>
+	<style>
+		a{text-decoration: none; color: #005AA0;}
+		*{padding: 0;margin: 0;font-size: 12px;}
+		#printbox{}
+		#printbox .item{width: 1000px;height: 650px;position: relative;z-index: 1;border-right: solid 1px #ddd; border-left: solid 1px #ddd;border-bottom: dashed 1px #ccc;}
+		#printbox .item:first-child{border-top:  solid 1px #ddd;}
+		#printbox .item span{position: absolute;border: 0;font-size: 12px;word-break:break-all;}
+		.btn{padding: 8px 15px;cursor: pointer;background-color: #fff;border-radius: 4px;border: 1px #ccc solid;outline: none;}
+		.btn:hover{background-color: #f6f9fc;}
+		.explist{margin-top: 8px;}
+		.explist a{color: #333;}
+		a.selected {background-color: #f6f9fc;color: #e35d5a;}
+		
+	</style>
+</head>
+<body>
+<div style="max-width: 1080px;margin: 0 auto;">
+	<div style="margin-bottom: 10px;margin-top: 20px;color: #666;line-height: 28px;" id="btnlist"> 
+		<div style="margin-bottom: 10px;">
+			<p style="font-size: 12px;">提示：打印时 与快递不相关的元素会自动隐藏。点击下面的快递方式隐藏/显示此类快递单。</p>
+			<!--{if $fail_list}--><p style="color: #F43838;">下列订单不是发货/待收货状态：				
+			<!--{loop $fail_list $p}-->
+			{$p}
+			<!--{/loop}--> </p>				
+			<!--{/if}-->
+			<div class="explist">选择快递：
+				<!--{loop $ym_express_common $p}-->
+				<a href="javascript:void(0);" class="btn {if $cur_expcode==$p['code']}selected{/if}" id="{$p['code']}" data-tpl='{$p["tpl"]}'>{$p['name']}</a>
+				<!--{/loop}-->
+			</div>
+		</div>
+		<input type="button" value=" 打 印 " onclick="prints();" class="btn"/>&nbsp;<input type="button" value="隐藏背景" id="showtpl" class="btn"> 	
+	</div>
+	<div id="printbox">
+		<!--{loop $row $p}-->
+			<div class="item" id="{$p['order_sn']}" style="width: {$p['width']}px;height: {$p['height']}px;background-image: url({upload_img}expresstpl/{$p['exp_code']}.jpg);" data-tpl="url({upload_img}expresstpl/{$p['exp_code']}.jpg)" >
+				<!--{loop $p['list'] $v}-->
+				<span style="width: {$v['width']}px;height: {$v['height']}px; left: {$v['left']}px;top: {$v['top']}px;">{$v['txt']}</span>	
+				<!--{/loop}-->
+			</div>
+		<!--{/loop}-->
+	</div>
+</div>
+
+<script src="{adm_tpl}/js/jquery.js" type="text/javascript"></script>
+<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+<script type="text/javascript">
+	var delivery = {if $json_delivery}{$json_delivery}{else}{}{/if};
+
+	//打印
+	function prints(){
+		if ($(".explist a.selected").length ==0) {
+			msg("请先选择快递");return;
+		}
+		$("#btnlist,.remove_goods").hide();
+		$("#printbox .item").css("border", "none");
+		print();
+		$("#btnlist,.remove_goods").show();
+		$("#printbox .item").css("border", "solid 1px #ddd");
+	}
+	
+	$(".remove_goods").click(function() {
+		$(this).parents("tr").remove();
+		msg("移除成功");
+	});
+	
+	$(function() {
+		$("#showtpl").click(function() {
+			if ($(".item").css("background-image")=="none") {
+				$(this).val("隐藏背景");
+				$(".item").each(function() {
+					$(this).css("background-image", "url({upload_img}expresstpl/"+ $(".explist a.selected").attr("id")+".jpg)");
+				});
+			}
+			else
+			{
+				$(this).val("显示背景");
+				$(".item").css("background-image", "none");
+			}			
+		})
+		
+		//选择快递
+		$(".explist a").click(function () {
+			$(this).addClass("selected").siblings().removeClass("selected");
+			//$(".item").css("background-image", "url({upload_img}expresstpl/"+$(this).attr("id")+".jpg)");
+			show($(this).attr("id"))
+			$("#showtpl").val("隐藏背景");
+		});
+		
+	});
+	
+	//显示快递单
+	function show(exp_code) {
+		var exp_tpl = $('#' + exp_code).data("tpl");	
+		if (exp_tpl =='') {
+			msg("请先设置快递模板");
+			return;
+		}
+		var html ="";
+		$.each(delivery, function(k, v) {			
+			exp_code = exp_code || v.exp_code;
+			html += '<div class="item" id="'+v.order_sn+'" style="width: '+exp_tpl.width+'px;height: '+exp_tpl.height+'px;background-image: url({upload_img}expresstpl/'+ exp_code+'.jpg);" data-tpl="url({upload_img}expresstpl/'+exp_code+'.jpg)">';
+			$.each(exp_tpl.list, function(key, val) {
+				html += '<span style="width: '+val.width+'px;height: '+val.height+'px; left: '+val.left+'px;top: '+val.top+'px;">'+replaceVal(val.txt,v)+'</span>';
+			});
+			html += '</div>';
+		});
+		$("#printbox").html(html);
+	}
+	
+	function replaceVal(k,v) {
+		k = k.replace("寄件人\{send_name\}",v.send_name);
+		k = k.replace("寄件人手机\{send_mobile\}",v.send_mobile);
+		k = k.replace("寄件人完整地址\{send_address\}",v.send_address);
+		k = k.replace("姓名\{name\}",v.name);
+		k = k.replace("手机\{mobile\}",v.mobile);
+		k = k.replace("完整地址\{address\}",v.address);
+		k = k.replace("省\{province\}",v.province);
+		k = k.replace("市(县)\{city\}",v.city);
+		k = k.replace("区(镇)\{town\}",v.town);
+		k = k.replace("详细地址\{addr\}",v.addr);
+		return k;
+	}
+
+</script>
+</body>
+</html>

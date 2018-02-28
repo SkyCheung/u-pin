@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>品牌管理</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+		<script src="{adm_tpl}/js/api.js"></script>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>品牌管理</span></div>
+		</div>
+       <form method="post" id="brand" name="form1">
+		<div id="mainnav">
+			<a class="button" href="./admin.html?do=brand.add"><span>添加</span></a>
+			<a class="button" href="javascript:void(0);" onclick="delrows('brand.delete')"><span>删除</span></a>
+			<input type="hidden" value="brand.delete" name="action" />
+		</div>
+
+		<div class="maintab list auto-height-list ajaxedit">			
+				<ul class="rowtit">
+					<li class="w5"><input type="checkbox" name="chkall"  id="chkall" onclick="checkall(this.form)"/></li>
+					<li class="w40"><strong>品牌</strong></li>
+					<li class="w15"><strong>推荐</strong></li>
+					<li class="w15"><strong>排序</strong></li>
+					<li class="w15"><strong>操作</strong></li>
+				</ul>
+				<!--{loop $row $p}-->
+				<ul>
+					<li class="w5"><input type="checkbox" name="ids[]" value="{$p[id]}" id="checkbox" /></li>
+					<li class="w40"><input type="text" value="{$p[name]}" class="ajax" data-orival="{$p[name]}" data-id="{$p[id]}" data-do="brand" data-act="edit_name"/><!--{if $p[logo]}--><span class="img"><img src="{$p[logo]}"/></span><!--{/if}--></li>
+					<li class="w15"><a href="javascript:void(0);" class="ajax i-status{if $p['recommend']=='1'} i-status-on{/if}"  data-orival="{$p[recommend]}" data-id="{$p[id]}" data-do="brand" data-val="{$p[recommend]}" data-act="edit_recommend"></a></li>
+					<li class="w15"><input name="c_sort[]" type="text" id="c_sort[]" value="{$p[sort]}" size="5" maxlength="5" class="ajax" data-orival="{$p[sort]}" data-id="{$p[id]}" data-do="brand" data-act="edit_sort"</li>
+					<li class="w15"><a href="./admin.html?do=brand.edit&id={$p[id]}" class="edit">修改</a><a href="javascript:void(0);" onclick="isdel('{$p[name]}','/admin.html?do=brand.delete&id={$p[id]}');" class="del">删除</a></li>
+				</ul>
+				<!--{/loop}-->
+				<div class="page" style="">{$pages['pages']}</div>
+			
+		</div>
+       </form>
+       
+	</body>
+
+</html>

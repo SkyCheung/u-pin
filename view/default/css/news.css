@@ -1,0 +1,18 @@
+.problem-body{overflow: hidden;clear: both;padding:20px 0}
+.problem-lside{width:206px;float: left;}
+.problem-rside{width:975px;float: right;}
+.problem-lside h3{color:#fff;font-size: 18px;background-color:#007cc3;height: 40px;line-height: 40px;text-align: center;}
+.problem-lside ul.ulson{display: none;}
+.problem-lside ul.ulson li{height: 35px;line-height: 35px;background-color:#fff;border-bottom:1px solid #eaeaea;}
+.problem-lside ul.ulson li a{display: block;padding-left:40px;}
+.problem-lside ul.ulson .cur{color: #de342f;}
+.problem-lside ul a.nli{height: 36px;line-height: 36px;display: block;color:#666;padding-left:40px;background:#eaeaea;border-bottom:1px solid #fff;font-size: 14px;}
+.problem-lside ul a.nli b.arrow{background-position: -18px -347px;}
+.problem-lside ul a.nli b{width:12px;height: 5px;background:url(../images/icon-center.png) no-repeat -18px -354px;display: block;float: right;margin:15px 20px 0 0;}
+.problem-rside .probar{height: 40px;line-height: 40px;background-color: #EAEAEA;padding:0 20px;}
+.problem-rside .problemcon{padding:30px;background-color:#fff;}
+.problem-rside .problemcon h3.title{font-size: 18px;color:#007cc3;padding-bottom:10px;border-bottom:1px solid #EAEAEA;}
+.problem-rside .problemcon .pnr{padding-top:20px;line-height: 24px;}
+.problem-rside .problemcon .problem-list li{height: 30px;border-bottom:1px dotted #EAEAEA;list-style:circle;}
+.problem-rside .problemcon .problem-list li a{line-height: 30px;display: block;}
+.problem-rside .problistpad{padding:30px 30px 30px 40px;}

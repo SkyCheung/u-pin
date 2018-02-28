@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>订单详情</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script type="text/javascript" src="{adm_tpl}/js/main.js"></script>		
+		<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.config.js"></script>
+    	<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.all.min.js"> </script>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span><a href="admin.html?do=order">订单列表</a></span> > <span>订单详情</span></div>
+		</div>
+
+		<div class="maincon order-details" style="min-height: 800px;padding-bottom: 200px;">
+			<form action="" method="post" name="order-details" enctype="multipart/form-data" onsubmit="return check();">
+			<div class="row">
+				订单号：<b id="oid">{$order['order_sn']}</b><span class="status">{$order['status_name']}</span>
+				<div class="btn-list" style="width: 60%; float: right;">
+					<input type="button" value="付款" {if $order['payble_amount']!=0 && ($order['status']==order_paying || ($order['status']==order_deliver && $order['pay_code']=='cod'))} onclick="order_action(this);"  data-act="pay" class="sub" {else}disabled="disabled" class="sub btn-disabled"{/if}/>
+					<input type="button" value="发货" {if $order['status']==order_deliver} onclick="javascript:edit('./admin.html?do=delivery&ids={$order['order_sn']}');" class="sub" {else} disabled="disabled" class="sub btn-disabled"{/if}/>
+					<input type="button" value="收货" {if $order['status'] ==order_receiving} class="sub" data-act="confirm_receiving" onclick="order_action(this);" {else}disabled="disabled" class="sub btn-disabled"{/if}/>
+					<!--<input type="button" value="完成" class="sub"/>-->
+					<input type="button" value="取消订单" {if $order['status'] == order_paying || $order['status'] == order_deliver} class="sub" data-act="cancel" onclick="order_action(this);" {else}disabled="disabled" class="sub btn-disabled"{/if}/>
+					 
+					
+					<a {if $order['status']==order_deliver || $order['status']==order_receiving} href="admin.html?do=order.printexpress&ids={$id}" class="sub" {else} href="javascript:void(0);" class="sub btn-disabled" {/if} target="_blank">打印快递单</a>						 
+						
+				</div>
+			</div>
+			<div class="row">
+			<table class="tb tb-border">
+				<thead><tr><th colspan="4"><h3>订单详情</h3></th></tr></thead>
+				<tbody>
+					<tr>
+						<td>订单金额：{$order['amount']}</td>
+						<td style="position: relative;">未付金额：{if $order['payble_amount']==0}0{else}<input type="text" value="{$order['payble_amount']}" size="8" name="payble_amount" class="input"/>{/if}
+						</td>
+						<td>商品总额：{$order['goods_amount']}</td>
+						<td>运费：{$order['exp_amount']}</td>
+					</tr>
+					<tr class="tr">
+						<td>使用余额：{$order['balance_amount']}</td>
+						<td>积分抵用：{$order['point_amount']}</td>
+						<td>优惠券抵用：{$order['coupon_amount']}</td>
+						<td>返现：{$order['cashback']}</td>
+					</tr>
+				</tbody>
+				<tbody>
+					<tr>
+						<td colspan="4" style="padding: 0px;">&nbsp;</td>
+					</tr>
+					<tr class="tr">
+						<td>下单时间：{$order['add_time']}</td>
+						<td>会员账号：{$order['uname']}</td>						
+						<td>订单来源：{$lang_client[$order['client']]}</td>
+						<td>收货时间：{$order['receiving_time']}</td>
+					</tr>
+					<tr class="tr">
+						<td>支付状态：{if $order['pay_status']==pay_payed}已支付{else}待支付{/if}</td>
+						<td>支付方式：{$order['pay_name']}</td>
+						<td>支付时间：{$order['pay_time']}</td>
+						<td>支付交易号：{$order['trade_no']}</td>
+					</tr>
+					<tr class="tr">
+						<td>发货状态：{$lang_deliver[$order['deliver_status']]}</td>
+						<td>发货方式：{$order['exp_name']}</td>
+						<td>发货时间：{$order['deliver_time']}</td>
+						<td>发货单号：<input type="text" value="{$order['exp_no']}" name="exp_no" class="input" size="18"/> </td>
+					</tr>
+					<tr class="tr">
+						<td colspan="2">发票抬头：{$order['invoice_title']}</td>
+						<td colspan="2">发票内容：{$order['invoice_con']}</td>
+					</tr>
+					<tr class="tr">
+						<td colspan="4">会员留言：{$order['user_remark']}</td>
+					</tr>
+				</tbody>
+			</table>
+			<br />
+			<table class="tb tb-border autotb">	
+				<thead><tr><th colspan="4"><h3>收货人信息</h3></th></tr></thead>
+				<tbody class="tb-bd">
+					<tr>
+						<td style="width: 17%;">收货人：<input type="text" value="{$order['cnee_name']}" name="cnee_name" class="input wp70"/></td>
+						<td style="width: 19%;">手机号码：<input type="text" value="{$order['cnee_mobile']}" name="cnee_mobile" class="input wp90"/></td>
+						<td style="width: 21%;">固定电话：<input type="text" value="{$order['cnee_tel']}" name="cnee_tel" class="input wp100"/></td>
+						<td>地址：<span id="orderaddr">{$order['cnee_addr']}<a href="javascript:void(0);" class="lnk" style="margin-left:15px;">更改</a></span>
+							<div class="deliver">								
+									<div id="store-selector">										
+										<div class="text"><div title="请选择">- 请选择 -</div><b></b>
+										<input type="hidden" id="district" name="cnee_dist_ids" value="{$order['cnee_dist_ids']}"></div>                 
+										<div onclick="$('#store-selector').removeClass('hover')" class="close"></div>
+									</div>
+									<div id="store-prompt"><strong></strong></div>
+							</div>
+							<span id="cnee_address">详细地址：<input type="text" name="cnee_address" value="{$order['cnee_address']}" class="input" size="35"/></span>
+						</td>						
+					</tr>
+				</tbody>
+			</table>
+			<br />
+			<div style="text-align: center;">
+				<input type="submit" value="更新订单" class="sub">
+				<input name="id" type="hidden" value="{$id}" />
+				<input type="hidden" id="cnee_dist_name" name="cnee_dist_name" value="{$order['cnee_dist_name']}">
+				<input type="hidden" value="order" name="action">
+			</div>
+			<br />
+			<table class="tb tb-border tb-ct autotb goods-info">	
+				<thead><tr><th colspan="5"><h3>商品信息</h3></th></tr></thead>
+				<tbody class="tb-bd">
+					<tr align="center">
+						<td>商品信息</td>
+						<td>数量</td>
+						<td>单价</td>
+						<td>金额</td>
+						<td>配送状态</td>
+					</tr>
+					<!--{loop $order['goods'] $p}-->
+					<tr align="center">
+						<td align="left" class="w50">
+							<span class="img">
+								<a href="{$p['url']}" target="_blank"><img src="{$p['thumb']}"/></a></span>							
+							<span class="tit"><a href="{$p['url']}" target="_blank">{$p['name']}</a>
+								 <p>
+											<!--{loop $p['spec'] $v}-->
+											<span>{$v['name']}：{$v['val']}</span>
+											<!--{/loop}-->
+											</p>
+							</span>
+						</td>
+						<td>{$p['num']}</td>
+						<td>{$p['price']}</td>
+						<td>{$p['amount']}</td>
+						<td style="position: relative;">
+							{if $p['exp_id']==''}未发货{else}已发货&nbsp;<a href="javascript:void(0);" class="lnk" id="exp_track">跟踪</a>
+							<br>
+							{/if}							
+							<p>快递单号：{$p['exp_no']}&nbsp;
+								{if $order['status']==order_deliver || $order['status']==order_receiving}
+								<a href="admin.html?do=order.printexpress&ids={$id}" target="_blank" class="lnk">打印快递单</a>
+								{/if}
+							</p>	
+							<div style="width: 600px;height: 200px;display: none; position: absolute;bottom: 78px;right: 0;padding: 10px; border: solid 1px #ddd; background-color: #fff;">
+								<h3>物流跟踪</h3>
+								<div style="text-align: left;">
+									<!--{loop $p['order_log'] $v}-->
+									<p><span>{$v['addtime']}</span> {$v['op_name']} {$v['msg']}</p>
+									<!--{/loop}-->
+								</div>
+							</div>
+						</td>
+					</tr>
+					<!--{/loop}-->
+				</tbody>	
+			</table>
+			</div>
+			</form>
+		</div>
+ 		<input name="winop" type="hidden" id="winop" value="" />
+ 		 		
+ 		<link rel="stylesheet" href="static/css/location.css" />
+ 		<style>
+ 		.maincon input{font-size: 14px;}
+ 		.deliver{width: 86%; margin-bottom: -4px;display: none;}
+ 		#JD-stock li{box-sizing:initial;}
+ 		#JD-stock .area-list li{line-height: 25px;}
+ 		#JD-stock .tab em{font-style: normal;}
+ 		#store-selector{margin-right: 0px;}
+ 		#store-selector .text{width: 96%;min-width: 180px;padding-right: 8px; height: 30px;line-height: 30px;}
+ 		#store-selector .text div{display: inline-block;}
+ 		#store-selector .content{top: 30px;}
+ 		#cnee_address{display: none;margin-top: 3px;}
+ 		</style>
+ 		<script type="text/javascript" src="static/js/location.js" ></script>
+ 		
+		<script type="text/javascript"> 
+			$(function() {
+				//收货地址
+				curArea.curProvinceId = {if $province}{$province}{else}0{/if};
+				curArea.curCityId = {if $city}{$city}{else}0{/if};
+				curArea.curAreaId = {if $area}{$area}{else}0{/if};
+				curArea.curTownId = {if $town}{$town}{else}0{/if};
+				page_load=true, edit_init=true;
+				chooseProvince(curArea.curProvinceId);
+				//$("#store-selector .text div").append("{$order['cnee_address']}");	
+			})
+			
+			$("#orderaddr a").click(function() {
+				$(this).parent().hide();
+				$(".deliver,#cnee_address").css("display", "inline-block");
+			})
+		
+			$("#exp_track").mouseover(function () {
+				$(this).siblings("div").show(100);
+			}).mouseleave(function() {
+				$(this).siblings("div").hide();
+			});
+		   //修改
+			function edit(txt) {
+				var ii = top.layer.open({
+					type: 2,
+					title: '发货',
+					closeBtn: 0,
+					shadeClose: true,
+					area: ['1100px', '600px'],
+					content: [txt],
+					end: function() {
+						if($.trim($("#winop").val()) == 'ok') {
+							msg("发货成功");
+							window.location.reload();
+						}
+						$("#winop").val("");
+						$("#vals").val("");
+					}
+				});
+			}
+
+			function order_action(th) {
+				var t= $(th);
+				top.layer.confirm('确定要执行此操作？', function(index) {
+					$.getJSON("./admin.html?do=order.details", {act: t.data("act"), id: $("#oid").html()}, function(res) {
+						if(res.err && res.err != '') {
+							msg('操作失败，' + res.err);return;
+						}
+						if(res.url && res.url != '') {
+							window.location.href = res.url; return;
+						}
+						else
+						{
+							msg('操作成功');
+							setTimeout(function() {
+								window.location.reload();
+							},2000);			
+						}
+					});
+					top.layer.close(index);
+				});
+			}
+	 
+	 		function check() {
+	 			$("#cnee_dist_name").val($("#store-selector .text div").html());
+	 			return true;
+	 		}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<title>我的收藏 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/mui.poppicker.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style type="text/css">
+			.mui-checkbox input[type=checkbox], .mui-radio input[type=radio] {width: 0;height: 0;border-color: #fff;}
+			.cart-buy li .mui-checkbox {margin-top: 16px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a onclick="history.go(-1);" class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title">我的收藏</h1>
+			<!--{if $fav}--><a href="javascript:void(0);" class="btn-arrow-right" id="btn-showhide" style="right: 0;">编辑</a><!--{/if}-->
+		</header>
+		<div class="mui-content-top mui-content-bot">
+		<!--{if $fav}-->
+			<ul class="cart-buy">
+				<!--{loop $fav $p}-->
+				<li id="{$p['goods_id']}" data-spec="{$p['spec_name']}">
+					<div class="checkbox mui-checkbox">
+						<input type="checkbox" name="checkbox1" id="" value="">
+					</div>
+					<div class="nr">
+						<a href="../{$p['code']}-g.html" class="picbox"><img src="{$p['thumb']}" alt="110*110" width='60' height='60'/></a>
+						<div class="word">
+							<a href="../{$p['code']}-g.html" class="title">{$p['name']}</a>
+							<p class="price">￥<span>{$p['price']}</span></p>
+						</div>
+					</div>
+				</li>
+				<!--{/loop}-->
+			</ul>
+			<!--{else}-->
+					<p style="padding:30% 10%;font-size:16px;text-align:center">您没有收藏商品哦</p>   
+			<!--{/if}-->
+			<div class="fix-navbar cart-fix">
+				<div class="checkall mui-checkbox" {if !$fav}style="display:none"{/if}>
+					<input type="checkbox" name="" id="selectall" value="1" class="listCheckBox"><span>全选</span>
+				</div>
+				<a class="fix-btn gotosum" id="buynow">加入购物车</a>
+				<a class="fix-btn delete" id="confirmBtn">移除收藏</a>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script type="text/javascript" src="js/cart.js" ></script>
+		<script>
+	        setCheckbox('selectall', 'checkbox1');
+	    	$(function(){
+	    		$("#btn-showhide").click(function(){
+	    			if($(this).html()=="编辑"){
+	    				$(this).html("完成").addClass("word-yellow");
+	    				$(".mui-content-top").addClass("sh-cart-coll");
+	    			}else{
+	    				$(this).html("编辑").removeClass("word-yellow");	
+	    				$(".mui-content-top").removeClass("sh-cart-coll");
+	    			}
+	    		});
+	    	});
+			//mui初始化
+			(function(m) {
+				$("#confirmBtn").click(function(){
+					var listBox = m("input[name='"+'checkbox1'+"']:checked");
+					var n = listBox.length;
+					if(n>0){
+						mui.init({
+							swipeBack: true //启用右滑关闭功能
+						});
+						var btnArray = ['否', '是'];
+						mui.confirm('是否移除选中的商品，确认？', '温馨提示', btnArray, function(e) {
+							if (e.index == 1) {
+								//是
+								var ids = '';
+								var spec = '';
+								$("ul li .checkbox input[name='checkbox1']:checked").each(function() {
+									id = $(this).parents('li').attr("id") ;
+									spec = $(this).parents('li').data("spec") ;
+									th = $(this).parent();
+									delFav(id, spec,th)
+									
+								});
+								if(ids == '') {
+									return;
+								}
+								location.reload();
+							} else {
+								//否
+							}
+						});
+					}else{
+						mui.toast('请选择您要移除收藏的商品');
+					}
+				});
+				$("#buynow").click(function(){
+					var listBox = m("input[name='"+'checkbox1'+"']:checked");
+					var n = listBox.length;
+					if(n<=0){
+						mui.toast('你没有选择任何商品');
+					}else{
+						var ids = '';
+						var spec = '';
+						$("ul li .checkbox input[name='checkbox1']:checked").each(function() {
+							ids += $(this).parents('li').attr("id") + "-";
+							spec += $(this).parents('li').data("spec") + "-";
+						});
+						addcartMult(ids,'1','1',spec);
+					}
+				});
+			})(mui)
+		</script>
+	</body>
+</html>

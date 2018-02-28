@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>售后 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" class="mui-pull-left mui-icon mui-icon-left-nav" onclick='history.go(-1);'></a>
+			<h1 class="mui-title">退款售后</h1>
+		</header>
+		<div class="mui-content-top order application-list-c">
+		<!--{if $row}-->
+			<ul class="list-more">
+			<!--{loop $row $p}-->
+				<li>
+					<div class="number">
+						<p class="yec-inline">[{$lang_service_type[$p['type']]}] {$p['id']} &nbsp;&nbsp;&nbsp;订单号：{$p['order_sn']}</p><span class="right">{$lang_service[$p['status']]}</span>
+					</div>
+					<div class="order-nr">
+						<a class="order-top">
+							<p class="single-elli">{$p['name']}</p>
+							<p class="style">
+							<!--{loop $p['spec'] $s}-->
+							{$s['name']}：<span>{$s['val']}</span>
+							<!--{/loop}-->
+							</p>
+						</a>
+					</div>
+					<div class="order-num-sum">
+						<p>{$p['addtime']}</p>
+					</div>
+					<div class="orders-btn btn-ty">
+						<a href="servicedetails.html?id={$p['id']}" class="sing-ty">查看</a>
+					</div>
+				</li>
+			<!--{/loop}-->
+			</ul>
+		<!--{else}-->
+			<!--	没有相关订单-->
+			<div class="no-order">
+				<i class="icon-no-order"></i>
+				<h3>你还没有相关售后订单</h3>
+				<a href="myorder.html" class="lookbtn">去逛逛~</a>
+			</div>
+		<!--{/if}-->
+		</div>
+	</body>
+</html>

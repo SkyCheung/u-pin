@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>选择优惠券</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+		
+		<style type="text/css">
+			.maintab {width: 960px;border-top: none;padding-top: 0px;padding-bottom: 3px;margin-left: 0px;border-bottom: 0px;}						
+			.wintit{padding-bottom: 0px;margin-top: 10px;margin-bottom: 80px;}
+			.maincon .list ul.rowtit{height: 32px;line-height: 32px;}
+			.maincon .list ul.rowtit li{height: 32px;line-height: 32px}
+			.maincon .search span{height: auto;}
+			 .maincon  .list ul li span{float: none;}
+			 .maincon .column{float: none;display: block;}
+			 .maincon .fixedRow{padding: 5px 0;}
+			 
+			 #selectedtotal{position: absolute;left: 10px;top: 7px; font-size: 16px;}
+			 #selectedtotal b{color: #E01C2C;}
+			 
+			.couponlist{height: 400px;margin-top: 5px; border-top: dashed 1px #ddd;padding-top: 3px;margin-bottom: 60px;}
+			.couponlist .cp-it{ width:213px;float: left;margin-right: 15px;margin-bottom: 15px;border:dashed 1px #999;border-radius:  4px;position: relative; overflow: hidden;cursor: pointer;}
+			.couponlist .selected{border: solid 1px #E01C2C;}
+			.couponlist .cp-it:hover{opacity: 0.8;}
+			.couponlist .last{margin-right: 0px;}
+			.couponlist .cp-it .hd{height: 100px;background-color: #74d2d4;}
+			.couponlist .cp-it .bt{height: 93px;background-color: #f1f1f1;}
+			.couponlist .cp-it span{display: block;}
+			.couponlist .cp-it .hd span{text-align: center;color: #fff;}
+			.couponlist .cp-it .hd span.amount{font-size: 28px;padding-top: 5px;}
+			.couponlist .cp-it .hd span.amount_reached{margin-top: 6px;}
+			.couponlist .cp-it .hd span.date{color: #075456;margin-top: 8px;}
+			.couponlist .cp-it .bt>div{padding: 10px;line-height: 24px;}
+			.couponlist .cp-it .bt span{color: #666666;font-size: 12px;height: 24px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+			.couponlist .cp-it .bt span label{color: #333;font-size: 14px;}
+			.couponlist .cp-it .bt .tit{font-weight: normal;}
+			
+			
+		</style>
+	</head>
+
+	<body>
+		<div class="maincon wintit">
+			<div class="">
+				<div class="search" style="height:85px;">
+					<div class="column" style="position: relative;">
+						<div id="amountlist">
+								<a href="javascript:void(0);" data-val = "0" class="btn selected">所有面额</a>
+								<a href="javascript:void(0);" data-val = "1" class="btn">1元</a>
+								<a href="javascript:void(0);" data-val = "2" class="btn">2元</a>
+								<a href="javascript:void(0);" data-val = "3" class="btn">3元</a>
+								<a href="javascript:void(0);" data-val = "5" class="btn">5元</a>
+								<a href="javascript:void(0);" data-val = "8" class="btn">8元</a>
+								<a href="javascript:void(0);" data-val = "10" class="btn">10元</a>
+								<a href="javascript:void(0);" data-val = "20" class="btn">20元</a>
+								<a href="javascript:void(0);" data-val = "30" class="btn">30元</a>
+								<a href="javascript:void(0);" data-val = "50" class="btn">50元</a>
+								<a href="javascript:void(0);" data-val = "100" class="btn">100元</a>
+								<a href="javascript:void(0);" data-val = "150" class="btn">150元</a>
+								<a href="javascript:void(0);" data-val = "200" class="btn">200元</a>
+								<a href="javascript:void(0);" data-val = "300" class="btn">300元</a>
+								<input type="text" placeholder="面额" id="amount" class="wp60 center" onkeyup="onlyAmount(this);"/>
+								<div class="clear"></div>
+						</div>
+						<div style="margin-top: 13px;">
+								<input type="text" class="input wp120" size="10" placeholder="券编号/券名" id="name"/>
+								<input type="button" class="sub" value=" 搜索 " id="btn-search" />
+						</div>
+					</div>
+				</div>
+				<div class="couponlist">
+						<!--<div class="cp-it selected">							
+							<div class="hd">
+								<span class="amount">￥<b>200</b></span>
+								<span class="amount_reached">满 1000 可用</span>
+								<span class="date">2017.06.01-2017.06.20</span>
+							</div>
+							<div class="bt">
+								<div>
+									<span><label>限品类</label>：<b class="tit" title="全场通用无门槛优惠券">全场通用无门槛优惠券</b></span>
+									<span><label>限平台</label>：全平台</span>	
+									<span><label>限等级</label>：铜牌会员、铁牌会员</span>
+								</div>	
+							</div>
+							<i class="i-arrow"></i>
+						</div>-->
+						 
+				</div>
+				<div class="clear"></div>			 
+			</div>
+			<div class="row fixedRow">
+				<div class="column"><span id="selectedtotal"></span><input type="button" class="sub" id="ok" value="确定 " />&nbsp;&nbsp;<input type="button" class="sub" id="cancel" value="取消" /></div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var curpage=1, //当前页
+			totalpage=0, //总页数
+			ids = '',//缓存选择的券
+			get_type = 0, //发放方式  0所有 1买家领取  2平台发放	
+			is_mult = 0; //0单选，1多选 
+
+			$(function() {		
+				
+				$("#amountlist a").each(function() {
+					$(this).click(function() {
+						$(this).addClass("selected").siblings("a").removeClass("selected");
+						$("#amount").css("color", "#bbb");
+						query(curpage, true);
+					})		    		
+		    	});
+		    	
+		    	$("#amount").keyup(function() {
+		    		 $(this).css("color", "#F63");
+		    		$("#amountlist a").removeClass("selected");
+		    	});
+		    			    			    	
+		    	ids = $(parentlayer).find("#coupon_ids").val();
+		    	is_mult = ($(parentlayer).find("#coupon_ids").data("ismult")) ? $(parentlayer).find("#coupon_ids").data("ismult") : 0;
+		    	get_type = ($(parentlayer).find("#coupon_ids").data("gettype")) ? $(parentlayer).find("#coupon_ids").data("gettype") : 0;
+		    			    	
+		    	query(curpage, true);
+		    	sumSelected($(parentlayer).find("#coupon_count").html());		    	
+			});
+			
+			function query(p, isSearch) {
+				curpage = isSearch ? 1: p;
+				
+				var amount = $("#amountlist a.selected").length==0 ? $("#amount").val() : $("#amountlist a.selected").data("val");
+				amount = amount==''? 0 : parseInt(amount);
+
+				$.getJSON("admin.html?do=coupon_select",{act:"get_coupon", page:p,num:20,get_type:get_type, amount:amount,word: $.trim($("#name").val())}, function(res) {
+					if (res.err && res.err !='') {
+						msg(res.err);return;
+					} 
+					else{
+						var html='';
+						var ids_arr = ids ? ids.split(",") : '';
+						var n =0;
+						$.each(res.data, function(k, v) {
+							var chk='';
+							for (var i = 0; i < ids_arr.length; i++) {
+								if (ids_arr[i]==v.id) {
+									chk=' selected';
+								}
+							}
+							n++;
+							var last = n%5==0 ? " last" : "";
+							
+							html +='<div class="cp-it'+ chk + last +'" id='+ v.id+'><div class="hd">';
+							html +='<span class="amount">￥<b>'+v.amount+'</b></span>';
+							html +='<span class="amount_reached">满 '+v.amount_reached+' 可用</span>';
+							html +='<span class="date">'+v.date_start+'-'+v.date_end+'</span></div>';
+							html +='<div class="bt"><div>';
+							html +='<span><label>限品类</label>：<b class="tit" title="'+v.name+'">'+v.name+'</b></span>';
+							html +='<span><label>限平台</label>：'+v.client_name+'</span>';
+							html +='<span title="'+v.grade_name+'"><label>限等级</label>：'+v.grade_name+'</span></div></div><i class="i-arrow"></i></div>';
+						
+						});
+			
+						totalpage = res.total;
+						
+						if (isSearch) {
+							$(".couponlist").html(html);
+						} else{
+							$(".couponlist").append(html);
+						}
+						
+					}
+				});
+			}
+			
+			function sumSelected(num) {				
+				$("#selectedtotal").html("已选择<b> "+ (num | $(".couponlist>.selected").length) + "</b> 个");
+			}
+						 
+			var sc_up=0,sc_down=0;//判断向上/下滚
+			$(window).scroll(function() {
+				sc_up = $(this).scrollTop();  
+				if($(this).scrollTop()+$(this).height()+20 > $(document).height() && sc_down <= sc_up && curpage<totalpage) {
+					query(curpage+1);
+				}
+				setTimeout(function(){sc_down = sc_up;},0); 
+			});
+						
+			$(".couponlist").each(function() {
+				$(this).on("click",".cp-it",function() {
+					$(this).toggleClass("selected");
+					if (is_mult ==0) {
+						$(this).siblings().removeClass("selected");
+					}	
+					sumSelected();
+				});
+			}); 						 
+			
+			$("#btn-search").click(function() {
+				query(1,true);
+			});						
+			
+			$("#ok").click(function() {			
+				ids ='';
+				$(".couponlist>.selected").each(function() {
+					ids += ","+$(this).attr("id");
+				})
+				if(ids!='') {
+					ids = ids.substr(1, ids.length);
+				}
+				$(parentlayer).find("#coupon_ids").val(ids);
+				$(parentlayer).find("#coupon_count").html($("#selectedtotal b").html());
+				//$(parentlayer).find("#layer_res").val("ok");
+				parent.layer.close(parent.layer.getFrameIndex(window.name));
+			});
+			
+			$("#cancel").click(function() {				
+				parent.layer.close(parent.layer.getFrameIndex(window.name));
+			});
+			
+			 
+			$("#close").click(function  () {
+				close();
+			});
+		     	
+			$(document).click(function () {
+				close();
+			});
+			
+			function close() {
+				$(".winlayer").hide();
+				$("#c_cat_ids").css({"border-bottom-color":"#bbb", "background-color":"#f6f9fc"});
+			}
+
+		</script>
+		
+		 
+	</body>
+
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新建网站</title>
+
+<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+
+<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="$images/lhgcore.lhgcalendar.min.js"></script>
+
+<link rel="stylesheet" href="/static/editor/themes/default/default.css" />
+<script charset="utf-8" src="/static/editor/kindeditor-min.js"></script>
+
+<script>
+	var editor;
+	KindEditor.ready(function(K) {
+		editor = K.create('textarea[name="c_body"]', {
+			uploadJson : 'admin.html?do=upload_json',
+				fileManagerJson : 'admin.html?do=upload_file_manager_json',
+				allowFileManager : true,
+				resizeType:0,
+				filterMode:false,
+				urlType : 'absolute'
+		});
+	});
+</script>
+
+<link rel="stylesheet" href="$images/skins/lhgcalendar.css" />
+<script type="text/javascript" src="$images/lhgcore.lhgcalendar.min.js"></script>
+<script>
+//$.calendar({id:'c_time'});
+$(function(){
+    $('#c_time').calendar();
+});
+</script>
+<style>
+body{margin-left:0px;margin-right:0px;}
+#mainnav{padding-left:0px;}
+#mainnav .button{margin-left:40px;}
+</style>
+</head>
+
+<body>
+<div id="maintop"><div>你的位置：<span>内容管理 -> 发布文章</span></div></div>
+<div id="mainnav"> 	<a class="button" href="./admin.html?do=member.news&id={$id}"><span style="color:#090">返回列表</span></a></div>
+<div class="maincon">
+<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1"><input name="action" type="hidden" id="action" value="member.news.add" />
+  <div class="row">
+    <label class="row-name">标题：</label><div class="column"><input name="c_title" type="text" id="c_title" value="{$row[c_title]}" size="60" /> 
+ <!-- <label><input name="c_c" type="checkbox" id="c_c" value="1" {$cc} /> 推荐</label>-->
+  
+  <span></span></div></div>
+  
+<div class="row"><label class="row-name">金额：</label><div class="column"><input name="c_price" id="c_price" /><span></span></div>
+
+ <label class="row-name">时间日期：</label><div class="column"><input name="c_time" type="text" id="c_time" value="{$time}" size="20" readonly="readonly" />
+    </div>
+
+</div>
+  
+
+    
+<div class="row">
+      <label class="row-name">缩略图：</label><div class="column"><input type="file" name="file_upload" id="file_upload" />
+    </div></div>
+    
+ <!--
+    <div class="row">
+      <label class="row-name">是否推荐：</label><div class="column"> <label><input name="c_is" type="radio" id="radio" value="1" checked="checked" /> 是 </label> <label><input type="radio" name="c_is" id="radio" value="0" /> 否</label>
+      </div></div>
+      -->
+      
+      
+    <div class="row">
+      <label class="row-name">内容简介：</label><div class="column">
+      
+      <textarea name="c_txt" cols="70" rows="3" id="c_txt"></textarea>
+      </div></div>  
+      
+      
+      
+    <div class="row">
+      <label class="row-name">内容正文：</label><div><textarea name="c_body" style="width:700px;height:350px;visibility:hidden;">{$row[c_body]}</textarea></div></div>
+      
+      
+    <div class="row"><label class="row-name"></label><div class="column"><input type="submit" class="sub" value=" 提交 " /></div></div>
+</form>
+  
+</div>
+
+
+
+
+
+
+</body>
+
+</html>

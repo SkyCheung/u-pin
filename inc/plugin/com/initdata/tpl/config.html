@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>清空演示数据</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script type="text/javascript" src="{adm_tpl}/js/main.js"></script>
+	</head>
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>清空演示数据</span></div>
+		</div>
+		 <div class="maincon">
+				<br />
+				<div class="list" >
+					<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+					<div class="row">
+						<div class="column">本功能为一键清空商品(包括商品分类、品牌、属性等)、订单、评论、文章分类和文章（系统内置除外）、会员和会员相关信息等数据
+							<br />
+							<p><b style="color: #E01C2C;">操作后不可恢复，请谨慎操作！</b></p><span></span></div>
+					</div>
+					<div class="row"><label class="row-name"></label>
+						<div class="column">
+							<input type="submit" class="sub" value="立即清空" />	
+							<input type="button" class="sub" value="返回" onclick="javascript:window.location.href='admin.html?do=plugin'"/>	
+							<input name="action" type="hidden" value="plugin">
+							<input name="plugin_code" type="hidden" value="{$plugin_code}">
+							<input name="act" type="hidden" id="act" value="initdata">
+						</div>
+					</div>
+					</form>
+				</div>
+				
+		</div>
+		<style type="text/css">.maincon .row .row-name{width: 200px;}</style>
+		<script type="text/javascript"> 	 
+ 
+		    function check() {
+		    	top.layer.confirm("此操作不可恢复，确定要清空吗", function(index) {		
+		    		top.layer.close(index);
+		    		form1.submit();
+		    	});
+		    	
+		     	return false;
+		    }		   
+			 
+		</script>
+	</body>
+</html>

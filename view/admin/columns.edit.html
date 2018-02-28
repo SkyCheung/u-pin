@@ -1,0 +1,200 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>栏目编辑</title>
+
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script>
+			function tab(lookname) {
+				var alllook = 3;
+				for (var i = 1; i < alllook + 1; i++) {
+					document.getElementById("scon" + i).style.display = "none";
+					document.getElementById("base" + i).style.backgroundColor = "#fff";
+
+				}
+				document.getElementById('scon' + lookname).style.display = "block";
+				document.getElementById("base" + lookname).style.backgroundColor = "#FdFdFd";
+			}
+		</script>
+
+		<link rel="stylesheet" href="/static/editor/themes/default/default.css" />
+		<script charset="utf-8" src="/static/editor/kindeditor-min.js"></script>
+		<script>
+			var editor;
+			KindEditor.ready(function(K) {
+				editor = K.create('textarea[name="c_body"]', {
+					uploadJson: 'admin.html?do=upload_json',
+					fileManagerJson: 'admin.html?do=upload_file_manager_json',
+					allowFileManager: true,
+					resizeType: 0,
+					filterMode: false,
+					newlineTag: 'br',
+					urlType: 'absolute',
+					items: [
+						'source', 'undo', 'redo', 'plainpaste', 'wordpaste', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+						'removeformat', '|', 'table', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+						'insertunorderedlist', '|', 'image', 'flash', 'media', 'insertfile', 'link', 'unlink', 'clearhtml'
+					]
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 文章分类编辑</span></div>
+		</div>
+		<div id="mainnav"> <a class="button" href="./admin.html?do=news.add"><span>发布文章</span></a><a class="button" href="./admin.html?do=columns.add"><span>新建分类</span></a><a class="button" href="./admin.html?do=columns"><span>分类列表</span></a></div>
+
+		<div class="maincon">
+			<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1"><input name="action" type="hidden" id="action" value="columns.edit" />
+
+				<div class="tabnav">
+					<ul>
+						<li id="base1" class="ave"><a href="javascript:void(0);" onclick="tab('1');">基本信息</a></li>
+						<li id="base2"><a href="javascript:void(0);" onclick="tab('2');">分类描述</a></li>
+						<li id="base3"><a href="javascript:void(0);" onclick="tab('3');">SEO优化设置</a></li>
+					</ul>
+				</div>
+
+				<div id="scon2" style="display:none;">
+
+					<div class="row">
+						<label class="row-name">内容正文：</label>
+						<div><textarea name="c_body" style="width:700px;height:450px;visibility:hidden;">{$row[c_body]}</textarea></div>
+					</div>
+
+				</div>
+
+				<div id="scon3" style="display:none;">
+					<div class="row"><label class="row-name">标题：</label>
+						<div class="column"><input name="seo_title" type="text" id="seo_title" value="{$row[seo_title]}" size="50" /><span>优化搜索结果标题，SEO用</span></div>
+					</div>
+
+					<div class="row">
+						<label class="row-name">关键词：</label>
+						<div class="column"><input name="seo_keyword" type="text" id="seo_keyword" value="{$row[seo_keyword]}" size="50" /><span>可填写多个，以,或者|分隔开</span></div>
+					</div>
+
+					<div class="row"><label class="row-name">描述：</label>
+						<div class="column"><input name="seo_description" type="text" id="seo_description" value="{$row[seo_description]}" size="50" /><span>写一个简单的描述，SEO辅助</span></div>
+					</div>
+
+				</div>
+
+				<div id="scon1">
+
+					<div class="row"><label class="row-name">上级分类：</label>
+						<div class="column"><select name="c_pid" id="c_pid">
+  <option value="0" >---顶级分类---</option>
+  {$sortcon}    
+</select><input type="hidden" value="news" name="c_type" id="c_type" />
+							<span></span></div>
+					</div>
+					<div class="row"><label class="row-name">分类名称：</label>
+						<div class="column"><input name="c_title" type="text" id="c_title" value="{$row[c_title]}" size="30" /><span></span></div> <label class="row-name">注释：</label>
+						<div class="column"><input name="c_txt" type="text" id="c_txt" value="{$row[c_txt]}" size="30" /><span></span></div>
+					</div>
+					<div class="row"><label class="row-name">栏目属性：</label>
+						<div class="column">
+							<label><input type="radio" value="news" name="c_type" {$c_type['news']}/>文章</label>
+							<label><input type="radio" value="spage"  name="c_type" {$c_type['spage']}/>单页面</label>
+						</div>
+					</div>
+
+					<div class="row"><label class="row-name">文件名称：</label>
+						<div class="column">
+							<input type="text" value="n-" style="width: 15px;" readonly="readonly" /> <input name="c_name" type="text" id="c_name" value="{$row[c_name]}" size="30" />
+
+							<input type="text" id="aasdfsdf" value=".html" size="4" readonly="readonly" />
+							<span>只能英文或数字、如：news</span></div>
+					</div>
+
+					<div class="row">
+						<label class="row-name">存放目录：</label>
+						<div class="column"><input name="c_dir" type="text" id="c_dir" value="{$row[c_dir]}" size="30" />
+						</div>
+					</div>
+
+					<div class="row"><label class="row-name">模板文件：</label>
+						<div class="column"><input name="c_mo" type="text" id="c_mo" value="{$row[c_mo]}" size="30" /> <input type="text" id="aasdfsdf" value=".html" size="4" readonly="readonly" /><span>文件名称只支持英文、数字、下中横线</span>
+						</div>
+					</div>
+
+					<div class="row"> <label class="row-name">跳转地址：</label>
+						<div class="column"><input name="c_url" type="text" id="c_url" value="{$row[c_url]}" size="30" />
+						</div>
+					</div>
+
+					<div class="row">
+						<label class="row-name">显示分类：</label>
+						<div class="column"> <label><input name="c_is" type="radio" id="radio" value="1"{$c_is[1]} /> 显示 </label> <label><input type="radio" name="c_is" id="radio" value="0"{$c_is[0]} /> 隐藏</label>
+						</div>
+						<!--{if $web_member=='1'}-->
+						<label class="row-name">会员专区：</label>
+						<div class="column"> <label><input name="c_member" type="radio" id="radio" value="1" {$c_member[1]} /> 启用 </label>
+							<label><input name="c_member" type="radio" id="radio" value="0" {$c_member[0]} /> 不启用</label><span></span>
+						</div>
+						<!--{/if}-->
+					</div>
+
+					<div class="row">
+						<label class="row-name">显示子类内容：</label>
+						<div class="column"> <label><input name="c_look" type="radio" id="radio" value="1"{$c_look[1]} /> 是 </label> &nbsp;&nbsp; <label><input type="radio" name="c_look" id="radio" value="0"{$c_look[0]} /> 否</label>
+						</div>
+					</div>
+					<div class="row">
+						<label class="row-name">显示在页面底部：</label>
+						<div class="column"> <label><input name="is_help" type="radio" id="radio" value="1" {$is_help[1]} /> 是 </label> &nbsp;&nbsp; <label><input type="radio" name="is_help" id="radio" value="0"{$is_help[0]} /> 否</label>
+						</div>
+					</div>
+					<div class="row">
+						<label class="row-name">缩略图模式：</label>
+						<div class="column"> <label><input name="c_smtype" type="radio" id="c_smtype" value="" {$c_smtype['a']} /> 
+        跟随系统设定 </label> <label><input name="c_smtype" type="radio" id="c_smtype" value="1" {$c_smtype['a1']} /> 
+        剪裁(居中) </label> <label><input name="c_smtype" type="radio" id="c_smtype" value="2" {$c_smtype['a2']} /> 
+        剪裁(左上) </label>
+							<label><input type="radio" name="c_smtype" id="c_smtype" value="0" {$c_smtype['a0']} /> 
+        比例</label>
+						</div>
+					</div>
+
+					<div class="row">
+						<label class="row-name">缩略图宽：</label>
+						<div class="column"><input name="c_width" type="text" id="c_width" value="{$row[c_width]}" size="3" maxlength="4" /><span></span></div>
+						<label class="row-name" style="padding:0;margin:0;width:30px;">高：</label>
+						<div class="column"><input name="c_height" type="text" id="c_height" value="{$row[c_height]}" size="3" maxlength="4" /><span></span></div>
+
+						<label class="row-name" style="padding:0;margin:0;width:70px;">每页显示：</label>
+						<div class="column"><input name="c_num" type="text" id="c_num" value="{$row[c_num]}" size="3" maxlength="4" /><span>一般无需设置，0为默认值</span></div>
+					</div>
+
+					<div class="row"><label class="row-name">封面图：</label>
+						<div class="column"><input type="file" name="file_upload" id="file_upload" />
+							<input type="hidden" name="c_simg" id="c_simg" value="{$row[c_simg]}" />
+							{if $row[c_simg]}<img src="{imgpath}{$row[c_simg]}" width="80" height="80" style="vertical-align: middle;" />{/if}
+						</div>
+					</div>
+
+				</div>
+
+				<div class="row"><label class="row-name"></label>
+					<div class="column"><input type="submit" class="sub" value=" 提交 " onclick="toTop();"/></div>
+				</div>
+			</form>
+
+		</div>
+		<script type="text/javascript">
+			/*$("#c_pid").change(function() {
+				var moFile =$(this).children(":selected").data("file");
+				moFile = moFile || '';
+				$("#c_mo").val(moFile);
+			});*/
+		</script>
+	</body>
+
+</html>

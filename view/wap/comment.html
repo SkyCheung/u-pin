@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" class="feedback">
+	<head>
+		<meta charset="UTF-8">
+		<title>订单评价 - {$ym_endtitle}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<link rel="stylesheet" type="text/css" href="css/feedback-page.css"/>
+		<style type="text/css">
+			.mui-icon-star{color:#e8e8e8;}
+			.mui-icon-star,.mui-icon-star-filled{font-size: 34px;margin:0 -2px;}
+			.mui-icon-star-filled{color:#f5cb19;}
+			.mui-bar-nav~.mui-content{padding-top:54px;}
+			.feedback .image-list{padding-left:0;padding-right: 0;}
+			.mui-icon-star:before{content:'\e6cc';font-family: 'iconfont';}
+			.mui-icon-star-filled:before{content:'\e605';font-family: 'iconfont';}
+			.feedback .image-list{height: auto;}
+			.btn-ty .sing-ty{color:#fff;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:history.go(-1);" class="mui-pull-left mui-icon mui-icon-left-nav" ></a>
+			<h1 class="mui-title">订单评价</h1>
+		</header>
+		<div class="mui-content bgw evaluate">
+		{if !$goods}<p style="text-align: center;"><br><br><br>您的订单已评价</p>{/if}
+			<form name="comment" enctype="multipart/form-data">
+				<!--{loop $goods $p}-->
+				<div class="submit-bd" id="{$p['goods_id']}">
+					<div class="good-view">
+						<input type="hidden" name="item_id[]" value="{$p['goods_id']}">
+						<input type="hidden" name="spec[]" value="{$p['spec']}">
+						<a href="{$p['url']}" class="picbox"><img src="{$p['thumb']}" alt="196*196"/></a>
+						<div class="mui-content-padded star-box">
+							<div class="mui-inline">描述相符</div>
+							<div class="icons" style="margin-top:6px;">
+								<i data-index="1" class="mui-icon mui-icon-star"></i>
+								<i data-index="2" class="mui-icon mui-icon-star"></i>
+								<i data-index="3" class="mui-icon mui-icon-star"></i>
+								<i data-index="4" class="mui-icon mui-icon-star"></i>
+								<i data-index="5" class="mui-icon mui-icon-star"></i>
+								<input type="hidden" name="star[]" id='star' class="star" value="0" ></input>
+							</div>
+						</div>
+					</div>
+					<div class="row mui-input-row textarea">
+						<textarea id='question' class="mui-input-clear question " name="content[]" placeholder="说两句吧"></textarea>
+					</div>
+					<div id='image-list' data-limit="{$ym_comment_imglimit}" class="row image-list"></div>
+					<input type="hidden" id="item_id" value="{$p['goods_id']}">
+				</div>
+				<!--{/loop}-->
+				<div class="fix-navbar btn-ty evaluate-btn">
+					<input type="submit" name="ok" id="btn-submit" value="提交评论" class="sing-ty bg-yellow"/>
+					<input type="hidden" name="is_anon" value="0">
+					<input type="hidden" name="action" value="comment" />
+					<input type="hidden" name="act" value="add" />
+					<input type="hidden" name="oid" value="{$oid}" />
+					<input type="hidden" name="type" value="0" />
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/feedback-page.js" ></script>
+		<script type="text/javascript">
+		/*表单判断*/
+			$("#btn-submit").click(function(){
+				if(!$(".icons i").hasClass("mui-icon-star-filled")){
+					mui.toast('您还没有给此次购物评分');
+					return false;
+				}
+				if($("#question").val()==""){
+					$("#question").focus();
+					mui.toast('您还没对此次购物做出评价');
+					return false;
+				}
+			});
+		//评分
+		star();
+		</script>
+	</body>
+</html>

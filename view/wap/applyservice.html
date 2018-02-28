@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" class="feedback">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>退/换货申请 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/feedback-page.css" />
+		<link rel="stylesheet" href="css/mui.picker.min.css" />
+		<link rel="stylesheet" href="css/mui.poppicker.css" />
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style type="text/css">
+			#cityResult3{margin-left: 3%;display: inline-block;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="" class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title">退/换货申请</h1>
+		</header>
+		<div class="mui-content tabstyle">
+			<div id="" class="maxwidthpos">
+			<form method="post" enctype="multipart/form-data" onsubmit="return check();">
+				<div id="" class="backapply bgw">
+					<div class="backapply-bar">
+						<a class="mbtab-active bara" id="1">
+							<span>换货申请</span>
+						</a>
+						<a class="bara" id="2">
+							<span>退货申请</span>
+						</a>
+					</div>
+				</div>
+				<!--{loop $row $p}-->
+				<input type="hidden" name="goods_id" value="{$p['goods_id']}" /><input type="hidden" name="spec" value="{$p['spec']}" />
+				<!--{/loop}-->
+				<div class="grouptab">
+					<div class="">
+						<div class="back-box mui-input-row">
+							<h3 class="back-title">申请原因<em>*</em></h3>
+							<div class="back-inp-box">
+								<input type="text" name="content" id="resapply" value="" placeholder="请输入申请原因" class="mui-input-clear back-inp"/>
+							</div>
+						</div>
+						<div class="back-box mui-input-row">
+							<h3 class="back-title">申请数量<em>*</em></h3>
+							<div class="mui-numbox" data-numbox-min='1' data-numbox-max='{$row[0]['num']}'>
+								<button class="mui-btn mui-btn-numbox-minus" type="button" style="margin:0">-</button>
+								<input id="test" name="num" class="mui-input-numbox" type="number" value="1"  maxlength="4"/>
+								<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+							</div>
+						</div>
+						<div class="back-box mui-input-row" id="showCityPicker3">
+							<div class="mui-navigate-right">
+								<span>市、省、区</span>
+								<div id="cityResult3" class="ui-alert  mui-pull-right" style="margin-right: 30px;">{$order['cnee_dist_name']}</div>
+								<input type="hidden" id="addressid" value="{$order['cnee_dist_ids']}">
+							</div>
+						</div>
+						<div class="back-box mui-input-row">
+							<h3 class="back-title">详细地址<em>*</em></h3>
+							<div class="back-inp-box">
+								<input type="text" name="address" id="apply-street" value="{$order['cnee_address']}" placeholder="请输入详细收货地址" class="mui-input-clear back-inp"/>
+							</div>
+						</div>
+						<div class="back-box mui-input-row">
+							<h3 class="back-title">姓名<em>*</em></h3>
+							<div class="back-inp-box">
+								<input type="text" name="name" id="apply-name" value="{$order['cnee_name']}" placeholder="请输入姓名" class="mui-input-clear back-inp"/>
+							</div>
+						</div>
+						<div class="back-box mui-input-row">
+							<h3 class="back-title">手机号码<em>*</em></h3>
+							<div class="back-inp-box">
+								<input type="tel" name="mobile" id="apply-tel" value="{$order['cnee_mobile']}" placeholder="请输入手机号码" class="mui-input-clear back-inp" maxlength="11"/>
+							</div>
+						</div>
+						<div class="back-box">
+							<h3 class="back-title">上传凭证<span>可不填</span></h3>
+							<div id='image-list' class="row image-list" data-limit="5"></div>
+						</div>
+						<div class="btn-box margin10">
+							<input type="submit" value="提交" id="save-btn" class="btn btn-single-click"/>
+							<br />
+						</div>
+						<input type="hidden" name="apply_type" id="apply_type" value=""/>
+						<input type="hidden" name="action" value="applyservice" />
+						<input type="hidden" name="district_name" id="district_name" value=''>
+						<input type="hidden" name="act" value="add" />
+						<input type="hidden" name="oid" value="{$oid}" />
+					</div>
+				</div>
+			</form>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/mui.view.js" ></script>
+		<script type="text/javascript" src="js/feedback-page.js" ></script>
+		<script type="text/javascript" src="js/mui.picker.js" ></script>
+		<script type="text/javascript" src="js/mui.poppicker.js" ></script>
+		<script type="text/javascript" src="js/city.data.js" ></script>
+		<script type="text/javascript" src="js/city.data-3.js" ></script>
+		<script>
+		(function($, doc) {
+			$.init();
+			$.ready(function() {
+				var cityPicker3 = new $.PopPicker({
+					layer: 4
+				});
+				cityPicker3.setData(cityData3);
+				var showCityPickerButton = doc.getElementById('showCityPicker3');
+				var cityResult3 = doc.getElementById('cityResult3');
+				showCityPickerButton.addEventListener('tap', function(event) {
+					cityPicker3.show(function(items) {
+						cityResult3.innerText = (items[0].text || '') + " " + (items[1].text || '') + " " + (items[2].text || '') + " " + (items[3].text || '');
+							a = (items[0].value || '') + "-" + (items[1].value || '')  + (items[2].value ? "-" + items[2].value : '') + (items[3].value ? "-" + items[3].value : '');
+						//返回 false 可以阻止选择框的关闭
+						//return false;
+						doc.getElementById('addressid').value = a;
+					});
+				}, false);
+			});
+		})(mui, document);
+		$(".backapply-bar a").each(function(){
+			$(this).click(function(){
+				$(this).addClass("mbtab-active").siblings().removeClass("mbtab-active");
+				$('html,body').animate({scrollTop: '0px'}, 0);
+			});
+		});
+		
+		//表单验证
+			function check(){
+				var city = $("#cityResult3").html();
+				$("#district_name").val(city);
+				var type=$(".mbtab-active").attr("id");
+				if(type==""){
+					mui.toast('请选择服务类型');
+					$(".mbtab-active").focus();
+					return false;
+				}
+				$("#apply_type").val(type);
+				var v_Tel=$("#apply-tel").val();
+				if($("#resapply").val()==""){
+					mui.toast('请填写申请原因');
+					$("#resapply").focus();
+					return false;
+				}
+				if($("#cityResult3").html()==""){
+					mui.toast("请选择市、省、区");
+					return false;
+				}
+				if($("#apply-street").val()==""){
+					mui.toast('请填写详细地址');
+					$("#apply-street").focus();
+					return false;
+				}
+				if($("#apply-name").val()==""){
+					mui.toast('请填写姓名');
+					$("#apply-name").focus();
+					return false;
+				}
+				if(v_Tel==""){
+					mui.toast('请填写手机号码');
+					$("#apply-tel").focus();
+					return false;
+				}
+				if(v_Tel!="" && !is_tel(v_Tel)){
+					mui.toast('请填写正确的手机号码'); 
+					$("#apply-tel").focus();
+					return false;
+				}
+
+				return true;
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>我的订单 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style>
+			.mui-col-xs-3{width: 20%;}
+			.mui-slider .mui-segmented-control.mui-segmented-control-inverted~.mui-slider-group .mui-slider-item{border:none;}
+			.mui-slider .mui-slider-group{margin-top:48px;}
+			.mui-table-view{background:none ;}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{color:#007cc3;}
+			.mui-slider-indicator.mui-segmented-control{position: fixed;top:44px;z-index:9;width: 100%;}
+			.mui-segmented-control.mui-segmented-control-inverted~.mui-slider-progress-bar{position: fixed;top: 80px;z-index: 9;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href='user.html' class="mui-pull-left mui-icon mui-icon-left-nav tiao"></a>
+			<h1 class="mui-title" id="mytitle">我的订单</h1>
+			<div class="order-search">
+				<input type="submit" name="" id="btn-sub" value="" />
+				<a id="menu" class="mui-pull-right mui-icon mui-icon-search" value=""></a>
+			</div>
+			<form class="searchword" action="" method="post">
+			<div class="mui-input-row mui-search mui-center mui-title" style="width: calc(100% - 74px);left:10px;right:10px;display: none;">
+				<input type="search" name="keyword" id="searchword" class="mui-input-clear" data-input-clear="1" data-input-search="1" placeholder="订单号/商品名称">
+			</div>
+			</form>
+		</header>
+		<div class="mui-content order">
+			<div id="slider" class="mui-slider">
+				<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted bgw">
+					<a class="mui-control-item{if !$t} mui-active{/if}" href="#item1mobile">全部</a>
+					<a class="mui-control-item{if $t==1} mui-active{/if}" href="#item2mobile">待付款</a>
+					<a class="mui-control-item{if $t==4} mui-active{/if}" href="#item3mobile">待发货</a>
+					<a class="mui-control-item{if $t==2} mui-active{/if}" href="#item4mobile">待收货</a>
+					<a class="mui-control-item{if $t==3} mui-active{/if}" href="#item5mobile">待评价</a>
+				</div>
+				<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-3"></div>
+				<div class="mui-slider-group">
+					<div id="item1mobile" class="mui-slider-item mui-control-content {if !$t} mui-active{/if}">
+						<div id="scroll1" class="mui-scroll-wrapper">
+							<div class="mui-scroll" id="0">
+							<!--{if !$t}-->
+								<ul class="list-more  mui-table-view">
+									<!--{if $order}-->
+									<!--{loop $order $p}-->
+									<li class="mui-table-view-cell" id="{$p['order_sn']}">
+										<div class="number">
+											<p class="mui-inline">订单号：{$p['order_sn']}</p><span class="right">{$p['status_name']}</span>
+										</div>
+										<!--{loop $p['goods'] $v}-->
+										<div class="order-nr">
+											<a class="picbox" href="{$v['url']}">
+												<img src="{$v['thumb']}" alt="110*110" style="width:60px;height:60px"/>
+											</a>
+											<div class="order-word">
+												<a class="order-top">
+													<p class="single-elli">{$v['name']}</p>
+													<p class="style">
+													<!--{loop $v['spec'] $s}-->
+													{$s['name']}：<span>{$s['val']}</span>
+													<!--{/loop}-->
+													</p>
+												</a>
+												<div class="pwtxt">
+													<p class="money">￥<span>{$v['price']}</span></p>
+													<span class="buy-num">x{$v['num']}</span>
+													<!--{if $p['status']==order_finish}-->
+											    	<p style="display: inline-block;vertical-align: middle;height: 30px;line-height: 30px;border: 1px solid #e3e3e3;padding: 0 10px;border-radius: 18px;margin-left: 2px;margin-top:3px"><a href="applyservice.html?oid={$v['order_sn']}&gid={$v['goods_id']}&spec={$v['spec_name']}" class="qiangrey" target="_blank">申请售后</a></p>
+													<!--{/if}-->
+												</div>
+											</div>
+										</div>
+										<!--{/loop}-->
+										<div class="order-num-sum">
+											<p>合计<span>{$p['amount']}</span>元</p>
+										</div>
+										<div class="orders-btn btn-ty">
+											<!--{if $p['status']==order_finish}-->
+											{if $p['is_comment']==0}											
+											<a href="comment.html?oid={$p['order_sn']}" target="_blank" class="sing-ty">评价</a>
+											{/if}											
+											<!--{elseif $p['status']==order_paying}-->
+											<a href="pay.html?oid={$p['order_sn']}" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">付款</a>
+											<a href="javascript:void(0);" onclick="order_cancel({$p['order_sn']});" class="sing-ty">取消订单</a>
+											<!--{elseif $p['status']==order_receiving}-->	
+											<a href="details.html?oid={$p['order_sn']}" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">确认收货</a>
+											<!--{/if}-->
+											<!--{if $p['status'] !=order_paying}-->
+											<a href="javascript:void(0);" onclick="addcartMult('{loop $p['goods'] $v}{$v['goods_id']}- {/loop}',1,1,'');" class="sing-ty">再次购买</a>
+											<!--{/if}-->
+										</div>
+									</li>
+								<!--{/loop}-->
+								<!--{else}-->
+									<div class="no-order">
+										<i class="icon-no-order"></i>
+										<h3>你还没有相关订单</h3>
+										<a href="/category.html" class="lookbtn">去逛逛~</a>
+									</div>
+								<!--{/if}-->
+								</ul>
+						<!--{else}-->
+								<div class="mui-loading" id="0">
+									<div class="mui-spinner">
+									</div>
+								</div>
+						<!--{/if}-->
+							</div>
+						</div>
+					</div>
+					<div id="item2mobile" class="mui-slider-item mui-control-content {if $t==1} mui-active{/if}">
+						<div id="scroll2" class="mui-scroll-wrapper">
+							<div class="mui-scroll" id="1">
+							<!--{if $t==1}-->
+								<ul class="list-more  mui-table-view">
+									<!--{if $order}-->
+									<!--{loop $order $p}-->
+									<li class="mui-table-view-cell" id="{$p['order_sn']}">
+										<div class="number">
+											<p class="mui-inline">订单号：{$p['order_sn']}</p><span class="right">{$p['status_name']}</span>
+										</div>
+										<!--{loop $p['goods'] $v}-->
+										<div class="order-nr">
+											<a class="picbox" href="{$v['url']}">
+												<img src="{$v['thumb']}" alt="110*110" style="width:60px;height:60px"/>
+											</a>
+											<div class="order-word">
+												<a class="order-top">
+													<p class="single-elli">{$v['name']}</p>
+													<p class="style">
+													<!--{loop $v['spec'] $s}-->
+													{$s['name']}：<span>{$s['val']}</span>
+													<!--{/loop}-->
+													</p>
+												</a>
+												<div class="pwtxt">
+													<p class="money">￥<span>{$v['price']}</span></p>
+													<span class="buy-num">x{$v['num']}</span>
+													<!--{if $p['status']==order_finish}-->
+											    	<p style="display: inline-block;vertical-align: middle;height: 30px;line-height: 30px;border: 1px solid #e3e3e3;padding: 0 10px;border-radius: 18px;margin-left: 2px;margin-top:3px"><a href="applyservice.html?oid={$v['order_sn']}&gid={$v['goods_id']}&spec={$v['spec_name']}" class="qiangrey" target="_blank">申请售后</a></p>
+													<!--{/if}-->
+												</div>
+											</div>
+										</div>
+										<!--{/loop}-->
+										<div class="order-num-sum">
+											<p>合计<span>{$p['amount']}</span>元</p>
+										</div>
+										<div class="orders-btn btn-ty">
+											<!--{if $p['status']==order_finish}-->
+											{if $p['is_comment']==0}											
+											<a href="comment.html?oid={$p['order_sn']}" target="_blank" class="sing-ty">评价</a>
+											{/if}											
+											<!--{elseif $p['status']==order_paying}-->
+											<a href="pay.html?oid={$p['order_sn']}" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">付款</a>
+											<a href="javascript:void(0);" onclick="order_cancel({$p['order_sn']});" class="sing-ty">取消订单</a>
+											<!--{elseif $p['status']==order_receiving}-->	
+											<a href="details.html?oid={$p['order_sn']}" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">确认收货</a>
+											<!--{/if}-->
+											<!--{if $p['status'] !=order_paying}-->
+											<a href="javascript:void(0);" onclick="addcartMult('{loop $p['goods'] $v}{$v['goods_id']}- {/loop}',1,1,'');" class="sing-ty">再次购买</a>
+											<!--{/if}-->
+										</div>
+									</li>
+								<!--{/loop}-->
+								<!--{else}-->
+									<div class="no-order">
+										<i class="icon-no-order"></i>
+										<h3>你还没有相关订单</h3>
+										<a href="/category.html" class="lookbtn">去逛逛~</a>
+									</div>
+								<!--{/if}-->
+								</ul>
+						<!--{else}-->
+								<div class="mui-loading" id="1">
+									<div class="mui-spinner">
+									</div>
+								</div>
+						<!--{/if}-->
+							</div>
+						</div>
+					</div>
+					<div id="item3mobile" class="mui-slider-item mui-control-content {if $t==4} mui-active{/if}">
+						<div id="scroll3" class="mui-scroll-wrapper">
+							<div class="mui-scroll" id="2">
+							<!--{if $t==4}-->
+								<ul class="list-more  mui-table-view">
+									<!--{if $order}-->
+									<!--{loop $order $p}-->
+									<li class="mui-table-view-cell" id="{$p['order_sn']}">
+										<div class="number">
+											<p class="mui-inline">订单号：{$p['order_sn']}</p><span class="right">{$p['status_name']}</span>
+										</div>
+										<!--{loop $p['goods'] $v}-->
+										<div class="order-nr">
+											<a class="picbox" href="{$v['url']}">
+												<img src="{$v['thumb']}" alt="110*110" style="width:60px;height:60px"/>
+											</a>
+											<div class="order-word">
+												<a class="order-top">
+													<p class="single-elli">{$v['name']}</p>
+													<p class="style">
+													<!--{loop $v['spec'] $s}-->
+													{$s['name']}：<span>{$s['val']}</span>
+													<!--{/loop}-->
+													</p>
+												</a>
+												<div class="pwtxt">
+													<p class="money">￥<span>{$v['price']}</span></p>
+													<span class="buy-num">x{$v['num']}</span>
+													<!--{if $p['status']==order_finish}-->
+											    	<p style="display: inline-block;vertical-align: middle;height: 30px;line-height: 30px;border: 1px solid #e3e3e3;padding: 0 10px;border-radius: 18px;margin-left: 2px;margin-top:3px"><a href="applyservice.html?oid={$v['order_sn']}&gid={$v['goods_id']}&spec={$v['spec_name']}" class="qiangrey" target="_blank">申请售后</a></p>
+													<!--{/if}-->
+												</div>
+											</div>
+										</div>
+										<!--{/loop}-->
+										<div class="order-num-sum">
+											<p>合计<span>{$p['amount']}</span>元</p>
+										</div>
+										<div class="orders-btn btn-ty">
+											<!--{if $p['status']==order_finish}-->
+											{if $p['is_comment']==0}											
+											<a href="comment.html?oid={$p['order_sn']}" target="_blank" class="sing-ty">评价</a>
+											{/if}											
+											<!--{elseif $p['status']==order_paying}-->
+											<a href="pay.html?oid={$p['order_sn']}" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">付款</a>
+											<a href="javascript:void(0);" onclick="order_cancel({$p['order_sn']});" class="sing-ty">取消订单</a>
+											<!--{elseif $p['status']==order_receiving}-->	
+											<a href="details.html?oid={$p['order_sn']}" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">确认收货</a>
+											<!--{/if}-->
+											<!--{if $p['status'] !=order_paying}-->
+											<a href="javascript:void(0);" onclick="addcartMult('{loop $p['goods'] $v}{$v['goods_id']}- {/loop}',1,1,'');" class="sing-ty">再次购买</a>
+											<!--{/if}-->
+										</div>
+									</li>
+								<!--{/loop}-->
+								<!--{else}-->
+									<div class="no-order">
+										<i class="icon-no-order"></i>
+										<h3>你还没有相关订单</h3>
+										<a href="/category.html" class="lookbtn">去逛逛~</a>
+									</div>
+								<!--{/if}-->
+								</ul>
+						<!--{else}-->
+								<div class="mui-loading" id="2">
+									<div class="mui-spinner">
+									</div>
+								</div>
+						<!--{/if}-->
+							</div>
+						</div>
+					</div>
+					<div id="item4mobile" class="mui-slider-item mui-control-content {if $t==2} mui-active{/if}">
+						<div id="scroll4" class="mui-scroll-wrapper">
+							<div class="mui-scroll" id="3">
+							<!--{if $t==2}-->
+								<ul class="list-more  mui-table-view">
+									<!--{if $order}-->
+									<!--{loop $order $p}-->
+									<li class="mui-table-view-cell" id="{$p['order_sn']}">
+										<div class="number">
+											<p class="mui-inline">订单号：{$p['order_sn']}</p><span class="right">{$p['status_name']}</span>
+										</div>
+										<!--{loop $p['goods'] $v}-->
+										<div class="order-nr">
+											<a class="picbox" href="{$v['url']}">
+												<img src="{$v['thumb']}" alt="110*110" style="width:60px;height:60px"/>
+											</a>
+											<div class="order-word">
+												<a class="order-top">
+													<p class="single-elli">{$v['name']}</p>
+													<p class="style">
+													<!--{loop $v['spec'] $s}-->
+													{$s['name']}：<span>{$s['val']}</span>
+													<!--{/loop}-->
+													</p>
+												</a>
+												<div class="pwtxt">
+													<p class="money">￥<span>{$v['price']}</span></p>
+													<span class="buy-num">x{$v['num']}</span>
+													<!--{if $p['status']==order_finish}-->
+											    	<p style="display: inline-block;vertical-align: middle;height: 30px;line-height: 30px;border: 1px solid #e3e3e3;padding: 0 10px;border-radius: 18px;margin-left: 2px;margin-top:3px"><a href="applyservice.html?oid={$v['order_sn']}&gid={$v['goods_id']}&spec={$v['spec_name']}" class="qiangrey" target="_blank">申请售后</a></p>
+													<!--{/if}-->
+												</div>
+											</div>
+										</div>
+										<!--{/loop}-->
+										<div class="order-num-sum">
+											<p>合计<span>{$p['amount']}</span>元</p>
+										</div>
+										<div class="orders-btn btn-ty">
+											<!--{if $p['status']==order_finish}-->
+											{if $p['is_comment']==0}											
+											<a href="comment.html?oid={$p['order_sn']}" target="_blank" class="sing-ty">评价</a>
+											{/if}											
+											<!--{elseif $p['status']==order_paying}-->
+											<a href="pay.html?oid={$p['order_sn']}" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">付款</a>
+											<a href="javascript:void(0);" onclick="order_cancel({$p['order_sn']});" class="sing-ty">取消订单</a>
+											<!--{elseif $p['status']==order_receiving}-->	
+											<a href="details.html?oid={$p['order_sn']}" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">确认收货</a>
+											<!--{/if}-->
+											<!--{if $p['status'] !=order_paying}-->
+											<a href="javascript:void(0);" onclick="addcartMult('{loop $p['goods'] $v}{$v['goods_id']}- {/loop}',1,1,'');" class="sing-ty">再次购买</a>
+											<!--{/if}-->
+										</div>
+									</li>
+								<!--{/loop}-->
+								<!--{else}-->
+									<div class="no-order">
+										<i class="icon-no-order"></i>
+										<h3>你还没有相关订单</h3>
+										<a href="/category.html" class="lookbtn">去逛逛~</a>
+									</div>
+								<!--{/if}-->
+								</ul>
+						<!--{else}-->
+								<div class="mui-loading" id="3">
+									<div class="mui-spinner">
+									</div>
+								</div>
+						<!--{/if}-->
+							</div>
+						</div>
+					</div>
+					<div id="item5mobile" class="mui-slider-item mui-control-content {if $t==3} mui-active{/if}">
+						<div id="scroll5" class="mui-scroll-wrapper">
+							<div class="mui-scroll" id="4">
+							<!--{if $t==3}-->
+								<ul class="list-more  mui-table-view">
+									<!--{if $order}-->
+									<!--{loop $order $p}-->
+									<li class="mui-table-view-cell" id="{$p['order_sn']}">
+										<div class="number">
+											<p class="mui-inline">订单号：{$p['order_sn']}</p><span class="right">{$p['status_name']}</span>
+										</div>
+										<!--{loop $p['goods'] $v}-->
+										<div class="order-nr">
+											<a class="picbox" href="{$v['url']}">
+												<img src="{$v['thumb']}" alt="110*110" style="width:60px;height:60px"/>
+											</a>
+											<div class="order-word">
+												<a class="order-top">
+													<p class="single-elli">{$v['name']}</p>
+													<p class="style">
+													<!--{loop $v['spec'] $s}-->
+													{$s['name']}：<span>{$s['val']}</span>
+													<!--{/loop}-->
+													</p>
+												</a>
+												<div class="pwtxt">
+													<p class="money">￥<span>{$v['price']}</span></p>
+													<span class="buy-num">x{$v['num']}</span>
+													<!--{if $p['status']==order_finish}-->
+											    	<p style="display: inline-block;vertical-align: middle;height: 30px;line-height: 30px;border: 1px solid #e3e3e3;padding: 0 10px;border-radius: 18px;margin-left: 2px;margin-top:3px"><a href="applyservice.html?oid={$v['order_sn']}&gid={$v['goods_id']}&spec={$v['spec_name']}" class="qiangrey" target="_blank">申请售后</a></p>
+													<!--{/if}-->
+												</div>
+											</div>
+										</div>
+										<!--{/loop}-->
+										<div class="order-num-sum">
+											<p>合计<span>{$p['amount']}</span>元</p>
+										</div>
+										<div class="orders-btn btn-ty">
+											<!--{if $p['status']==order_finish}-->
+											{if $p['is_comment']==0}											
+											<a href="comment.html?oid={$p['order_sn']}" target="_blank" class="sing-ty">评价</a>
+											{/if}											
+											<!--{elseif $p['status']==order_paying}-->
+											<a href="pay.html?oid={$p['order_sn']}" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">付款</a>
+											<a href="javascript:void(0);" onclick="order_cancel({$p['order_sn']});" class="sing-ty">取消订单</a>
+											<!--{elseif $p['status']==order_receiving}-->	
+											<a href="details.html?oid={$p['order_sn']}" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">确认收货</a>
+											<!--{/if}-->
+											<!--{if $p['status'] !=order_paying}-->
+											<a href="javascript:void(0);" onclick="addcartMult('{loop $p['goods'] $v}{$v['goods_id']}- {/loop}',1,1,'');" class="sing-ty">再次购买</a>
+											<!--{/if}-->
+										</div>
+									</li>
+								<!--{/loop}-->
+								<!--{else}-->
+									<div class="no-order">
+										<i class="icon-no-order"></i>
+										<h3>你还没有相关订单</h3>
+										<a href="/category.html" class="lookbtn">去逛逛~</a>
+									</div>
+								<!--{/if}-->
+								</ul>
+						<!--{else}-->
+								<div class="mui-loading" id="4">
+									<div class="mui-spinner">
+									</div>
+								</div>
+						<!--{/if}-->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<input type="hidden" id="page0" value="2">
+		<input type="hidden" id="page1" value="2">
+		<input type="hidden" id="page2" value="2">
+		<input type="hidden" id="page3" value="2">
+		<input type="hidden" id="page4" value="2">
+		<input type="hidden" id="endall0" value="0">
+		<input type="hidden" id="endall1" value="0">
+		<input type="hidden" id="endall2" value="0">
+		<input type="hidden" id="endall3" value="0">
+		<input type="hidden" id="endall4" value="0">
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script src="js/mui.pullToRefresh.js"></script>
+		<script src="js/mui.pullToRefresh.material.js"></script>
+		<script>
+			mui.init({
+				swipeBack: false
+			});
+			(function($) {
+				$('.mui-scroll-wrapper').scroll({
+					indicators: true //是否显示滚动条
+				});
+				var item1 = document.getElementById('item1mobile');
+				var item2 = document.getElementById('item2mobile');
+				var item3 = document.getElementById('item3mobile');
+				var item4 = document.getElementById('item4mobile');
+				var item5 = document.getElementById('item5mobile');
+				document.getElementById('slider').addEventListener('slide', function(e) {
+					if (e.detail.slideNumber === 0) {
+						if (item1.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								$.getJSON("/myorder.html",{is_ajax:'1', t:'0'}, function(res) {
+									if(res.url){
+										alert(res.err);
+										window.location.href=res.url;
+									}else if(res.data==''){
+										var html1 = '<div class="no-order"><i class="icon-no-order"></i><h3>你还没有相关订单</h3><a href="/category.html" class="lookbtn">去逛逛~</a></div>';
+										item1.querySelector('.mui-scroll').innerHTML = html1;
+									}else{
+									  var html1 = '<ul class="list-more  mui-table-view" id="0">';
+									  for(var o in res.data){
+										html1 = html1 + '<li class="mui-table-view-cell" id="' + res.data[o].order_sn + '"><div class="order-goode-num"><p class="mui-inline">订单号：' + res.data[o].order_sn + '</p><span class="right">' + res.data[o].status_name + '</span></div>';
+										var goodids='';
+										for(var s in res.data[o].goods){
+											html1 = html1 + '<div class="order-nr"><a class="picbox" href="' + res.data[o].goods[s].url + '"><img src="' + res.data[o].goods[s].thumb + '" alt="110*110" style="width:60px;height:60px"/></a><div class="order-word"><a class="order-top"><p class="single-elli">' + res.data[o].goods[s].name + '</p><p class="style">';
+											for(var v in res.data[o].goods[s].spec){
+												html1 = html1 + res.data[o].goods[s].spec[v].name + '：'+ res.data[o].goods[s].spec[v].val;
+											}
+											html1 = html1 + '</span></p></a><div class="pwtxt"><p class="money">￥<span>' + res.data[o].goods[s].price + '</span></p><span class="buy-num">x' + res.data[o].goods[s].num + '</span>';
+											if(res.data[o].status == 8){
+													html1 = html1 + '<p style="display: inline-block;vertical-align: middle;height: 30px;line-height: 30px;border: 1px solid #e3e3e3;padding: 0 10px;border-radius: 18px;margin-left: 2px;margin-top:3px"><a href="applyservice.html?oid=' + res.data[o].order_sn + '&gid=' + res.data[o].goods[s].goods_id + '&spec=' + res.data[o].goods[s].spec_nam + '" class="qiangrey" target="_blank">申请售后</a></p>';
+											}
+											html1 = html1 + '</div></div></div>';
+											goodids += res.data[o].goods[s].goods_id + '- ';
+										}
+										html1 = html1 + '<div class="order-num-sum"><p>合计<span>' + res.data[o].amount + '</span>元</p></div><div class="orders-btn btn-ty">';
+										if(res.data[o].status == 8){
+											if((res.data[o].is_comment == 0)&&(res.data[o].status_name != '已退货')){
+												html1 = html1 + '<a href="comment.html?oid='+res.data[o].order_sn+'" target="_blank" class="sing-ty">评价</a>';
+											}
+										}else if(res.data[o].status == 1){
+												html1 = html1 + '<a href="pay.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">付款</a><a href="javascript:void(0);" onclick="order_cancel('+res.data[o].order_sn+');" class="sing-ty">取消订单</a>';
+										}else if(res.data[o].status == 3){
+												html1 = html1 + '<a href="details.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">确认收货</a>'; 
+										}
+										if(res.data[o].status !=1){
+												html1 = html1 + '<a href="javascript:void(0);" onclick="addcartMult(';
+												html1 = html1 + "'" + goodids + "'";
+												html1 = html1 + ',1,1,';
+												html1 = html1 + "'" + "'" + ');" class="sing-ty">再次购买</a>';
+										}
+										html1 = html1 + '</div></li>';   
+									  } 
+									  html1 = html1 + '</ul>';
+									  item1.querySelector('.mui-loading').innerHTML = html1;
+									}
+								});
+							}, 500);
+						}
+					} else if (e.detail.slideNumber === 1) {
+						if (item2.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								$.getJSON("/myorder.html",{is_ajax:'1', t:'1'}, function(res) {
+									if(res.url){
+										alert(res.err);
+										window.location.href=res.url;
+									}else if(res.data==''){
+										var html2 = '<div class="no-order"><i class="icon-no-order"></i><h3>你还没有相关订单</h3><a href="/category.html" class="lookbtn">去逛逛~</a></div>';
+										item2.querySelector('.mui-scroll').innerHTML = html2;
+									}else{
+									  var html2 = '<ul class="list-more  mui-table-view">';
+									  for(var o in res.data){
+										html2 = html2 + '<li class="mui-table-view-cell" id="' + res.data[o].order_sn + '"><div class="order-goode-num"><p class="mui-inline">订单号：' + res.data[o].order_sn + '</p><span class="right">' + res.data[o].status_name + '</span></div>';
+										var goodids='';
+										for(var s in res.data[o].goods){
+											html2 = html2 + '<div class="order-nr"><a class="picbox" href="' + res.data[o].goods[s].url + '"><img src="' + res.data[o].goods[s].thumb + '" alt="110*110" style="width:60px;height:60px"/></a><div class="order-word"><a class="order-top"><p class="single-elli">' + res.data[o].goods[s].name + '</p><p class="style">';
+											for(var v in res.data[o].goods[s].spec){
+												html2 = html2 + res.data[o].goods[s].spec[v].name + '：'+ res.data[o].goods[s].spec[v].val;
+											}
+											html2 = html2 + '</span></p></a><div class="pwtxt"><p class="money">￥<span>' + res.data[o].goods[s].price + '</span></p><span class="buy-num">x' + res.data[o].goods[s].num + '</span>';
+											if(res.data[o].status == 8){
+													html2 = html2 + '<p style="display: inline-block;vertical-align: middle;height: 30px;line-height: 30px;border: 1px solid #e3e3e3;padding: 0 10px;border-radius: 18px;margin-left: 2px;margin-top:3px"><a href="applyservice.html?oid=' + res.data[o].order_sn + '&gid=' + res.data[o].goods[s].goods_id + '&spec=' + res.data[o].goods[s].spec_nam + '" class="qiangrey" target="_blank">申请售后</a></p>';
+											}
+											html2 = html2 + '</div></div></div>';
+											goodids += res.data[o].goods[s].goods_id + '- ';
+										}
+										html2 = html2 + '<div class="order-num-sum"><p>合计<span>' + res.data[o].amount + '</span>元</p></div><div class="orders-btn btn-ty">';
+										if(res.data[o].status == 8){
+											if((res.data[o].is_comment == 0)&&(res.data[o].status_name != '已退货')){
+												html2 = html2 + '<a href="comment.html?oid={$p['order_sn']}" target="_blank" class="sing-ty">评价</a>';
+											}
+										}else if(res.data[o].status == 1){
+												html2 = html2 + '<a href="pay.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">付款</a><a href="javascript:void(0);" onclick="order_cancel('+res.data[o].order_sn+');" class="sing-ty">取消订单</a>';
+										}else if(res.data[o].status == 3){
+												html2 = html2 + '<a href="details.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">确认收货</a>'; 
+										}
+										if(res.data[o].status !=1){
+												html2 = html2 + '<a href="javascript:void(0);" onclick="addcartMult(';
+												html2 = html2 + "'" + goodids + "'";
+												html2 = html2 + ',1,1,';
+												html2 = html2 + "'" + "'" + ');" class="sing-ty">再次购买</a>';
+										}
+										html2 = html2 + '</div></li>';   
+									  } 
+									  html2 = html2 + '</ul>';
+									  item2.querySelector('.mui-loading').innerHTML = html2;
+									}
+								});
+							}, 500);
+						}
+					} else if (e.detail.slideNumber === 2) {
+						if (item3.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								$.getJSON("/myorder.html",{is_ajax:'1', t:'4'}, function(res) {
+									if(res.url){
+										alert(res.err);
+										window.location.href=res.url;
+									}else if(res.data==''){
+										var html3 = '<div class="no-order"><i class="icon-no-order"></i><h3>你还没有相关订单</h3><a href="/category.html" class="lookbtn">去逛逛~</a></div>';
+										item3.querySelector('.mui-scroll').innerHTML = html3;
+									}else{
+									  var html3 = '<ul class="list-more  mui-table-view">';
+									  for(var o in res.data){
+										html3 = html3 + '<li class="mui-table-view-cell" id="' + res.data[o].order_sn + '"><div class="order-goode-num"><p class="mui-inline">订单号：' + res.data[o].order_sn + '</p><span class="right">' + res.data[o].status_name + '</span></div>';
+										var goodids='';
+										for(var s in res.data[o].goods){
+											html3 = html3 + '<div class="order-nr"><a class="picbox" href="' + res.data[o].goods[s].url + '"><img src="' + res.data[o].goods[s].thumb + '" alt="110*110" style="width:60px;height:60px"/></a><div class="order-word"><a class="order-top"><p class="single-elli">' + res.data[o].goods[s].name + '</p><p class="style">';
+											for(var v in res.data[o].goods[s].spec){
+												html3 = html3 + res.data[o].goods[s].spec[v].name + '：'+ res.data[o].goods[s].spec[v].val;
+											}
+											html3 = html3 + '</span></p></a><div class="pwtxt"><p class="money">￥<span>' + res.data[o].goods[s].price + '</span></p><span class="buy-num">x' + res.data[o].goods[s].num + '</span>';
+											if(res.data[o].status == 8){
+													html3 = html3 + '<p style="display: inline-block;vertical-align: middle;height: 30px;line-height: 30px;border: 1px solid #e3e3e3;padding: 0 10px;border-radius: 18px;margin-left: 2px;margin-top:3px"><a href="applyservice.html?oid=' + res.data[o].order_sn + '&gid=' + res.data[o].goods[s].goods_id + '&spec=' + res.data[o].goods[s].spec_nam + '" class="qiangrey" target="_blank">申请售后</a></p>';
+											}
+											html3 = html3 + '</div></div></div>';
+											goodids += res.data[o].goods[s].goods_id + '- ';
+										}
+										html3 = html3 + '<div class="order-num-sum"><p>合计<span>' + res.data[o].amount + '</span>元</p></div><div class="orders-btn btn-ty">';
+										if(res.data[o].status == 8){
+											if((res.data[o].is_comment == 0)&&(res.data[o].status_name != '已退货')){
+												html3 = html3 + '<a href="comment.html?oid={$p['order_sn']}" target="_blank" class="sing-ty">评价</a>';
+											}
+										}else if(res.data[o].status == 1){
+												html3 = html3 + '<a href="pay.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">付款</a><a href="javascript:void(0);" onclick="order_cancel('+res.data[o].order_sn+');" class="sing-ty">取消订单</a>';
+										}else if(res.data[o].status == 3){
+												html3 = html3 + '<a href="details.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">确认收货</a>'; 
+										}
+										if(res.data[o].status !=1){
+												html3 = html3 + '<a href="javascript:void(0);" onclick="addcartMult(';
+												html3 = html3 + "'" + goodids + "'";
+												html3 = html3 + ',1,1,';
+												html3 = html3 + "'" + "'" + ');" class="sing-ty">再次购买</a>';
+										}
+										html3 = html3 + '</div></li>';   
+									  } 
+									  html3 = html3 + '</ul>';
+									  item3.querySelector('.mui-loading').innerHTML = html3;
+									}
+								});
+							}, 500);
+						}
+					} else if (e.detail.slideNumber === 3) {
+						if (item4.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								$.getJSON("/myorder.html",{is_ajax:'1', t:'2'}, function(res) {
+									if(res.url){
+										alert(res.err);
+										window.location.href=res.url;
+									}else if(res.data==''){
+										var html4 = '<div class="no-order"><i class="icon-no-order"></i><h3>你还没有相关订单</h3><a href="/category.html" class="lookbtn">去逛逛~</a></div>';
+										item4.querySelector('.mui-scroll').innerHTML = html4;
+									}else{
+									  var html4 = '<ul class="list-more  mui-table-view">';
+									  for(var o in res.data){
+										html4 = html4 + '<li class="mui-table-view-cell" id="' + res.data[o].order_sn + '"><div class="order-goode-num"><p class="mui-inline">订单号：' + res.data[o].order_sn + '</p><span class="right">' + res.data[o].status_name + '</span></div>';
+										var goodids='';
+										for(var s in res.data[o].goods){
+											html4 = html4 + '<div class="order-nr"><a class="picbox" href="' + res.data[o].goods[s].url + '"><img src="' + res.data[o].goods[s].thumb + '" alt="110*110" style="width:60px;height:60px"/></a><div class="order-word"><a class="order-top"><p class="single-elli">' + res.data[o].goods[s].name + '</p><p class="style">';
+											for(var v in res.data[o].goods[s].spec){
+												html4 = html4 + res.data[o].goods[s].spec[v].name + '：'+ res.data[o].goods[s].spec[v].val;
+											}
+											html4 = html4 + '</span></p></a><div class="pwtxt"><p class="money">￥<span>' + res.data[o].goods[s].price + '</span></p><span class="buy-num">x' + res.data[o].goods[s].num + '</span>';
+											if(res.data[o].status == 8){
+													html4 = html4 + '<p style="display: inline-block;vertical-align: middle;height: 30px;line-height: 30px;border: 1px solid #e3e3e3;padding: 0 10px;border-radius: 18px;margin-left: 2px;margin-top:3px"><a href="applyservice.html?oid=' + res.data[o].order_sn + '&gid=' + res.data[o].goods[s].goods_id + '&spec=' + res.data[o].goods[s].spec_nam + '" class="qiangrey" target="_blank">申请售后</a></p>';
+											}
+											html4 = html4 + '</div></div></div>';
+											goodids += res.data[o].goods[s].goods_id + '- ';
+										}
+										html4 = html4 + '<div class="order-num-sum"><p>合计<span>' + res.data[o].amount + '</span>元</p></div><div class="orders-btn btn-ty">';
+										if(res.data[o].status == 8){
+											if((res.data[o].is_comment == 0)&&(res.data[o].status_name != '已退货')){
+												html4 = html4 + '<a href="comment.html?oid={$p['order_sn']}" target="_blank" class="sing-ty">评价</a>';
+											}
+										}else if(res.data[o].status == 1){
+												html4 = html4 + '<a href="pay.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">付款</a><a href="javascript:void(0);" onclick="order_cancel('+res.data[o].order_sn+');" class="sing-ty">取消订单</a>';
+										}else if(res.data[o].status == 3){
+												html4 = html4 + '<a href="details.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">确认收货</a>'; 
+										}
+										if(res.data[o].status !=1){
+												html4 = html4 + '<a href="javascript:void(0);" onclick="addcartMult(';
+												html4 = html4 + "'" + goodids + "'";
+												html4 = html4 + ',1,1,';
+												html4 = html4 + "'" + "'" + ');" class="sing-ty">再次购买</a>';
+										}
+										html4 = html4 + '</div></li>';   
+									  } 
+									  html4 = html4 + '</ul>';
+									  item4.querySelector('.mui-loading').innerHTML = html4;
+									}
+								});
+							}, 500);
+						}
+					}else if (e.detail.slideNumber === 4) {
+						if (item5.querySelector('.mui-loading')) {
+							setTimeout(function() {
+								$.getJSON("/myorder.html",{is_ajax:'1', t:'3'}, function(res) {
+									if(res.url){
+										alert(res.err);
+										window.location.href=res.url;
+									}else if(res.data==''){
+										var html5 = '<div class="no-order"><i class="icon-no-order"></i><h3>你还没有相关订单</h3><a href="/category.html" class="lookbtn">去逛逛~</a></div>';
+										item5.querySelector('.mui-scroll').innerHTML = html5;
+									}else{
+									  var html5 = '<ul class="list-more  mui-table-view">';
+									  for(var o in res.data){
+										html5 = html5 + '<li class="mui-table-view-cell" id="' + res.data[o].order_sn + '"><div class="order-goode-num"><p class="mui-inline">订单号：' + res.data[o].order_sn + '</p><span class="right">' + res.data[o].status_name + '</span></div>';
+										var goodids='';
+										for(var s in res.data[o].goods){
+											html5 = html5 + '<div class="order-nr"><a class="picbox" href="' + res.data[o].goods[s].url + '"><img src="' + res.data[o].goods[s].thumb + '" alt="110*110" style="width:60px;height:60px"/></a><div class="order-word"><a class="order-top"><p class="single-elli">' + res.data[o].goods[s].name + '</p><p class="style">';
+											for(var v in res.data[o].goods[s].spec){
+												html5 = html5 + res.data[o].goods[s].spec[v].name + '：'+ res.data[o].goods[s].spec[v].val;
+											}
+											html5 = html5 + '</span></p></a><div class="pwtxt"><p class="money">￥<span>' + res.data[o].goods[s].price + '</span></p><span class="buy-num">x' + res.data[o].goods[s].num + '</span>';
+											if(res.data[o].status == 8){
+													html5 = html5 + '<p style="display: inline-block;vertical-align: middle;height: 30px;line-height: 30px;border: 1px solid #e3e3e3;padding: 0 10px;border-radius: 18px;margin-left: 2px;margin-top:3px"><a href="applyservice.html?oid=' + res.data[o].order_sn + '&gid=' + res.data[o].goods[s].goods_id + '&spec=' + res.data[o].goods[s].spec_nam + '" class="qiangrey" target="_blank">申请售后</a></p>';
+											}
+											html5 = html5 + '</div></div></div>';
+											goodids += res.data[o].goods[s].goods_id + '- ';
+										}
+										html5 = html5 + '<div class="order-num-sum"><p>合计<span>' + res.data[o].amount + '</span>元</p></div><div class="orders-btn btn-ty">';
+										if(res.data[o].status == 8){
+											if((res.data[o].is_comment == 0)&&(res.data[o].status_name != '已退货')){
+												html5 = html5 + '<a href="comment.html?oid={$p['order_sn']}" target="_blank" class="sing-ty">评价</a>';
+											}
+										}else if(res.data[o].status == 1){
+												html5 = html5 + '<a href="pay.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">付款</a><a href="javascript:void(0);" onclick="order_cancel('+res.data[o].order_sn+');" class="sing-ty">取消订单</a>';
+										}else if(res.data[o].status == 3){
+												html5 = html5 + '<a href="details.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">确认收货</a>'; 
+										}
+										if(res.data[o].status !=1){
+												html5 = html5 + '<a href="javascript:void(0);" onclick="addcartMult(';
+												html5 = html5 + "'" + goodids + "'";
+												html5 = html5 + ',1,1,';
+												html5 = html5 + "'" + "'" + ');" class="sing-ty">再次购买</a>';
+										}
+										html5 = html5 + '</div></li>';   
+									  } 
+									  html5 = html5 + '</ul>';
+									  item5.querySelector('.mui-loading').innerHTML = html5;
+									}
+								});
+							}, 500);
+						}
+					}  
+				});
+				var sliderSegmentedControl = document.getElementById('sliderSegmentedControl');
+				$('.mui-input-group').on('change', 'input', function() {
+					if (this.checked) {
+						sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-' + this.value;
+						//force repaint
+						sliderProgressBar.setAttribute('style', sliderProgressBar.getAttribute('style'));
+					}
+				});
+				
+				
+				
+				//刷新页面
+				$.ready(function() {
+					//循环初始化所有下拉刷新，上拉加载。
+					$.each(document.querySelectorAll('.mui-slider-group .mui-scroll-wrapper'), function(index, pullRefreshEl) {
+						$(pullRefreshEl).pullRefresh({
+							down: {
+							},
+							up: {
+								contentrefresh: '正在加载...',
+								contentnomore:'没有更多订单了',
+								callback: pullupRefresh
+							}
+						});
+					});
+					/**
+					 * 上拉加载具体业务实现
+					 */
+					function pullupRefresh() {
+						var self = this;
+						setTimeout(function() {
+							var ul = self.element.querySelector('.mui-table-view');
+							var idname = ul.parentNode.parentNode.id;
+							if(idname.length<2){
+								var idname = ul.parentNode.parentNode.parentNode.id;
+							}
+							var idval = ul.parentNode.id;
+							setTimeout(function() {
+								var endall = document.getElementById('endall'+idval).value;
+								mui("#"+idname).pullRefresh().endPullupToRefresh((endall > 0)); //参数为true代表没有更多数据了。
+							}, 100);
+							
+							
+							
+							var pagenumname = 'page' + idval;
+							var pagenum = document.getElementById(pagenumname).value;
+							var fragment = document.createDocumentFragment();
+							var li;
+							$.getJSON("/myorder.html",{is_ajax:'1', t:idval, page:pagenum}, function(res) {
+								if(res.url){
+									alert(res.err);
+									window.location.href=res.url;
+								}else if(res.data==''){
+									document.getElementById('endall'+idval).value='1';
+								}else{
+								  for(var o in res.data){
+										li = document.createElement('li');
+										li.className = 'mui-table-view-cell';
+										li.id = res.data[o].order_sn;
+										var htmlss = '';
+										htmlss = htmlss + '<div class="order-goode-num"><p class="mui-inline">订单号：' + res.data[o].order_sn + '</p><span class="right">' + res.data[o].status_name + '</span></div>';
+										var goodids='';
+										for(var s in res.data[o].goods){
+											htmlss = htmlss + '<div class="order-nr"><a class="picbox" href="' + res.data[o].goods[s].url + '"><img src="' + res.data[o].goods[s].thumb + '" alt="110*110" style="width:60px;height:60px"/></a><div class="order-word"><a class="order-top"><p class="single-elli">' + res.data[o].goods[s].name + '</p><p class="style">';
+											for(var v in res.data[o].goods[s].spec){
+												htmlss = htmlss + res.data[o].goods[s].spec[v].name + '：'+ res.data[o].goods[s].spec[v].val;
+											}
+											htmlss = htmlss + '</span></p></a><div class="pwtxt"><p class="money">￥<span>' + res.data[o].goods[s].price + '</span></p><span class="buy-num">x' + res.data[o].goods[s].num + '</span>';
+											if(res.data[o].status == 8){
+													htmlss = htmlss + '<p style="display: inline-block;vertical-align: middle;height: 30px;line-height: 30px;border: 1px solid #e3e3e3;padding: 0 10px;border-radius: 18px;margin-left: 2px;margin-top:3px"><a href="applyservice.html?oid=' + res.data[o].order_sn + '&gid=' + res.data[o].goods[s].goods_id + '&spec=' + res.data[o].goods[s].spec_nam + '" class="qiangrey" target="_blank">申请售后</a></p>';
+											}
+											htmlss = htmlss + '</div></div></div>';
+											goodids += res.data[o].goods[s].goods_id + '- ';
+										}
+										htmlss = htmlss + '<div class="order-num-sum"><p>合计<span>' + res.data[o].amount + '</span>元</p></div><div class="orders-btn btn-ty">';
+										if(res.data[o].status == 8){
+											if((res.data[o].is_comment == 0)&&(res.data[o].status_name != '已退货')){
+												htmlss = htmlss + '<a href="comment.html?oid={$p['order_sn']}" target="_blank" class="sing-ty">评价</a>';
+											}
+										}else if(res.data[o].status == 1){
+												htmlss = htmlss + '<a href="pay.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">付款</a><a href="javascript:void(0);" onclick="order_cancel('+res.data[o].order_sn+');" class="sing-ty">取消订单</a>';
+										}else if(res.data[o].status == 3){
+												htmlss = htmlss + '<a href="details.html?oid='+res.data[o].order_sn+'" target="_blank" style="border-color: #007cc3;color: #007cc3;" class="sing-ty">确认收货</a>'; 
+										}
+										if(res.data[o].status !=1){
+												htmlss = htmlss + '<a href="javascript:void(0);" onclick="addcartMult(';
+												htmlss = htmlss + "'" + goodids + "'";
+												htmlss = htmlss + ',1,1,';
+												htmlss = htmlss + "'" + "'" + ');" class="sing-ty">再次购买</a>';
+										}
+										htmlss = htmlss + '</div>';
+										li.innerHTML = htmlss;
+										fragment.appendChild(li);
+								  } 
+								  ul.appendChild(fragment);
+								  pagenum++;
+								  document.getElementById('page'+idval).value = pagenum;
+								}
+							});
+						}, 100);
+					}
+				});
+			})(mui);
+		
+			$(".mui-control-content").css("min-height",$(window).height()-84);
+
+			$("#menu").click(function() {
+				$(".mui-search").fadeIn(600);
+				$("#mytitle").fadeOut(0);
+				$("#btn-sub").show();
+			});
+			$('body').on('tap', 'li', function(e) {
+				var	oid = $(e.target).attr('id');
+				if((!oid)||(oid.length<8)){
+					oid = $(e.target).parents('li').attr('id');
+				};
+				if($(e.target).hasClass("qiangrey")) {
+					window.location.href= $(e.target).attr('href');
+					return false;
+				}
+				if (!$(e.target).hasClass("sing-ty")) {
+					window.location.href='details.html?oid='+oid;
+				}				
+			});
+			$('body').on('tap', '.sing-ty', function(e) {
+				this.click();
+			});
+			$("#searchword").change(function(){
+				$(".searchword").submit();
+			})
+			mui('.mui-table-view-cell').on('tap','a',function(){
+				var onclickvalue = this.onclick;
+				var classname = this.className;
+				if(classname =="mui-control-item"){
+					return;
+				}
+				if(onclickvalue){
+					this.click();
+				}else{
+					var href = this.href;
+					window.location.href = href;
+				}
+			});
+		</script>
+	</body>
+</html>

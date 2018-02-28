@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{$ym_title}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/common.css?v=20171228" />
+		<link rel="stylesheet" href="css/swiper.css" />
+		<link rel="stylesheet" href="css/phone.css" />
+		<style type="text/css">
+			body{background-color:#ebebeb;}
+			.mui-bar{border-bottom:none;}
+			.mui-bar .mui-search:before {
+	        margin-top: -10px
+           }
+           .mui-content-top{padding-top:0px;}
+
+		</style>
+	</head>
+	<body>
+      
+		<div class="mui-content-bot">
+			<div class="banner mui-content-top">
+				<div class="swiper-container swiper-container-banner">
+			        <div class="swiper-wrapper">
+						<!--{loop $mobileindexbanner $p}-->
+			            <div class="swiper-slide"><a href="{$p[url]}"><img src="{$p[img]}"/></a></div>
+						<!--{/loop}-->
+			        </div>
+			        <div class="swiper-pagination swiper-pagination-banner"></div>
+			    </div>
+			</div>
+
+			<div class="indfun">
+<div class="nb"><ul class="fundisplay flex"><li class="flex1">
+<a href="#">
+<i class="icon-display1 yunicon" style="background-image: url(upload/img/banner/532ebfe2e14e581590ff24d6e258edb9_b.png);"></i>
+<span>安桌</span>
+</a>
+</li><li class="flex1">
+<a href="#">
+<i class="icon-display1 yunicon" style="background-image: url(upload/img/banner/fd4bff9d05d1a712bcb062d6acdb21f6_b.png);"></i>
+<span>苹果</span>
+</a>
+</li><li class="flex1">
+<a href="#">
+<i class="icon-display1 yunicon" style="background-image: url(upload/img/banner/454867754c35290d6f7a830fcf345bf7_b.png);"></i>
+<span>笔记本</span>
+</a>
+</li><li class="flex1">
+<a href="#">
+<i class="icon-display1 yunicon" style="background-image: url(upload/img/banner/14ab009f9b94266365ce65e3e37e9a2a_b.png);"></i>
+<span>配件</span>
+</a>
+</li></ul>
+
+</div>
+
+            <!--
+			<div class="martb15 ind-prolist">
+				{$diy_mobileindexhuo}
+			</div> -->
+            <!--{if $new_goods}-->
+			<div class="indguesslike prostyleall">
+				<div class="title-cen">
+					<h3>最新上架</h3>
+				</div>
+				<ul class="prostyleall-ul">
+					<!--{loop $new_goods $p}-->
+					<li>
+						<div class="nr">
+							<a href="{$p[url]}" class="picbox"><img src="{$p[thumb]}" alt=""></a>
+							<div class="word">
+								<a href="{$p[url]}" class="title" style="display: block;height: 42px;overflow: hidden;color:#323232;margin:5% 0">{$p[name]}</a>
+								<a href="{$p[url]}" class="price">￥<span>{$p[price]}</span></a>
+							</div>
+						</div>
+					</li>
+					<!--{/loop}-->
+				</ul>
+			</div>
+			<!--{/if}-->
+
+			<!--{if $remmend_goods}-->
+			<div class="indguesslike prostyleall">
+				<div class="title-cen">
+					<h3>猜你喜欢</h3>
+				</div>
+				<ul class="prostyleall-ul">
+					<!--{loop $remmend_goods $p}-->
+					<li>
+						<div class="nr">
+							<a href="{$p[url]}" class="picbox"><img src="{$p[thumb]}" alt=""></a>
+							<div class="word">
+								<a href="{$p[url]}" class="title" style="display: block;height: 42px;overflow: hidden;color:#323232;margin:5% 0">{$p[name]}</a>
+								<a href="{$p[url]}" class="price">￥<span>{$p[price]}</span></a>
+							</div>
+						</div>
+					</li>
+					<!--{/loop}-->
+				</ul>
+			</div>
+			<!--{/if}-->
+		</div>
+		<div id="totop" class="totop"><img src="images/totop.png" alt="" style="width: 40px;"/></div>
+		<!--{tpl fixnavbar}-->
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/swiper.min.js" ></script>
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script>
+		$(".navbar_b1").parents('li').addClass("on");
+		$('#word').change(function(){
+			$(".search").submit();
+		})
+		$('.fix-navbar .fix-bar-ul li').eq(0).addClass('on');
+		/*indbanner*/
+		    var swiper = new Swiper('.swiper-container-banner', {
+		        pagination: '.swiper-pagination-banner',
+		        paginationClickable: true,
+		        autoplay: 2000
+		    });
+		    /*indnews*/
+		    var swiper = new Swiper('.slidenews', {
+		        pagination: '.swiper-pagination-new',
+		        paginationClickable: true,
+		        direction: 'vertical',
+		        autoplay: 3000
+		    });
+		    //多图滚动
+			var swiper = new Swiper('.swiper-container-limit', {
+			    pagination: '.swiper-pagination-limit',
+			    slidesPerView: 'auto',
+			    paginationClickable: true,
+			    spaceBetween: 1,
+			    freeMode: true
+			});
+			//倒计时
+			InterValObj1 = window.setInterval(function () {
+			 	SetRemainTime(1);
+			}, 1000); 	
+			totop();
+	    </script>
+	</body>
+</html>

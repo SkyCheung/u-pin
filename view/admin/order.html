@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>订单管理</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+		<script src="{adm_tpl}/js/api.js"></script>
+		<style type="text/css">
+			.auto-height-list{border-left: none;border-right: none;}
+			.dlist{max-width: 1300px;}
+			.dlist .rowtit{margin-bottom: 8px;}
+			.dlist .mod {border: solid 1px #ddd;margin-bottom: 10px; clear: both;}
+			.dlist .mod:hover{border-color:#ed8a47;}
+			.dlist .mod ul{height: 40px; border: none;float: none;position: relative;overflow: hidden;background-color: #fafafa;} 
+			.dlist .o-detail{border-top: dashed 1px #ddd;padding: 8px;}
+			.dlist .item{width: 100%;position: relative;overflow: hidden;padding-top: 3px;padding-bottom: 3px;}
+			.dlist .item .img{width: 60px;float: left;}
+			.dlist .item .txt{width: 290px;}
+			.dlist .glist{width: 30%;float: left;padding-left: 5px;}
+			.dlist .olist{width: 68%;float: right;}
+			.dlist .item .glist-item{width: 300px;overflow: hidden;white-space: nowrap;float: left;}
+			.dlist .cnee{width: 50%;float: left;}
+			.dlist .cnee span{display: block;}
+			.dlist .opbtn{width: 15%;float: right;padding-top: 5px;    text-align: center;}
+			.dlist .opbtn a{width: 70px; display: inline-block;margin-bottom: 5px; padding: 2px 10px;text-align: center; border: solid 1px #ed8a47;color: #6B94AF;}
+			.dlist .opbtn a:hover{color: #ed8a47;}
+		</style>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>订单管理</span></div>
+		</div>
+       <form method="get" id="order" name="form1">
+		<div id="mainnav" class="search">
+			<!--<div style="height: 35px;">-->
+				<a class="button" href="javascript:void(0);" onclick="print_form('order.printexpress', '.list', 'print_express')"><span>打印快递单</span></a>
+				<a class="button" href="javascript:void(0);" onclick="print_form('order.print', '.list', 'print_delivery');"><span>打印发货单</span></a>
+				<a class="button" href="./admin.html?do=order.add" style="display: none;"><span>添加</span></a>
+				<a class="button" href="javascript:void(0);" onclick="delrows('order.delete')"><span>删除</span></a>			
+				<a class="button" href="./admin.html?do=order.recycle" style="display: none;"><span>回收站</span></a>
+			<!--</div>-->
+			<div style="margin-top: 8px;" class="fr w80">
+				<input name="order_sn" type="text" class="input wp110" id="order_sn" placeholder="订单号" />
+				<input name="uname" type="text" class="input wp60" id="keyword" placeholder="会员名" />
+				状态<div class="select-mod" id="status">
+					<input type="hidden" name="status"/>
+					<span id="cur" data-id="">所有</span>
+					<div class="it-list">
+						<p id="">所有</p>
+						<!--{loop $lang_status $k $p}-->
+						<p id="{$k}">{$p}</p>
+						<!--{/loop}-->
+					</div>					
+				</div>
+				下单时间 <input type="text" name="trade_start_date" value="" maxlength="10" readonly="readonly" class="time input wp100"/>-<input type="text" name="trade_end_date" value="" readonly="readonly" maxlength="10" class="time input wp100"/>
+				<input type="submit" value="搜索" class="sub" style="width: 64px; border-bottom-right-radius: 0px;border-top-right-radius: 0px;"/><input name="do" type="hidden" id="do" value="order" /><span class="sub adv">高级 <i></i></span>											
+			</div>
+			<div class="adv-form" style="display: none;">
+				配送方式<div class="select-mod" id="exp_id">
+						<input type="hidden" name="exp_id"/>
+						<span id="cur" data-id="">所有</span>
+						<div class="it-list">							
+							<p id="">所有</p>
+							<!--{loop $exp $p}-->
+							<p id="{$p['id']}">{$p['name']}</p>
+							<!--{/loop}-->
+						</div>					
+					</div>
+				订单来源<div class="select-mod" id="client">
+					<input type="hidden" name="client"/>
+					<span id="cur" data-id="">所有</span>
+					<div class="it-list">
+						<p id="">所有</p>						
+						<p id="1">pc端</p>
+						<p id="2">手机</p>
+						<p id="3">app</p>
+					</div>					
+				</div>	
+			</div>
+		</div>
+		<div class="maintab list auto-height-list dlist" style="min-height: 450px;">
+				<ul class="rowtit">
+					<li class="w2"><input type="checkbox" name="chkall"  id="chkall" onclick="checkall(this.form)"/></li>
+					<li class="w10 center"><strong>订单号</strong></li>
+					<li class="w10 center"><strong>状态</strong></li>
+					<li class="w10"><strong>会员</strong></li>
+					<li class="w10"><strong>订单金额</strong></li>
+					<li class="w10"><strong>商品金额</strong></li>
+					<li class="w10"><strong>待支付金额</strong></li>
+					<li class="w12"><strong>下单时间</strong></li>
+					<li class="w15"><strong>操作</strong></li>
+				</ul>
+				<!--{loop $order $p}-->
+				<div class="mod">
+					<ul>
+						<li class="w2"><input type="checkbox" name="ids[]" value="{$p[order_sn]}" id="checkbox" /></li>
+						<li class="w10 center">
+							<a href="./admin.html?do=order.details&id={$p[order_sn]}">{$p['order_sn']}</a>
+						</li>
+						<li class="w10 center {if $p['status']==order_deliver}co-orange{/if}">{$p['status_name']}</li>
+						<li class="w10">{$p['uname']}&nbsp;</li>
+						<li class="w10">{$p['amount']}</li>
+						<li class="w10">{$p['goods_amount']}</li>
+						<li class="w10">{$p['payble_amount']}</li>
+						<li class="w12">{$p['add_time']}</li>
+					</ul>	
+					<div class="o-detail">		
+						<div class="glist">
+						<!--{loop $p['goods'] $v}-->
+							<div class="item">							
+								<a href="{$v['url']}" target="_blank" class="img"><img src="{$v['thumb']}" width="60" height="60"/></a>
+								<a href="{$v['url']}" target="_blank" class="txt">
+									<span>￥{$v['price']} x  {$v['num']}</span><br />
+									<span>{$v['name']}</span>
+								</a>
+								
+							</div>													
+						<!--{/loop}-->
+						</div>
+						<div class="olist">
+							<div class="cnee">
+								<span>{$p['cnee_name']}</span>
+								<span>{$p['cnee_mobile']}</span>
+								<span>{$p['cnee_addr']}</span>
+							</div>
+							<div class="opbtn">
+								 {if $p['payble_amount']!=0 && ($p['status']==order_paying || ($p['status']==order_deliver && $p['pay_code']=='cod'))}
+								 <a href="javascript:void(0);" onclick="order_action(this,{$p[order_sn]});"  data-act="pay" >付款</a>{/if}
+								 {if $p['status']==order_deliver}
+								<a href="javascript:void(0);" onclick="javascript:edit('./admin.html?do=delivery&ids={$p[order_sn]}');">发货</a>{/if}
+								{if $p['status'] ==order_receiving}
+								<a href="javascript:void(0);" data-act="confirm_receiving" onclick="order_action(this,{$p[order_sn]});" >收货</a>{/if}
+								{if $p['status'] == order_paying || $p['status'] == order_deliver}
+								<a href="javascript:void(0);" data-act="cancel" onclick="order_action(this,{$p[order_sn]});" >取消订单</a>{/if}		
+								{if $p['status']==order_deliver || $p['status']==order_receiving} 
+								<a href="admin.html?do=order.printexpress&ids={$p[order_sn]}" target="_blank">打印快递单</a>{/if}
+								<a href="./admin.html?do=order.details&id={$p[order_sn]}">详情</a>
+								<a href="javascript:void(0);" onclick="isdel('删除后，您可以通过回收站还原','/admin.html?do=order.delete&id={$p[order_sn]}');">删除</a>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>			
+				<!--{/loop}-->
+				<div class="page" style="">{$pages['pages']}</div>			
+		</div>
+		</form>
+		<div class="maintab list auto-height-list" style="min-height: 450px;display: none;">
+				<ul class="rowtit">
+					<li class="w2"><input type="checkbox" name="chkall"  id="chkall" onclick="checkall(this.form)"/></li>
+					<li class="w10 center"><strong>订单号</strong></li>
+					<li class="w10 center"><strong>状态</strong></li>
+					<li class="w10"><strong>会员</strong></li>
+					<li class="w10"><strong>订单金额</strong></li>
+					<li class="w10"><strong>商品金额</strong></li>
+					<li class="w10"><strong>待支付金额</strong></li>
+					<li class="w12"><strong>下单时间</strong></li>
+					<li class="w15"><strong>操作</strong></li>
+				</ul>
+				<!--{loop $order $p}-->
+				<ul>
+					<li class="w2"><input type="checkbox" name="ids[]" value="{$p[order_sn]}" id="checkbox" /></li>
+					<li class="w10 center"><a href="./admin.html?do=order.details&id={$p[order_sn]}">{$p['order_sn']}</a></li>
+					<li class="w10 center {if $p['status']==order_deliver}co-orange{/if}">{$p['status_name']}</li>
+					<li class="w10">{$p['uname']}&nbsp;</li>
+					<li class="w10">{$p['amount']}</li>
+					<li class="w10">{$p['goods_amount']}</li>
+					<li class="w10">{$p['payble_amount']}</li>
+					<li class="w12" style="line-height: 20px;">{$p['add_time']}</li>	
+					<li class="w15"><a href="./admin.html?do=order.details&id={$p[order_sn]}" class="edit">详情</a><a href="javascript:void(0);" onclick="isdel('删除后，您可以通过回收站还原','/admin.html?do=order.delete&id={$p[order_sn]}');" class="del">删除</a></li>
+				</ul>
+				<!--{/loop}-->
+				<div class="page" style="">{$pages['pages']}</div>			
+		</div>
+       
+       <input name="winop" type="hidden" id="winop" value="" />
+       <link rel="stylesheet" type="text/css" href="./static/datepicker/css/jquery-ui.css" />
+		<script src="./static/datepicker/js/jquery-ui-1.10.4.custom.min.js"></script>
+		<script src="./static/datepicker/js/jquery.ui.datepicker-zh-CN.js"></script>		
+		
+        <script type="text/javascript">
+       		$(function () {
+	      		$("input[name='trade_start_date'],input[name='trade_end_date']" ).datetimepicker();
+	 			//loadLayer();
+	 			$(".adv").click(function () {
+	 				if ($(".adv-form").is(":hidden")) {
+	 					$(".adv-form").slideDown(200);
+	 				}
+	 				else{
+	 					$(".adv-form").hide(100);
+	 				}
+	 			});
+	 			
+	 		});
+       		
+       		//修改
+			function edit(txt) {
+				var ii = top.layer.open({
+					type: 2,
+					title: '发货',
+					closeBtn: 0,
+					shadeClose: true,
+					area: ['1100px', '600px'],
+					content: [txt],
+					end: function() {
+						if($.trim($("#winop").val()) == 'ok') {
+							msg("发货成功");
+							window.location.reload();
+						}
+						$("#winop").val("");
+						$("#vals").val("");
+					}
+				});
+			}
+
+			function order_action(th, oid) {
+				var t= $(th);
+				top.layer.confirm('确定要执行此操作？', function(index) {
+					$.getJSON("./admin.html?do=order.details", {act: t.data("act"), id: oid}, function(res) {
+						if(res.err && res.err != '') {
+							msg('操作失败，' + res.err);return;
+						}
+						if(res.url && res.url != '') {
+							window.location.href = res.url; return;
+						}
+						else
+						{
+							msg('操作成功');
+							setTimeout(function() {
+								window.location.reload();
+							},2000);			
+						}
+					});
+					top.layer.close(index);
+				});
+			}
+       </script>
+	</body>
+
+</html>

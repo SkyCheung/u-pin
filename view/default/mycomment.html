@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的评价 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<div class="center-body">
+			<div class="nb">
+				<div class="center-lside">
+					 <!--{tpl usermenu}-->
+				</div>
+				<div class="center-rside pages-style">
+					<div class="center4 center-title-sig">
+						   <h3>我的评价</h3>
+					</div>
+					<div class="list-bd">
+						<div class="list-bd-head">
+								<div class="list-bd-th th1">
+									订单号
+								</div>
+								<div class="list-bd-th th2">
+									商品名称
+								</div>
+								<div class="list-bd-th th3">
+									评论内容
+								</div>
+								<div class="list-bd-th th4">
+									操作
+								</div>
+							</div>
+						<ul>
+							<!--{loop $row $p}-->
+							<li>
+								<div class="list-bd-th th1">
+									<a href="details.html?oid={$p['order_sn']}">{$p['order_sn']}</a>
+								</div>
+								<div class="list-bd-th th2">
+									{$p['name']}
+								</div>
+								<div class="list-bd-th th3" style="text-align: left;">
+									<b>[{$p['star']}星]&nbsp;</b>{$p['content']}
+								</div>
+								<div class="list-bd-th red th4">
+									<a href="details.html?oid={$p['order_sn']}" class="lnk">订单详情</a>
+								</div>
+							</li>
+							<!--{/loop}-->							
+						</ul>
+					</div>
+					<div class="pages"><!--{$pages['pages']}--></div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+      <script>
+      	$(".advance").click(function(){
+      		$(".slidedown-advance").slideToggle(300);
+      		});
+      		$(".i.icon-del").each(function(){
+      			$(this).click(function(){
+      				$(this).parentsUntil(".dd-list").hide();
+      			});           
+      		});
+      	
+      </script>
+
+	</body>
+
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>编辑角色</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+		<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.config.js"></script>
+    	<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.all.min.js"> </script>
+    	<style>
+    		#catlist{height: 520px;}
+    		#brandcat .it ul{height: 460px;}
+    		.opct{width: 100%; height: 50;text-align: center;bottom: 10px;position: absolute;left: 0;}
+    	</style>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 编辑角色</span></div>
+		</div>
+
+		<div class="maincon base" style="min-height: 800px;">
+			<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+				<div class="row"><label class="row-name">角色名称：</label>
+					<div class="column"><input name="name" type="text" id="c_name" value="{$row[name]}" size="50" maxlength="50" /><span>如：管理员、录入员、财务</span></div>
+				</div>
+				<div class="row"><label class="row-name">状态：</label>
+					<div class="column">
+						<label><input name="status" type="radio" value="1" {$cbk_status[1]}/>开启</label>
+						<label><input name="status" type="radio" value="0" {$cbk_status[0]}/>禁止 </label><span></span>
+					</div>
+				</div>
+				<div class="row"><label class="row-name">选择权限：</label>
+					<div class="column" style="position: relative;">
+						<input type="button" value="点击选择" class="sub" size="8" id="c_cat_ids"/>
+							<input name="c_cat_ids" type="hidden" value="{$row[cat_ids]}" />						
+							<div id="catlist" class="winlayer" style="top:34px;">
+								<div id="brandcat">
+									<div class="it" id="c1">
+									  	<ul></ul>
+									</div>
+									<div class="it" id="c2">
+										<ul></ul>
+									</div>
+									<div class="it" id="c3">
+										<ul></ul>
+									</div>
+									<div class="it" id="c4">
+										<ul></ul>
+									</div>
+								</div>
+								<div class="opct"><input type="button" class="sub back" value="关闭" id="close"></div>
+							</div>
+						<span></span>
+					</div>
+				</div>				
+				<div class="row"><label class="row-name">描述：</label>
+					<div class="column"><textarea name="memo" style="width: 600px;height: 140px;" maxlength="200">{$row[memo]}</textarea> <span></span></div>
+				</div>
+				<div class="row"><label class="row-name"></label>
+					<div class="column">
+						<input type="submit" class="sub" value="提交 " />
+						<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=role'"/>
+						<input name="action" type="hidden" id="action" value="role">
+						<input name="act" type="hidden" id="act" value="edit">
+						<input name="menu_ids" type="hidden" id="menu_ids" value="{$row[mid]}">
+					</div>
+				</div>
+			</form>
+		</div>
+ 
+		<script type="text/javascript"> 
+			var json_menu ={if $menu}{$menu}{else}{}{/if};
+			var json_role_menu ={if $role_menu}{$role_menu}{else}{}{/if};
+			var chkData='';
+			var level=1;
+			
+		    $(document).ready(function () {
+		    	if ($("#c2 li").size()>9) {
+		    		$("#c2").css("overflow-y","scroll");
+		    	}		    	
+		    	
+		    	loadItem(1);
+		    });
+            
+		    function check () {
+		     	if ($.trim($("#c_name").val())=='') {
+		     		msg("请填写角色名称");
+		     		return false;
+		     	}
+		     	getItem(); 
+		     	 
+		        return true;
+		     }
+		    
+		     //打开商品分类
+			$("#c_cat_ids").click(function (e) {
+				$(this).siblings(".winlayer").slideDown(200);
+				setTimeout(function() {
+					if ($(".catlist .it").innerHeight()>=488) {
+						$(".catlist .it").css({"overflow-y":"scroll"});
+			       	}				  
+				},200);
+								 			
+				e.stopPropagation();
+			});
+			
+			function delcat(th) {
+				$("#selectedcat a[id='"+$(th).data("id")+"']").remove();
+				$("#catlist input[type='checkbox']:checked").each(function() {
+					if ($(this).data("id")==$(th).data("id")) {
+						$(this).prop("checked", false).parent("li").removeClass("on selected");						
+					}
+				});
+			};
+			
+			function loadItem(n) {
+				var i = parseInt(n);//当前层级
+				$html ="";
+				$.each(json_menu, function(k,v) {
+					var chk="";
+					$.each(json_role_menu, function(key,val) {
+		     			if (v.id==val) {
+		     				chk="checked='checked'";
+		     			}	     		
+		     		});
+		     		if (n==v.level) {
+		     			$html +='<li data-pid="'+v.pid+'" class="pid_'+v.pid+' id_'+v.id+'"><input type="checkbox" '+chk+'  value="'+v.id+'" data-id="'+v.id+'" data-pid="'+v.pid+'" name="cat_ids" onclick="selectItem(this,'+n+');"/><a href="javascript:void(0);" data-id="'+v.id+'" onmouseover="showChild('+(n+1)+','+v.id+');">'+v.name+'</a></li>';
+		     		}
+					
+				});
+				
+				level ++;		
+				$("#c"+n+" ul").html($html);
+				if (n>1) {
+					$("#c"+n+" ul li").hide();
+				}
+				if (n< $("#catlist .it").length) {
+					loadItem(n+1);
+				}
+			}
+			
+			function showChild(n, pid) {
+				var i =n;
+				//去掉孙子级及以下
+				while (i < $("#catlist .it").length){					
+					$("#c"+i).each(function () {						
+						$(this).children("ul").children("li").hide();
+					});	
+					i++;
+				}
+				$("#c"+n+" ul li[data-pid='"+pid+"']").show();
+				if ($("#c"+n+" ul li[data-pid='"+pid+"']").length>12) {
+					$("#c"+n+" ul").css("overflow-y","scroll");
+				}
+				else
+				{
+					$("#c"+n+" ul").css("overflow-y","auto");
+				}
+			}
+			
+			//选择数据
+			function selectItem(t, n) {
+				var th = $(t);
+				var id = parseInt(th.val());				
+				var is_checked = th.is(":checked");
+				var pid = th.data("pid");
+				var pids =new Array(id);
+				pids.push(id);
+				
+				//祖先自动选中或去掉
+				var m =n-1;
+				while (m > 0){										
+						var li =$(this).find("li");
+						var tmp_pids=new Array();
+						var p = $(".id_"+pid).children("input");
+						if (is_checked) {							
+							if (p.is(":checked")) {
+								m = 0; //直接结束
+							} else{
+								p.prop("checked", is_checked);
+								pid = p.data("pid");
+							}
+						}
+						else{
+							if ($(".pid_"+pid+" input:checked").length ==0) {
+								p.prop("checked", is_checked);
+								pid = p.data("pid");
+							}
+						}	
+					m--;
+				}
+				
+				n++;
+				//子孙自动选中或去掉
+				while (n <= $("#catlist .it").length){					
+					$("#c"+n).each(function () {						
+						var li =$(this).find("li");
+						if (li ==undefined) {
+							return false;
+						}
+						var tmp_pids=new Array();
+						li.each(function() {
+							if ($.inArray($(this).data("pid"),pids) !=-1) {
+								$(this).children("input").prop("checked", is_checked);
+								tmp_pids.push(parseInt($(this).children("input").val()));//新的pid集
+							}
+						});	
+						pids =tmp_pids;
+					});		
+					n++;
+				}							
+			};
+			
+			function getItem(){
+				var chkData =new Array();
+				$("#catlist input[type='checkbox']:checked").each(function() {
+					chkData.push($(this).val());
+				});
+				$("#menu_ids").val(chkData);
+			}
+			
+			$("#catlist").click(function(e) {
+				e.stopPropagation();
+			});
+			$("#close").click(function  () {
+				$(this).parents(".winlayer").hide();
+			});
+		     	
+			$(document).click(function () {
+				$(".winlayer").hide();
+			});
+		</script>
+		
+		 
+	</body>
+
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>增加品牌</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+		<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.config.js"></script>
+    	<script type="text/javascript" charset="utf-8" src="./static/ueditor/ueditor.all.min.js"> </script>
+    	<style type="text/css">
+			.ct-picker{width: 60px;height: 60px;line-height: 60px; border: solid 1px #ddd;text-align: center;font-size: 30px;}
+			.webuploader-pick img{width: auto; height: 60px;}
+			.maincon input[type=file] { height: 60px;width: 60px;}
+			.filePicker{position: relative;display: inline-block; margin-left: 20px;}
+		</style>
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 增加品牌</span></div>
+		</div>
+
+		<div class="maincon base" style="min-height: 800px;">
+			<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+				<div class="row"><label class="row-name">品牌名称：</label>
+					<div class="column"><input name="c_name" type="text" id="c_name" value="" size="50" maxlength="50" /><span></span></div>
+				</div>
+				<div class="row"><label class="row-name">品牌logo：</label>
+					<div class="column">
+						<div class="it picker" style="position: relative;">
+							<img src="" style="max-height:60px;vertical-align: top;" id="logo-show"/>
+							<div class="filePicker preview" data-uploaddir="brand" data-filename="" data-isthumb="0" id="logopicker">
+								<div class="ct-picker">+</div>
+							</div>
+							<input type="hidden" value="" name="logo" id="img"/>
+						</div>
+					</div>
+				</div>
+				<div class="row"><label class="row-name">Banner海报：</label>
+					<div class="column">						
+						<div class="it picker" style="position: relative;">
+							<img src="" style="max-height:60px;vertical-align: top;"/>
+							<div class="filePicker preview" data-uploaddir="brand" data-filename="" data-isthumb="0" id="bannerpicker">
+								<div class="ct-picker">+</div>
+							</div>
+							<input type="hidden" value="" name="banner" id="img"/>
+						</div>
+					</div>
+				</div>
+				<div class="row"><label class="row-name">关联商品分类：</label>
+					<div class="column" style="position: relative;">
+						<input type="button" value="点击选择" class="sub" size="8" id="c_cat_ids"/><span>关联后方便商品编辑时检索</span>
+						<span id="selectedcat"></span>
+						<input name="c_cat_ids" type="hidden" value="" />
+						
+						<div id="catlist" class="winlayer" style="top:37px;">
+							<div id="brandcat">
+								<div class="it" id="c1">
+								  	<ul><!--{loop $cat $p}-->
+								    	<li><input type="checkbox" value="{$p[id]}"  data-id="{$p[id]}" name="cat_ids" onchange="selectCat(this);"/> <a href="javascript:void(0);" data-id="{$p[id]}" onclick="getCat(this);">{$p[name]}</a></li>
+								    	<!--{/loop}--></ul>
+								</div>
+								<div class="it" id="c2">
+									<ul></ul>
+								</div>
+								<div class="it" id="c3">
+									<ul></ul>
+								</div>
+								<div class="it" id="c4">
+									<ul></ul>
+								</div>
+							</div>
+							<div style="text-align: center;display: none;"><input type="button" class="sub back" value="关闭" id="close"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row"><label class="row-name">品牌网址：</label>
+					<div class="column"><input name="c_url" type="text" value="http://" size="50"  maxlength="255"/><span>品牌url链接</span></div>
+				</div>
+				<div class="row"><label class="row-name">品牌简介：</label>
+					<div class="column">
+						<script id="editor" type="text/plain" style="width:800px;height:300px;"></script>
+						<textarea name="c_description" value="" maxlength="20000" style="width: 389px;height: 100px;display: none;"></textarea>
+					</div>
+				</div>
+				<div class="row"><label class="row-name">是否推荐：</label>
+					<div class="column">
+						<label><input name="recommend" type="radio" value="1" />是</label>
+						<label><input name="recommend" type="radio" checked="checked" value="0" />否 </label><span>是否为推荐品牌</span>
+					</div>
+				</div>				
+				<div class="row"><label class="row-name">排序：</label>
+					<div class="column"><input name="c_sort" type="number" min="0" max="255" id="c_sort" value="10" size="50" maxlength="5" /><span>数字</span></div>
+				</div>
+				<div class="row"><label class="row-name"></label>
+					<div class="column">
+						<input type="submit" class="sub" value="提交 " />
+						<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=brand'"/>
+						<input name="action" type="hidden" id="action" value="brand">
+						<input name="act" type="hidden" id="act" value="add">
+					</div>
+				</div>
+			</form>
+		</div>
+ 
+ 		<script type="text/javascript" src="./static/webuploader/webuploader.js"></script>
+    	<script type="text/javascript" src="./static/webuploader/fileupload.js"></script>
+		<script type="text/javascript"> 
+		    $(document).ready(function () {
+		    	if ($("#c2 li").size()>9) {
+		    		$("#c2").css("overflow-y","scroll");
+		    	}		    	
+		    	var ue = UE.getEditor('editor',{
+		    		autoHeightEnabled: false,
+		    		textarea:'c_description',
+		    		catname:'common'
+		    	});
+		    	 ue.addListener('ready', function( editor ) {
+     				$(".edui-for-fullscreen").click(function () {
+     					if ($(this).children().eq(0).hasClass("edui-state-checked")) {
+     						top.document.getElementById('ym_main').width = top.document.getElementById('ym_main').contentWindow.document.documentElement.scrollWidth-186;
+     					}
+     					else{
+     						top.document.getElementById('ym_main').width =top.document.getElementById('ym_main').contentWindow.document.documentElement.scrollWidth+186;
+     					}
+		    		});
+				 });
+				 ue.addListener("contentChange", function ( type, arg1, arg2 ) {
+     				//top.document.getElementById('ym_main').height =document.body.scrollHeight+ ue.iframe.scrollHeight;
+				 }); 	
+				 
+				 //上传图片
+		    	$(".filePicker").each(function() {
+					com_upload($(this), setImg);
+				});
+				
+				function setImg(res, picker) {
+					picker.siblings("#img").val(res.data.img);
+					picker.siblings("img").attr("src", res.data.img+"?t="+Math.random());
+				}
+		    });
+            
+		    function check () {
+		     	if ($.trim($("#c_name").val())=='') {
+		     		msg("请填写品牌名称");
+		     		return false;
+		     	}
+		     	var ids="";
+		     	$("#selectedcat a").each(function  () {
+		     		ids+="," + $(this).data("id");	     		
+		     	});
+		     	if (ids.lastIndexOf(",")>=0) {
+		     		ids=ids.substring(1, ids.length);
+		     	}
+		     	$("input[name='c_cat_ids']").val(ids);
+		     	
+		     	//alert(ids);
+		        return true;
+		     }
+		     //打开商品分类
+			$("#c_cat_ids").click(function (e) {
+				$(this).siblings(".winlayer").slideDown(200);
+				setTimeout(function() {
+					if ($(".catlist .it").innerHeight()>=345) {
+						$(".catlist .it").css({"overflow-y":"scroll"});
+			       	}				  
+				},200);
+								 			
+				e.stopPropagation();
+			});
+			function delcat(th) {
+				$("#selectedcat a[id='"+$(th).data("id")+"']").remove();
+				$("#catlist input[type='checkbox']:checked").each(function() {
+					if ($(this).data("id")==$(th).data("id")) {
+						$(this).prop("checked", false).parent("li").removeClass("on selected");						
+					}
+				});
+			};
+			
+			function getCat(t) {
+				var th = $(t);
+				var n = th.parents(".it").attr("id");				
+				n = n.substring(1, n.length);
+				var i = parseInt(n);//当前层级
+				//去掉孙子级及以下
+				while (n < $("#catlist .it").length){
+					n++;
+					$("#c"+n).each(function () {						
+						if (n>i+1) {
+							$(this).children("ul").html("");
+						}
+					});				
+				}
+				
+				$son ="";
+				$.ajax({
+					type:"post",
+					url:"./admin.html?do=ajax",
+					data:{act:"getCats", pid:th.data("id")},
+					dataType: "json",
+					success:function(data)
+					{
+						if (data.err=='') {
+							var m=0;
+							$.each(data.data, function(k,v) {
+								var chk="";
+								$("#selectedcat a").each(function  () {
+		     						if ($(this).data("id")==v.id) {
+		     							chk="checked='checked'";
+		     						}	     		
+		     					});
+								$son +='<li'+(chk!=''?' class="on selected"':'') +'><input type="checkbox" '+chk+' value="'+v.id+'" data-id="'+v.id+'" name="cat_ids" onclick="selectCat(this);"/><a href="javascript:void(0);" data-id="'+v.id+'" onclick="getCat(this);">'+v.name+'</a></li>';
+							    m++;
+							});
+							if (m> 10) {
+								$("#c"+(i+1)+" ul").css("overflow-y","scroll");
+							}
+							$("#c"+(i+1)+" ul").html($son);
+						} else{
+							msg(data.err);
+						}
+					},
+					error: function(data, t) {
+		msg(t);
+	},
+					complete: function(XMLHttpRequest, textStatus){             			
+          			}
+				});	
+			}
+			
+			//选择分类
+			function selectCat(t) {
+				getCat(t);
+				var th = $(t);
+				var id = th.val();
+				th.parent().toggleClass("on selected");
+				
+				if (th.prop("checked")) {
+					$("#selectedcat").append('<a href="javascript:void(0);" id="'+ id+'" data-id="'+ id+'" onclick="delcat(this)">'+ th.siblings("a").html()+'<i class="i-del"></i></a>');									
+				}
+				else
+				{
+					delcat(th);
+				}								
+			};
+			
+			$("#catlist").click(function(e) {
+				e.stopPropagation();
+			});
+			$("#close").click(function  () {
+				$(this).parents(".winlayer").hide();
+			});
+		     	
+			$(document).click(function () {
+				$(".winlayer").hide();
+			});
+		</script>
+	</body>
+
+</html>

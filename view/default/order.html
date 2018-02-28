@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>订单结算 - {$ym_endtitle}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/animate.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/cart.css"/>		
+		<link rel="stylesheet" href="css/quan.css" />
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+	</head>
+
+	<body>
+		<div class="ny-header">
+			<div class="nb">
+				<div class="logo">
+					<a href="/"><img src="{$ym_logo}" alt="" /></a>
+				</div>
+				<div class="right cart-center">
+					{if $ym_uname!=''}<a href="/user.html" class="red">{$ym_uname}</a>&nbsp;&nbsp;<a href="/user.html?act=logout" >退出</a> {else}<a href="login.html" class="red login">马上登录</a>
+						<a href="/reg.html" class="red">免费注册</a>{/if}
+					<a href="/myorder.html">我的订单</a>
+					<a href="/help.html">客户服务</a>
+				</div>
+			</div>
+		</div>
+		<div class="cart-box">
+			<div class="nb">
+				<div class="cart-step">
+					<ul>
+						<li class="cart1"><i></i>购物车</li>
+						<li class="cart2 oncart2"><i></i>确认订单</li>
+						<li class="cart3"><i></i>付款</li>
+						<li class="cart4"><i></i>支付成功</li>
+					</ul>
+				</div>
+				{if $ym_uid ==0 || ($user && $user['mobile']=='')} 
+				<div class="anonlogin">
+					<div>
+						<h3 style="margin-bottom: 10px;text-align: left;color: #007cc3;font-size: 20px;">{if $user['mobile']==''}绑定手机号码{else}一步登陆，免注册{/if}</h3>
+					</div>
+					<div class="input-box">
+						<label class="icon-phone" for="loginmobile"></label>
+						<input type="text" id="loginmobile" value="" placeholder="手机号码" maxlength="11" autocomplete="off"/>
+					</div>
+					<div class="input-box">
+						<label class="icon-smscode" for="smscode"></label>
+						<input type="text" name="smscode" id="smscode" maxlength="8" value="" placeholder="短信验证码" onkeyup="onlyNum(this);" style="width: 52%;"/>	
+						<input type="button" class="btn" id="btnSendCode" data-mobileid="loginmobile" data-act ="{if $ym_uid>0 && $user['mobile']==''}user_bind{else}login{/if}" value="获取验证码" />	
+					</div>
+							
+						<input type="button" class="btn" id="btnlogin" value="{if $user['mobile']==''}绑定{else}登陆{/if}" />	
+						<span class="formtip"><i></i><label></label></span>
+				</div>
+				{/if}
+				<div class="add-deliver">
+					<div class="cart-title">
+						<h3><span>收货人信息</span></h3>						
+					</div>
+					<div class="sh-address">
+						<ul>
+							<!--{loop $consignee $p}-->
+							<li class="other-add{if $p['is_default']==1} default-add{/if}" id="{$p['id']}" data-cityid="{$p[city]}" >
+								<div class="add-box ">
+									<span class="remove vivi-blue" onclick="removeAddr({$p['id']});">X</span>
+									<div class="name-add"><span class="name">{$p['name']}</span><span class="add-rside"></span></div>
+									<div class="elli add-detail">
+										<p title="{$p['addr']}">{$p['addr']}</p>
+									</div>
+									<div><span class="moblie">{$p['mobile']}</span><span style="margin-left: 30px;">{if $p['is_default']==1}默认地址{/if}</span>
+										<a href="javascript:void(0);" onclick="editAddr({$p['id']});" class="chang-default change vivi-blue">修改</a>
+									</div>																			
+								</div>
+								<i class="icon-check"></i>
+							</li>
+							<!--{/loop}-->
+							
+							<li class="add-add">
+								<div class="add-box add-box-center" onclick="addAddr();">
+									<a href="#">
+									<i class="icon-add-add"></i>
+									添加新地址
+									</a>
+								</div>
+							</li>
+						</ul>						
+					</div>
+				</div>
+				<div class="goods-infor">
+					<div class="cart-title">
+						<h3><span>商品信息</span><a href="/cart.html" class="vivi-blue">返回购物车修改</a></h3>
+					</div>
+					<div class="goods-table">
+						<div class="goods-thead">
+							<div class="col col1">
+								商品
+							</div>
+							<div class="col col3">
+								单价
+							</div>
+							<div class="col col4">
+								数量
+							</div>
+							<div class="col col5">
+								小计
+							</div>
+						</div>
+						<div class="goods-tbody">
+							<!--{loop $cart['goods'] $p}-->
+							<div class="goodinfor" id="{$p['goods_id']}">
+								<div class="col col1 goods-title-pic">
+									<a href="{$p['url']}"><img src="{$p['thumb']}" width="60" height="60"/></a>
+									<div class="goods-describ elli">
+										<p><a href="{$p['url']}">{$p['name']}&nbsp;&nbsp;</a></p>
+										<p>
+										<!--{loop $p['spec'] $v}-->
+										<span class="color">{$v['name']}：{$v['val']}</span>
+										<!--{/loop}-->
+										</p>
+										</div>
+									</div>
+									<div class="col col3 goods-price"> ￥{if $p['user_price']!=0}{$p['user_price']}{else}{$p['price']}{/if} </div>
+									<div class="col col4 good-num"> {$p['num']} </div>
+									<div class="col col5 orange-bold xiaoji"> ￥{if $p['user_amount'] !=0}{$p['user_amount']}{else}{$p['amount']}{/if} </div>
+							</div>
+							<!--{/loop}-->							
+						</div>						
+					</div>
+				</div>
+
+				<div class="style-zhifu">
+					<div class="cart-title">
+						<h3><span>支付方式</span></h3>
+					</div>
+					<div class="zhifu-box" >
+						<div class="yue">
+							{if $ym_is_bal !=0}<span><input type="checkbox" id="userbalance" {if $user['paypwd']=='' || $user['balance']==0}disabled="disabled"{/if}/>&nbsp;使用余额</span><input type="text" maxlength="9" id="balance" onkeyup="onlyAmount(this,2);" value="" readonly="readonly"/><span class="yeuse">（我的余额：<b class="orange-bold">{$user['balance']}</b>元）</span>。<br /><br />{/if}							
+							<p>							
+							<span><input type="checkbox" id="userpoint" {if $user['paypwd']=='' || $user['point']==0}disabled="disabled"{/if}/>&nbsp;使用积分</span><input type="text" maxlength="9" id="point" onkeyup="onlyNum(this);" value="" readonly="readonly"/>
+								<span class="yeuse">（我的积分：<b class="orange-bold">{$user['point']}</b>个）</span>
+							</p>
+							{if $user['paypwd']==''}<span id="setpaypwd">为保障您的资金安全，请先<a href="javascript:void(0);" class="vivi-blue"> 设置支付密码</a></span>{/if}
+						</div>						
+					</div>
+					<div class="zhifu-box">
+						<ul class="zfb" id="paylist">
+							<!--{loop $payment $p}-->
+							<li>
+								<i class="icon-check-zf"></i>
+								<a href="javascript:void(0);" id="{$p['pay_code']}"><img src="{upload_img}/payment/{$p['pay_code']}.png" />{$p['pay_name']}</a>
+							</li>
+							<!--{/loop}-->		
+						</ul>
+					</div>
+				</div>
+				<div class="style-zhifu">
+					<div class="cart-title">
+						<h3><span>配送方式</span></h3>
+					</div>
+					<div class="zhifu-box">						
+						<ul class="zfb" id="expresslist">
+							{if $express_common}
+							<!--{loop $express_common $p}-->
+							<li><i class="icon-check-zf"></i><a href="javascript:void(0);" id="{$p['id']}">{$p['name']}</a></li>
+							<!--{/loop}-->	
+							{else}
+							<li><i class="icon-check-zf" style="display: block;"></i><a href="javascript:void(0);" id="0" class="selected">商家配送</a></li>
+							{/if}
+						</ul>						
+					</div>
+				</div>
+				<!--{if $ym_is_invoice ==1}-->
+				<div class="style-zhifu order-invoice">
+					<div class="cart-title">
+						<h3><span>发票信息</span></h3>
+					</div>
+					<div class="zhifu-box">
+						<div class="item">
+							<div class="label">
+								<ul class="zfb" id="is_invoice">
+									<li><i class="icon-check-zf"></i><a href="javascript:void(0);" id="1">需要发票</a></li>
+									<li><i class="icon-check-zf" style="display: block;"></i><a href="javascript:void(0);" id="0" class="selected">不需要发票</a></li>
+								</ul>
+							</div>
+						</div>
+						<div id="invoiceinfo" style="display: none;">
+							<div class="item">
+								<span class="label fl">发票抬头：</span>
+								<div class="fl">
+									<ul class="zfb" id="invoice_tite_list">
+										<li><i class="icon-check-zf" style="display: block"></i><a href="javascript:void(0);" id="1" class="selected">个人</a></li>
+										<li class="company"><i class="icon-check-zf"></i><a id="2"><input type="text" placeholder="请填写公司发票抬头" maxlength="200"></a></li>
+									</ul>
+								</div>
+							</div>	
+							<div class="item">
+								<span class="label fl">发票内容：</span>
+								<div class="fl">
+									<ul class="zfb" id="invoice_con">
+										<!--{loop $ym_invoice_con $p}-->
+										<li><i class="icon-check-zf" {if $p=='明细'}style="display: block"{/if}></i><a href="javascript:void(0);" id="{$p}" {if $p=='明细'}class="selected"{/if}>{$p}</a></li>
+										<!--{/loop}-->
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--{/if}-->
+				<div class="discount">
+					<div class="h3dy">
+						<h3 class="yhdyong">使用优惠券<sup id="couponnum">0</sup><i class="icon-arrow"></i><span id="couponselected"style="display: none;"></span></h3> 
+					</div>
+					<div class="youhui-box couponlist" id="couponlist">
+								
+					</div>
+				</div>
+				<div class="fare-result">
+					<div class="cart-title"><h3><span>结算信息</span></h3></div>
+					<div class="result-box">
+						<ul>
+							<li class="first">
+								<div class="calu-box">
+									<p class="slivergrey"><span><b class="orange-bold">{$cart['num']}</b> 件商品 总计：</span><span class="txtmoney">￥<b>{$cart['amount']}</b></span></p>
+									<p class="slivergrey"><span>运费：</span><span class="txtmoney">￥<b id="expfee">{$express_fee}</b></span></p>							
+								</div>
+							</li>
+							<li>
+								<div style="width: 400px; float: left;font-size: 14px;">
+									<label class="list-name" for="leavemess">留言：</label>
+									<textarea style="width: 90%; margin-top:6px;height: 50px;vertical-align: top;" id="leavemess" maxlength="200"></textarea>
+								</div>
+								<div class="lside">
+									<p class="save-passw"><span class="slivergrey">输入支付密码：</span><input type="password" id="cbkpaypwd"/></p>
+								</div>
+								<div class="rside">
+									<div class="lside">
+										<p><span class="slivergrey">应付金额：</span><span class="orange-bold big">￥<b id="payAmount">{$total}</b></span></p>
+										<p class="vivi-blue">提交订单后尽快支付，商品才不会被人抢走哦！</p>
+									</div>
+									<a href="javascript:void(0);" class="btn-jiesuan">提交订单</a>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>			
+			</div>
+		</div>
+	
+	 	<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+	 
+		<div class="edit-address modbox">
+			<div class="edit-box">
+				<h3>新增配送信息<i class="close-modbox"></i></h3>
+				<div class="edit-form">
+						<ul>
+							<li>
+								<label><i>*</i>收货人：</label>
+								<input type="text" id="sh-name" maxlength="20" class="s-length" />
+							</li>
+							<li>
+								<label><i>*</i>手机号码：</label>
+								<input type="text" id="sh-phone" maxlength="11" class="s-length"/>
+							</li>
+							<li>
+								<label>固定电话：</label>
+								<input type="text" id="sh-tel" maxlength="20" class="s-length"/>
+							</li>
+							<li style="min-height: 25px;">
+								<label style="width: 75px; float: left;"><i>*</i>所在地区：</label>
+								<div class="deliver" style="float: left;">								
+									<div id="store-selector">
+										<div class="text"><div title="请选择">- 请选择 -</div><b></b><input type="hidden" id="district"></div>                 
+										<div onclick="$('#store-selector').removeClass('hover')" class="close"></div>
+									</div>
+									<div id="store-prompt"><strong></strong></div>
+								</div>
+								 
+							</li>
+							<li style="clear: both;">
+								<label><i>*</i>详细地址：</label>
+								<input type="text" id="sh-address" maxlength="30" class="l-length" />
+							</li>
+						</ul>
+						<div class="setting">
+					        <input type="checkbox" value="1" id="isdefault"/>&nbsp;&nbsp;设为默认地址
+				         </div>
+				         <input type="hidden" id="id" value="">
+				         <button class="btn-save" id="saveconsignee" onclick="saveconsignee();">保存</button>
+				</div>							
+			</div>
+		</div>
+		<div id="edit-paypwd" class="modbox">
+			<h3>设置支付密码<i class="close-modbox"></i></h3>
+			<div>
+				<p><label>手机：</label><input type="text" id="mobile" readonly="readonly" value="{$user['mobile']}" style="width: 93px; border: none;"><input type="button" value="获取验证码" id="sendcode" data-mobileid="mobile" class="btn" onclick="sendSms(this, 'sms_setpaypwd');"/></p>
+				<p><label>手机验证码：</label><input type="text" value="" id="authcode" maxlength="8" class="input" onkeyup="onlyNum(this);"/></p>
+				<p><label>设置支付密码：</label><input type="password" value="" id="paypwd" maxlength="16" class="input"/><span class="tip">限数字和字母，6到16个字符</span></p>
+				<p><label>再输支付密码：</label><input type="password" value="" id="repaypwd" maxlength="16" class="input"/></p>
+				<a href="javascript:void(0);" onclick="editPaypwd();" class="btn" style="margin-left: 94px;margin-top: 20px">提交</a>
+			</div>
+		</div>
+		<div id="mask"></div>
+		<input type="hidden" id="user_mobile" value="{$user['mobile']}"/>
+		<link rel="stylesheet" href="css/location.css" />
+		
+		<script type="text/javascript" src="js/jquery.SuperSlide.2.1.1.js" ></script>
+		
+		<script type="text/javascript" src="js/cart.js" ></script>
+		<script type="text/javascript" src="js/location.js" ></script>
+		
+		<script type="text/javascript">
+			var goods_amount = {if $cart['amount']}{$cart['amount']}{else}0{/if};
+			var mostpoint = {if $ym_mostpoint}{$ym_mostpoint}{else}0{/if}; //最多不超过每笔订单结算金额
+			var pointpay = {if $ym_pointpay}{$ym_pointpay}{else}0{/if}; //每pointpay个积分可抵1元
+			var is_invoice={if $ym_is_invoice}{$ym_is_invoice}{else}0{/if};
+			var is_paypwd=false;
+			$(function(){
+				loadLayer();
+				$(".ul-pro-box li").each(function(){
+					if($(this).index()%3==2){
+						$(this).css("margin-right","0");
+					}				
+				});
+				$(".slide-like-pro").slide({});		
+				
+				setTimeout(function() {
+					get_coupon_list();					
+				}, 100);
+			});
+			
+			$("#loginmobile").change(function() {
+				var mobile  = $.trim($(this).val());
+				if (is_mobile(mobile) == false) {
+					msg("请输入正确手机号码")
+					return;
+				}
+				check_mobile(mobile, callback_check_mobile);
+			});
+			
+			function callback_check_mobile(res) {
+				if ($.trim($("#btnSendCode").data("act")) =='user_bind') {
+					return false;
+				}
+				if(res.err && res.err !='')//已注册
+				{
+					$("#btnSendCode").data("act", 'login');	
+				}
+				else
+				{
+					$("#btnSendCode").data("act", 'reg');
+				}
+			}
+			
+			$("#btnlogin").click(function() {
+				var mobile = $.trim($("#loginmobile").val()), smscode = $.trim($("#smscode").val()),
+				act = $.trim($("#btnSendCode").data("act"));
+				
+				$.post("user_api.html",
+						{   act: act,
+							authtype:1,//短信验证
+							username: (act=='reg' ? '' : mobile),
+							tel: mobile,
+							smscode: smscode,
+							password: '',
+							repassword: '',
+							agree: 1,
+							isOauth: 0,
+							authcode: '',
+							autologin:1
+						},
+						function(data) {
+							if (data.err != '') {
+								msg(data.err);
+							}
+							else{
+								msg("登陆成功");
+								setTimeout(function() {
+									window.location.reload();	
+								},1500)												
+							}
+				},"json");
+								
+			});
+			
+			//发送验证码
+			$("#btnSendCode").click(function() {
+				var act= $.trim($(this).data("act"))
+				sendSms($(this)[0], 'sms_'+ (act=="user_bind" ?'login':act));		
+			})
+			
+			$("#is_invoice a").click(function() {
+				if ($(this).attr("id") == "1") {
+					$("#invoiceinfo").slideDown(200);
+				}
+				else
+				{
+					$("#invoiceinfo").slideUp(100);
+				}
+			});
+		 
+			//优惠券
+			$(".h3dy .yhdyong").click(function() {
+				$(this).find("i.icon-arrow").toggleClass("icon-down");
+				$(".youhui-box").slideToggle(500);
+			});
+			$(".useful li").each(function() {
+				$(this).click(function() {
+					$(this).toggleClass("checked").siblings().removeClass("checked");
+					inputdis();
+				});
+			});
+			
+			//输入余额、积分
+			$("#balance, #point").blur(function() {		
+				///inputdis();
+				//calcTotal();
+			});
+			
+			//选中使用余额
+			$("#userbalance").click(function () {
+				inputdis();
+				calcTotal();
+				$("#balance").css("display", $(this).is(":checked")?"inline-block":"none") ;				
+			});
+			
+			//选中使用积分
+			$("#userpoint").click(function () {
+				inputdis();
+				calcTotal();
+				$("#point").css("display", $(this).is(":checked")?"inline-block":"none") ;						
+			});
+			
+			//结算
+			$(".btn-jiesuan").click(function() {
+				if($("#btnSendCode").length>0 && $.trim($("#btnSendCode").data("act")) =='user_bind')
+				{
+					$("#loginmobile").focus();
+					msg("请先绑定手机号码");return;
+				}
+				if ($(".other-add").length==0) {
+					msg("请先填写您的收货人信息");return;
+				}
+				if ($(".default-add").length==0) {
+					msg("请选择您的收货地址");return;
+				}
+				if ($("#payAmount").html() !=0 && $("#paylist li a.selected").length==0) {
+					msg("请选择支付方式");return;
+				}
+				if ($("#expresslist li a.selected").length==0) {
+					msg("请选择配送方式");return;
+				}
+				
+				if (is_paypwd && $.trim($("#cbkpaypwd").val()) == '') {
+					msg("请填写支付密码");return;
+				}
+				//发票信息
+				var invoice_title ='', invoice_con =''; 
+				if ($("#is_invoice a.selected").attr("id") ==1) { //开启发票功能
+					var sl_title = $("#invoice_tite_list a.selected");
+					invoice_title = sl_title.attr("id") ==1 ? sl_title.html() : $.trim(sl_title.children().val());
+					invoice_con = $("#invoice_con a.selected").attr("id");
+					if (invoice_title=='') {
+						msg("请填写发票抬头");return;
+					}
+					if (invoice_con =='') {
+						msg("请填写发票内容");return;
+					}
+				}							
+				
+				var data ={
+					act : 'add_order',
+					cneeid: $(".default-add").attr("id"),
+					balance:$("#userbalance").is(":checked")? $.trim($("#balance").val()) :0 ,
+					point : $("#userpoint").is(":checked")? $.trim($("#point").val()) :0 ,
+					pay : $("#paylist li a.selected").attr("id"),
+					exp_id : $("#expresslist li a.selected").attr("id"),
+					paypwd : is_paypwd ? $.trim($("#cbkpaypwd").val()) : '',
+					invoice_title: invoice_title,
+					invoice_con : invoice_con,
+					user_remark : $("#leavemess").val(),
+					coupon_ids:getCouponIDs()//会员优惠券
+				};
+				
+				$(this).attr("disabled", "disabled");
+				$.getJSON("order.html", data, function(res) {
+					if( (res.err && res.err != '')) {
+						msg('操作失败，' + res.err);return;
+					}
+					if( (res.url && res.url != '')) {
+						 window.location.href = res.url;
+					}
+
+					$(this).removeAttr("disabled");
+				});	
+			});
+		
+			//显示支付密码框
+			function inputdis() {
+				if( $("#userbalance").is(":checked") || $("#userpoint").is(":checked") || $(".useful li").hasClass("checked")) {
+					$(".result-box .lside .save-passw").show();
+					is_paypwd= true;
+				} else {
+					$(".result-box .lside .save-passw").hide();
+					is_paypwd=false;
+				}
+			}
+			
+			var is_count=1,//各状态数量
+        	 page = 1; //当前页码
+			//加载优惠券
+ 			function get_coupon_list() {		
+	 				var ids_arr = Array();
+	 				 $(".goodinfor").each(function() {
+	 				 	ids_arr.push($(this).attr('id'));
+	 				 })
+	 				var goods_ids = ids_arr.toString();
+ 				 
+					$.getJSON("myquan.html", {act: "get_coupon", page:page,num:100, goods_ids:goods_ids, is_count:is_count,type:0,is_available:1}, function(res) {
+						var html ='';
+						if(res.err) {
+							msg("加载优惠券失败，".res.err);return;
+						}
+						var n =0;
+						$.each(res.data, function(k, v) {
+							n++;
+							html +='<div class="cp-it '+(n%5 ==0 ? 'last' :'')+(v.is_selected==1 ? ' selected' :'')+(v.is_vaild==0 ? ' disabled' :'')+ '" id="'+v.id+'" data-cid="'+v.cid+'" data-amount="'+v.amount+'"><div class="hd">';
+							html +='<span class="amount">￥<b>'+v.amount+'</b></span>';
+							html +='<span class="amount_reached">满 '+v.amount_reached+'元 可用</span>';
+							html +='<span class="date">'+v.date_start+'-'+v.date_end+'</span></div>';
+							html +='<div class="bt"><div class="option">';
+							html +='<span><label>限品类</label>：<b class="tit" title="'+v.name+'">'+v.name+'</b></span>';
+							html +='<span><label>限平台</label>：'+v.client_name+'</span>';
+							html +='<span><label>限等级</label>：'+v.grade_name+'<i class="tip-down"></i></span>';
+							html +='<span><label>券编号</label>：'+v.code+'</span></div></div><i class="icon-check-zf"></i></div>';
+						});
+						
+						if(is_count ==1)
+						{
+							is_count=0;
+							$("#couponnum").html(res.count[0]);
+						}
+						if (res.data.length==0) {
+							return;
+						}
+												
+						$(".couponlist").append(html);						
+						calcTotal();
+						sumSelected();
+						page++; 
+					});	
+			}
+ 			
+ 			//选择优惠券
+ 			$(".couponlist").each(function() { 				
+				$(this).on("click",".cp-it",function() {
+					var t =$(this);
+					if(t.hasClass("disabled")) {
+						return;
+					}
+					
+					var cid = t.data("cid");		
+					if(t.hasClass("selected"))
+					{
+						t.removeClass("selected");
+					}
+					else
+					{											
+						var ids = getSelectedCoupon(); //已选
+						if(ids !='' && t.hasClass("selected") ==false) {
+							$.getJSON("myquan.html", {act: "select_coupon", id: cid, ids: ids}, function(res) {
+								var html ='';
+								if(res.err) {
+									msg("选择优惠券失败，".res.err);return;
+								}
+								if(res.data && res.data.length > 0) {
+									$.each(res.data, function(k, v) {
+										var coupon = $(".couponlist>.selected[data-cid='"+v+"']");
+										$(".couponlist>.selected[data-cid='"+v+"']").each(function() {
+											if($(this).attr("id") != t.attr("id")) {
+												$(this).removeClass("selected");
+											}
+										})									
+									});								
+								}
+								sumSelected();
+								calcTotal();
+							});	
+						}
+						
+						t.addClass("selected");
+					}
+										
+					sumSelected();
+					calcTotal();
+				});
+			}); 
+			
+			function sumSelected(num) {
+				num = num || $(".couponlist>.selected").length;
+				$("#couponselected").html("已选<b class='orange-bold'> "+ num + "</b> 张").css("display", (num == 0 ? "none" :"inline-block") );
+			}
+			
+			//获取优惠券id
+			function getSelectedCoupon(){
+				var ids = '';
+				$(".couponlist>.selected").each(function() {
+					ids += $(this).data("cid") + ",";
+				});
+				if (ids !='') {
+					ids = ids.substr(0, ids.length - 1);
+				}
+				return ids;
+			}
+			
+			//获取会员优惠券id
+			function getCouponIDs(){
+				var ids = '';
+				$(".couponlist>.selected").each(function() {
+					ids += $(this).attr("id") + ",";
+				});
+				if (ids !='') {
+					ids = ids.substr(0, ids.length - 1);
+				}
+				return ids;
+			}
+		</script>
+	</body>
+
+</html>

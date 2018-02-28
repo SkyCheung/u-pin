@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>分销 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<div class="center-body distrib">
+			<div class="nb">
+				<div class="center-lside">
+					<!--{tpl usermenu}-->
+				</div>
+				<div class="center-rside pages-style">
+					<div class="center-title-sig">
+						<h3 class="tab"><span>分销</span></h3>						   
+					</div>
+					<div class="set-password">
+						<div class="set-pass-box">
+							我的分销链接和二维码：<label style="font-size: 16px;" id="txt">{$ym_url}dt.html?i={$dt_id}</label><input type="button" value="复制" id="copy" class="btn"/>
+							<p>
+								<img src="qrcode.html?data={$ym_url}dt.html?i={$dt_id}" alt=""/>
+							</p>
+							
+							<div class="commission">
+								<span>分成比例</span>
+								<table class="tb-bd">
+									<tr><th>类别</th><th>一级</th><th>二级</th><th>三级</th></tr>
+									{loop $ym_ditribution_config['commission'] $p}
+									<tr>
+										<td>{$p['name']}</td>
+										<td>{$p['level_1']}%</td>
+										<td>{$p['level_2']}%</td>
+										<td>{$p['level_3']}%</td>
+									</tr>
+									{/loop}
+								</table>
+							</div>
+							
+							<div class="commission">
+								<span>我的下级</span>
+								
+								<!--<table class="tb-bd">
+									<tr><th>会员</th><th>级别</th></tr>
+									{loop $row $p}
+									<tr>
+										<td>{$p['uname']}</td>
+										<td>{$level[$p['level']]}</td>
+									</tr>
+									{/loop}
+								</table>-->
+								<div class="list-bd">
+									<div class="list-bd-head">
+										<div class="list-bd-th th2">
+										会员
+										</div>
+										<div class="list-bd-th th2">
+										级别
+										</div>
+									</div>
+									{if $row}
+									<ul>
+										{loop $row $p}
+										<li>
+											<div class="list-bd-th th2">{$p['uname']}</div>
+											<div class="list-bd-th th2">{$level[$p['level']]}</div>
+										</li>
+										{/loop}
+									</ul>
+									{/if}
+								</div>
+								<div class="pages"><!--{$pages['pages']}--></div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<style>			
+			.tb-bd{border:solid 1px #ddd;border-spacing: 0;border-collapse: collapse;text-align: center;}			
+			.tb-bd td{border: 1px solid #ddd;vertical-align: middle;padding: 8px;}
+			.tb-bd th{border: 1px solid #ddd;vertical-align: middle;background-color: #F1F1F1;padding: 12px 8px;}
+			.distrib{font-size: 14px;}			
+			.distrib td{padding: 20px;}
+			.distrib .list-bd{border-top: solid 1px #ddd;}
+			.distrib .list-bd .list-bd-th{text-align: left;}
+			.distrib .list-bd ul{width: 100%;padding: 0px;}
+			.commission{margin-top: 50px;}
+		</style>
+		
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="js/main.js" ></script>
+        <script type="text/javascript" src="static/js/clipboard.min.js" ></script>
+        
+        <script type="text/javascript">
+        	$(function () {
+      		 	loadLayer();
+      		 	
+      		 	var clipboard = new Clipboard('#copy', {
+			        target: function() {
+			            return document.querySelector('#txt');
+			        }
+			    });
+			
+			    clipboard.on('success', function(e) {
+			        msg("复制成功");
+			    });
+			
+			    clipboard.on('error', function(e) {
+			        console.log(e);
+			    });
+ 			});
+        	
+        </script>
+
+	</body>
+
+</html>

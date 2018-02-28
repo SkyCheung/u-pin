@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>找回密码 - {$ym_title}</title>
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" href="css/loginregister.css" />
+	<link rel="stylesheet" href="css/valifrom.css" /> </head>
+<body>
+<!--{tpl header}-->
+<div class="nb">
+	<div class="find-passw-box">
+		<h3>找回密码</h3>
+		<div class="jindu">
+			<dl class="successdl"> <dt class="success">1</dt>
+				<dd>填写账户名</dd>
+			</dl>
+			<dl class="successdl"> <dt class="success">2</dt>
+				<dd>验证身份</dd>
+			</dl>
+			<dl class="successdl"> <dt class="success">3</dt>
+				<dd>设置新密码</dd>
+			</dl>
+			<dl> <dt>4</dt>
+				<dd>完成</dd>
+			</dl>
+		</div>
+		<div class="findform-box">
+			<ul>
+				<li><span class="label"><label for="fusername">设置新密码：</label></span><input type="password" name="password" id="password" class="input" maxlength="20"/></li>
+				<li><span class="label"><label for="fusername">再输入密码：</label></span><input type="password" name="repassword" id="repassword" class="input" maxlength="20"/></li>
+			</ul>
+			<div class="div-tj"> <input type="submit" value="提交" onclick="javascript:updatePwd(2);" class="find-subbtn btn" /> </div>
+		</div>
+	</div>	
+</div>
+<!--{tpl footer}-->
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/main.js" ></script>
+    <script type="text/javascript" src="js/users.js" ></script>
+     <script type="text/javascript">
+        	$(function () {
+      		 	loadLayer();
+ 			});
+        	
+        </script>
+</body>
+</html>

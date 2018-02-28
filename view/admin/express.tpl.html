@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>快递单模板</title>
+	<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>
+	<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" /> 
+	<link type="text/css" rel="stylesheet" href="/static/js/editbox/editbox.css" />
+	<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+	<script type="text/javascript" src="/static/js/editbox/jquery.editbox.js" ></script>
+
+</head>
+<body>
+<div id="maintop">
+	<div>你的位置：<span>配送方式 -> 快递单模板 -> {$name}</span></div>
+</div>
+<div id="mainnav"></div>
+<div class="maincon" style="min-height: 785px;">	
+	<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
+		<div style="position: relative;">
+			<div class="sub" id="uploadimg" data-uploaddir="expresstpl" data-isthumb="0" data-filename="{$code}" style="width: 120px;"><span>上传快递单图片</span></div>		
+			<span style="margin-left: 20px;position: absolute;left: 120px;bottom: 5px;" class="optip">图片尺寸：<input type="text" id="width" value="" style="width: 60px;text-align: center;" readonly="readonly"/> x <input type="text" id="height" value="" style="width: 60px;text-align: center;" readonly="readonly"/>像素，请确保上传的图片大小和快递单一致！</span>
+		</div>
+		<div>
+			<div class="editor" id="content"></div>	      	
+		</div>
+		<div class="row"><label class="row-name"></label>
+			<div class="column">
+				<input type="hidden" name="content" value=""/>	
+	      		<input type="hidden" id="tpl-img" value=""/>
+				<input name="action" type="hidden" value="express" />
+				<input name="act" type="hidden" value="tpl">
+				<input type="hidden" name="id" value="{$id}" />
+				<input type="submit" class="sub" value=" 提交 " />
+			</div>
+		</div>
+	</form>
+</div>
+
+<style type="text/css">
+	.sub{padding: 0;margin-bottom: 10px;}
+	.webuploader-pick{padding:2px 10px 2px 10px;}
+	.webuploader-element-invisible{position: absolute !important;clip: rect(1px 1px 1px 1px);}
+</style>
+<script type="text/javascript" src="./static/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="./static/webuploader/fileupload.js"></script>
+
+<script type="text/javascript">
+	com_upload($('#uploadimg'), upload_res);
+	function upload_res(res){
+		var w = res.data.attr.width;
+		var h = res.data.attr.height;
+		if (res.err && res.err !='') {
+			msg(res.err);
+		} else{
+			$("#tpl-img").val(res.data.img);
+			$("#width").val(w);
+	   		$("#height").val(h);
+			$(".editCanvas_bg").attr("style",'width: '+ (w+20) +'px; height: '+ (h+20) +'px; background: url("'+res.data.img+'") 20px 20px no-repeat;');
+			$("#editCanvas").css({"width":w,"height":h});
+			$(".staff_x").css("width", w);
+			$(".staff_y").css("height", h);
+			$("#editResize").css("width", w+20);
+			msg("上传成功");
+		}		
+	}
+
+	var $editor = $("#content");
+	var deliverys = '';
+	var contents ={if $tpl_content}{$tpl_content}{else}{"width":1000,"height":650}{/if};
+	
+	$(function(){
+	    $editor.editBox({
+	        id: 'ymtpl',				//插件ID
+	        color:"red",				//控件颜色
+	        imgurl:"/static/js/editbox/img/",	//图片路径
+	        height:contents.height,
+	        width:contents.width,
+	        /* 快递公司列表 */
+	       	background:'{upload_img}expresstpl/{$code}.jpg',
+	        delivery:'{$code}',
+	        deliveryName: '{$name}',
+	        deliveryImage: '{upload_img}expresstpl/',
+	        deliveryOption:deliverys
+	    });
+	    if (contents.background != undefined) {
+	    	$("#tpl-img").val(contents.background);
+	    }
+	    
+	    {if $tpl_content}
+	   	$("#width").val(contents.width);
+	   	$("#height").val(contents.height);
+	   	{/if}
+	   	
+	    if (contents.list) {
+		    $.each(contents.list, function(i, n){
+		        $editor.addBox({width:n.width,height:n.height,left:n.left,top:n.top,text:n.txt});
+		    })
+	    }
+	});
+	
+	$(":submit").click(function() {
+		if ($.trim($("#width").val())=='' || $.trim($("#height").val())=='') {
+	   		msg('请设置图片的尺寸');return false;
+		}
+	    var content = $editor.content();
+	    if ($("#tpl-img").val()=='') {
+	       msg('请上传快递单模版');
+	       return false;
+	    }
+	    $("input[name=content]").attr("value", content);
+	});
+</script>
+
+</body>
+</html>

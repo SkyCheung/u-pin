@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>增加商品类型</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 商品类型</span></div>
+		</div>
+
+		<div class="maincon base">
+			<form action="" method="post" id="form1" name="form1" onsubmit="return check();">
+				<div class="row"><label class="row-name">类型名称：</label>
+					<div class="column"><input name="types_name" type="text" id="types_name" value="" size="50" maxlength="50" /><span>商品类型，例如：手机、电脑等</span></div>
+				</div>
+				<div class="row"><label class="row-name">排序：</label>
+					<div class="column"><input name="types_sort" type="number" min="0" max="255" id="types_sort" value="10" size="50" maxlength="5" /><span>数字</span></div>
+				</div>
+
+				<div class="maintab maintit">
+					<ul class="thead">
+						<li class="w25"><strong>属性名称</strong> </li>
+						<li class="w10"><strong>展示类型</strong> </li>
+						<li class="w20"><strong>属性值</strong> </li>
+						<li class="w10"><strong>是否规格</strong> </li>
+						<li class="w10"><strong>查询条件</strong> </li>
+						<li class="w10"><strong>排序</strong> </li>
+						<li class="w15"><strong>操作</strong> </li>
+					</ul>
+					<div class="tbody">
+						<ul class="trow">
+							<li class="w25"><input name="attr_name[]" type="text" id="attr_name" value="" class="resizetxt" maxlength="50" /></li>
+							<li class="w10"><select class="layout" name="uitype[]" style="height: 28px; margin-top: 7px;">
+								<option value="radio" selected="selected">单选框</option>
+								<option value="checkbox">复选框</option>
+								<option value="input">输入框</option>
+								</select></li>
+							<li class="w20"><a id="vallist" class="lnk" data-tmpval = "点击设置属性值" href="javascript:void(0);" onclick="javascript:edit('./admin.html?do=attribute',this);">点击设置属性值</a><input type="hidden" id="value" name='value[]' value="" /></li>
+							<li class="w10">
+								<a href="javascript:void(0);" class="i-status"></a><input type="hidden" name="type[]" value="0"></li>
+							<li class="w10">
+								<a href="javascript:void(0);" class="i-status i-status-on"></a><input type="hidden" name="search[]" value="1"></li>
+							<li class="w10"><input name="sort[]" type="text" id="sort[]" value="10" size="2" maxlength="50" /></li>
+							<li class="w15"><a href="javascript:void(0);" class="del">删除</a></li>
+						</ul>
+					</div>
+					<ul class="trow newrow tpl" style="display: none;">
+						<li class="w25"><input name="attr_name[]" type="text" id="attr_name[]" value="" class="resizetxt" maxlength="50" /></li>
+						<li class="w10"><select class="layout" name="uitype[]" style="height: 28px; margin-top: 7px;">
+								<option value="radio" selected="selected">单选框</option>
+								<option value="checkbox">复选框</option>
+								<option value="input">输入框</option>
+								</select></li>
+						<li class="w20"><a id="vallist" class="lnk" href="javascript:void(0);" data-tmpval = "点击设置属性值" onclick="javascript:edit('./admin.html?do=attribute',this);">点击设置属性值</a><input type="hidden" id="value" name='value[]' value="" /></li>
+						<li class="w10">
+							<a href="javascript:void(0);" class="i-status"></a><input type="hidden" name="type[]" value="0"></li>
+						<li class="w10">
+							<a href="javascript:void(0);" class="i-status i-status-on"></a><input type="hidden" name="search[]" value="1"></li>
+						<li class="w10"><input name="sort[]" type="text" id="sort[]" value="10" size="2" maxlength="50" /></li>
+						<li class="w15"><a href="javascript:void(0);" class="del">删除</a></li>
+					</ul>
+					<p class="clear"><a href="javascript:void(0);" class="add"><i class="i-add">+</i>&nbsp;再加一个</a></p>
+				</div>
+
+				<div class="row"><label class="row-name"></label>
+					<div class="column">
+						<input type="submit" class="sub" value="提交 " />
+						<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=types'"/>
+						<input name="action" type="hidden" id="action" value="types">
+						<input name="act" type="hidden" id="act" value="add">
+					</div>
+				</div>
+			</form>
+		</div>
+		<input name="winop" type="hidden" id="winop" value="" />
+		<input name="vals" type="hidden" id="vals" value="" />
+		
+		<style>.maintab li{overflow: hidden;}</style>
+		
+		<script type="text/javascript">
+			//控件类型改变时
+			$("select[name='uitype[]']").change(function() {
+				var o = $(this).parents(".trow").find("#vallist");
+				var h = $(this).parents(".trow").find("#value");
+				if ($(this).val() == "input") {
+					o.text("");
+					h.val("");
+				} else {
+					o.text(o.data("tmpval"));
+					if ($.trim(o.data("tmpval"))!="点击设置属性值") {						
+						h.val(o.data("tmpval"));
+					}
+				}
+			});
+			//删除
+			$(".del").click(function() {
+				if ($(this).parents(".trow").hasClass("newrow")) {
+					del($(this).parents(".trow").index());
+				} else {
+					isdel('', 'javascript:del(' + $(this).parents(".trow").index() + ');');
+				}
+			});
+
+			function del(i) {
+				$(".trow").eq(i).remove();
+			}
+		 
+			//添加新项
+			$(".add").click(function() {
+				$(".tpl").clone(true).appendTo(".tbody").removeClass("tpl").removeAttr("style");
+				autoResizeHeight();
+			});
+			//修改
+			function edit(txt, current) {
+				/*top.layer.config({
+		            extend: 'extend/layer.ext.js'
+		          });
+		           top.layer.prompt({title: $(current).parents(".trow").find("#attr_name").val()+'- 属性值', 
+		           formType: 0,
+		           area: '800px',
+		           value:''+$(current).parents(".trow").find("#value").val()},
+		           function(txt){
+                   top.layer.msg(txt);
+		          });                
+				return;*/
+				if ($(current).text() == '点击设置属性值') {
+					$("#vals").val("");
+				} else {
+					$("#vals").val($(current).text());
+				}
+				var ii = top.layer.open({
+					type: 2,
+					title: '编辑属性值',
+					closeBtn: 0,
+					shadeClose: true,
+					area: ['800px', '500px'],
+					content: [txt],
+					end: function() {
+						if ($.trim($("#winop").val()) == 'ok') {
+							var o = $(current).parents(".trow").find("#vallist");
+							o.text($("#vals").val()).data("tmpval", $("#vals").val());
+							var h = $(current).parents(".trow").find("#value");
+							h.val($("#vals").val());
+						}
+						$("#winop").val("");
+						$("#vals").val("");
+					}
+				});
+			}
+			
+			function check()
+			{
+				var arr=[];
+				var flag= true;
+				$("input[name='attr_name[]']").each(function () {
+					if ($.trim($(this).val())!='') {
+						if ($.inArray($.trim($(this).val()),arr)>=0) {
+							msg("属性名称重复了");
+							flag= false;
+						    return false;
+					     }
+						arr.push($.trim($(this).val()));
+					}  					
+				});
+				return flag;
+			}
+		</script>
+	</body>
+
+</html>

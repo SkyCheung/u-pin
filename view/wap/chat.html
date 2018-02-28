@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<link rel="stylesheet" href="css/emoji.css" />
+		<style type="text/css">
+		.mui-bar .mui-title{text-align: left;padding-left: 10px;border-left: 1px solid #bfbfbf;line-height: 16px;margin: 10px 0 0 0;padding: 4px 10px;margin-left:10px;}
+	</style>
+	</head>
+
+	<body contextmenu="return false;">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left" href="new.html"></a>
+			<h1 class="mui-title">回忆专用的小马甲</h1>
+			<!--<a class="mui-pull-right" href=""><img src="images/shop.png" alt="" style="width:36px;margin-top:4px;"/></a>-->
+		</header>
+		<pre id='h'></pre>
+		
+		<div class="mui-content chatbox">
+			<div id='msg-list'>
+				<div class="chatleft chat">
+					<div class="word ">
+						<div class="word-posi">
+							<i class=" chat-arrow"></i>
+							<div><img src="images/qq/21.png"/>谢谢你</div>
+						</div>
+					</div>
+					<a href="#" class="chat-head"><img src="images/details_icon4.png" style="width: 45px;"/></a>
+				</div>
+			</div>
+		</div>
+		<footer class="chat-footer">
+			<div class="chat-common">
+				<div class="chat-footer-left">
+					<div class="input-text" id="msg-text" contenteditable="true"></div>
+				</div>
+				<div class="chat-footer-right">
+					<a class="chat-fun chatemoji iconfont"></a>
+					<a class="chat-fun chat-fun-aub chat-funmore iconfont"></a>
+					<a class="chat-fun chat-fun-aub chatsent" style="display: none;">发送</a>
+				</div>
+				<div class="pic-tx picker" id="pic" style="background-color:#000;">
+					<div class="filePicker preview" data-uploaddir="chat" data-isthumb="1" id="mainpicker"></div>
+					<input type="hidden" value="" name="img" id="img"/>
+					<input type="hidden" value="" name="thumb" id="thumb"/>										
+				</div>
+			</div>
+			<div class="chat-function">
+				<!--表情-->
+				<div class="emojibox hide">
+					<span class="face-ico  qq-1" title="1" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-2" title="2" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-3" title="3" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-4" title="4" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-5" title="5" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-6" title="6" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-7" title="7" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-8" title="8" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-9" title="9" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-10" title="10" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-11" title="11" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-12" title="12" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-13" title="13" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-14" title="14" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-15" title="15" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-16" title="16" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-17" title="17" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-18" title="18" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-19" title="19" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-20" title="20" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-21" title="21" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-22" title="22" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-23" title="23" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-24" title="24" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-25" title="25" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-26" title="26" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-27" title="27" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-28" title="28" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-29" title="29" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-30" title="30" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-31" title="31" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-32" title="32" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-33" title="33" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-34" title="34" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-35" title="35" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-36" title="36" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-37" title="37" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-38" title="38" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-39" title="39" unselectable="on" onmousedown="return false;"></span>
+        			<span class="face-ico  qq-40" title="40" unselectable="on" onmousedown="return false;"></span>
+				</div>
+				<!--更多功能-->
+				<div class="more-function hide">
+					<ul>
+						<li>
+							<a href="javascript:void(0);" class="iconfont icon-pic"></a>
+							<span>图片</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</footer>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/webuploader.js" ></script>
+		<script type="text/javascript" src="js/uploader.js" ></script>
+		
+		<script>
+			$("#msg-text").on("DOMNodeInserted", function(e) {
+				if($(this).html()!=""){
+					$(".chat-fun-aub").hide().siblings(".chatsent").show();
+				}
+				if($(this).height()>30){
+					$(this).css("margin-top","0px")
+				}
+			});
+			$(".chatsent").click(function(){
+				$("#msg-list").append('<div class="chatright chat"><div class="word "><div class="word-posi"><i class=" chat-arrow"></i><div>'+$("#msg-text").html()+'</div></div></div><a href="#" class="chat-head"><img src="images/chat-emoji.png" style="width: 45px;"/></a></div>');
+				$("#msg-text").html("").css("margin-top","15px");
+				$(".chat-fun-aub").show().siblings(".chatsent").hide();
+				$('#msg-list').scrollTop( $('#msg-list')[0].scrollHeight);
+				console.log($('#msg-list').height());
+			});
+			$(".chat-funmore").click(function(){
+				$(".more-function").toggleClass("hide").siblings(".emojibox").addClass("hide");
+				$("#msg-list").css("height",$(window).height()-$("footer").height()-44);
+				$('#msg-list').scrollTop( $('#msg-list')[0].scrollHeight);
+			});
+			//加载上传图片
+			$(".filePicker").each(function() {
+				upFile($(this));
+			});
+//			function res_upfile(res) {
+//			    $("#im-msg").html($("#im-msg").html() + '<img data-type="img" data-code="'+ res.data.img +'" src="'+ res.data.img+'"/> ');    
+//			}
+			/*聊天区域的高度*/
+			$("#msg-list").css("height",$(window).height()-$("footer").height()-44);
+			
+			/*emoji*/
+			$(".chatemoji").click(function(){
+				if($(".emojibox").hasClass("hide")){
+					$(".emojibox").removeClass("hide").siblings(".more-function").addClass("hide");
+					$(this).addClass("enterword");
+				}else{
+					$(".emojibox").addClass("hide");
+					$(this).removeClass("enterword").parent().siblings(".chat-footer-left").children().focus();
+   					$("#msg-text").focusEnd();
+				}
+				$("#msg-list").css("height",$(window).height()-$("footer").height()-44);
+				$('#msg-list').scrollTop( $('#msg-list')[0].scrollHeight);
+			});
+				
+			$(".emojibox .face-ico").click(function(){
+      			var face = $(this).attr("title");
+      			insertAtCursor($("#msg-text")[0],  '<img data-type="face" data-code="'+ face.replace(/:/g, '')+'" width="20" height="20" src="images/qq/'+ face.replace(/:/g, '')+'.png" /> ');
+			});
+			//处理光标出现在最后
+			$.fn.setCursorPosition = function(position){  
+			    if(this.lengh == 0) return this;  
+			    return $(this).setSelection(position, position);  
+			}  
+			$.fn.setSelection = function(selectionStart, selectionEnd) {  
+			    if(this.lengh == 0) return this;  
+			    input = this[0];  
+			  
+			    if (input.createTextRange) {  
+			        var range = input.createTextRange();  
+			        range.collapse(true);  
+			        range.moveEnd('character', selectionEnd);  
+			        range.moveStart('character', selectionStart);  
+			        range.select();  
+			    } else if (input.setSelectionRange) {  
+			        input.focus();  
+			        input.setSelectionRange(selectionStart, selectionEnd);  
+			    }  
+			    return this;  
+			}    
+			$.fn.focusEnd = function(){  
+			    this.setCursorPosition(this.val().length);  
+			} 
+			//在光标位置插入内容
+        function insertAtCursor(dom, html) {
+			if (dom != document.activeElement) { // 如果dom没有获取到焦点，追加
+			dom.innerHTML = dom.innerHTML + html;
+			return;
+			}
+			var sel, range;
+			if (window.getSelection) {
+				// IE9 或 非IE浏览器
+				sel = window.getSelection();
+				if (sel.getRangeAt && sel.rangeCount) {
+					range = sel.getRangeAt(0);
+					range.deleteContents();
+					// Range.createContextualFragment() would be useful here but is
+					// non-standard and not supported in all browsers (IE9, for one)
+					var el = document.createElement("div");
+					el.innerHTML = html;
+					var frag = document.createDocumentFragment(),
+					node, lastNode;
+					while ((node = el.firstChild)) {
+						lastNode = frag.appendChild(node);
+					}
+					range.insertNode(frag);
+					// Preserve the selection
+					if (lastNode) {
+						range = range.cloneRange();
+						range.setStartAfter(lastNode);
+						range.collapse(true);
+						sel.removeAllRanges();
+						sel.addRange(range);
+					}
+				}
+			} else if (document.selection && document.selection.type != "Control") {
+			// IE < 9
+				document.selection.createRange().pasteHTML(html);
+			}
+		}
+		</script>
+	</body>
+</html>

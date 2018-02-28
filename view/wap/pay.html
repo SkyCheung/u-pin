@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>支付订单 - {$ym_endtitle}</title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />
+		<style type="text/css">
+		.mui-content{background-color:#f5f5f5;}
+		.mui-table-view-radio .mui-table-view-cell .mui-navigate-right:after{color:#007cc3;}
+		.mui-radio input[type=radio]:checked:before{content: '\e442';}
+		.mui-input-group .mui-input-row{height: auto;}
+		.mui-radio input[type=radio]{top: 10px;}
+		.mui-input-row label{padding-left: 0;border-top:1px solid #f6f6f6;font-family: "microsoft yahei",'Arial', 'Verdana','Helvetica', sans-serif;}
+		.mui-input-row label span{margin-left: 10px;}
+		.mui-input-group{background:none;}
+		.mui-input-group .mui-input-row:after,.mui-input-group:after,.mui-input-group:before{height: 0;}
+		/*弹框*/
+		.mui-popup.mui-popup-in{background-color:#fff;opacity: 1;filter:alpha(opacity=100);padding:15px;}
+		.mui-popup-inner{padding:0 0 15px;}
+		.mui-popup-button:after,.mui-popup-inner:after{height: 0;}
+		.mui-popup-button:first-child{border:1px solid #eaeaea;margin-right: 15px;}
+		.mui-popup-button:last-child{border:1px solid #1b1b1b;background-color:#1b1b1b;color:#fff;font-weight: normal;}
+		.mui-popup-button{border-radius: 5px !important;font-size: 14px;}
+		.mui-popup-title+.mui-popup-text p{font-size: 15px;margin:10px 0;color:#646464;}
+		.mui-popup{width: 6.25rem;}
+		/*checkbox btn*/
+		.mui-radio input[type=radio]{right: 10px;left: initial;}
+		.mui-checkbox input[type=checkbox]:checked:before, .mui-radio input[type=radio]:checked:before{color:#007cc3;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="" class="mui-pull-left mui-icon mui-icon-left-nav" id='confirmBtn'></a>
+			<h1 class="mui-title">支付中心</h1>
+		</header>
+		<div class="mui-content payment" {if $pay_code=='alipay_wap'}style="padding-top:0"{/if}>
+		<!--{if !$order_type || $order_type==0}-->
+			<div class="pay-price bgw">
+				<div class="sptitle">订单号</div>
+				<div class="sprice">{$oid}</div>
+				<!--{if $order['payble_amount']}-->
+				<div class="sptitle">订单金额</div>
+				<div class="sprice" style="top: 1.25rem;">￥<span>{$order['payble_amount']}</span></div>
+					<!--{if $ym_split_pay2}-->
+						<p>银行卡限额？<a href="javascript:void(0);" style="display: inline-block;" class="lnk">分批支付</a></p>
+						<br />
+						<span>本次支付：<input type="text" class="input"/> 还需支付：200元</span>
+					<!--{/if}-->
+				<!--{/if}-->
+			</div>
+		<!--{else}-->
+			<form enctype="multipart/form-data" method="post" onsubmit="return check();">
+				<div class="mui-content recharge">
+					<p class="margin10"></p>
+					<div class="enterprice">
+						<span class="tel-qz">金额</span>
+						<div class="num-phone">
+							<input id='pay_amount' name="pay_amount" type="text" maxlength="6" size="8" class="mui-input-clear" onkeyup="onlyAmount(this,2);" placeholder="请输入充值金额" value="{$pay_amount}" {if $pay_amount}readonly="readonly"{/if}/>
+						</div>
+					</div>
+					<div class="mararound10">
+						{if $order_type==1 && $pay_amount==0}<input class="btn btn-grey btn-single-click" type="submit" name="submit" id="save-btn" value="下一步">{/if}
+					</div>
+				</div>
+			</form>
+		<!--{/if}-->
+		{if $err}
+		 <p style="font-size: 20px;color: #de342f;text-align: center;background: #fff;padding: 20px;">{$err}</p>
+		{/if} 
+		{if $pay_again==1}<a href="/myorder.html" class="btn" style="width: 120px;margin: 50px auto;">重新支付</a>{/if}
+		{if $payable==1}
+		<div class="zhifu-box" style="border: none;border-top: dashed 1px #ddd;{if $order_type==1 && $pay_amount==0}display: none;{/if}">
+			<p class="bgw mbtitle">选择支付方式</p>
+			<form action="" method="post" class="mui-input-group">
+				<div class="box-paystyle bgw">
+					<!--{loop $payment $p}-->
+					
+					<div class="mui-input-row mui-radio {if $pay_code==$p['pay_code']}selected{/if}" id="{$p['pay_code']}">
+						<a class="tiao" href="pay.html?oid={$oid}&pay_code={$p['pay_code']}&order_type={$order_type}&pay_amount={$pay_amount}"><label><img src="{upload_img}/payment/{$p['pay_code']}.png" style="width:30px"/><span>{$p['pay_name']}</span></label>
+						<input name="radio1" type="radio" {if $pay_code==$p['pay_code']}checked="checked"{/if}></a>
+						<input type="hidden" class="{$p['pay_code']}" id="type" value="pay.html?oid={$oid}&pay_code={$p['pay_code']}&order_type={$order_type}&pay_amount={$pay_amount}">
+					</div>
+					<!--{/loop}-->
+				</div>
+				<div class="single-all-btn">
+					{$payhtml}					
+				</div>
+			</form>
+		</div>
+		{/if}
+
+        <div class="zhifu-box" style="border: dashed 1px #f50606ed; margin: 5px 10px;padding: 5px;">
+        	请在20分钟内完成支付，超过20分钟没支付的订单会自动取消！
+        </div>	
+
+		</div>		 
+		
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/cart.js"></script>
+		<script>
+			loadLayer();
+			
+			mui("body").on("tap",".tiao",function(){
+				window.location.href=this.href;
+			});
+			$("input[name='radio1']").click(function(){
+				$("input[name='radio1']").parent('.mui-input-row').removeClass('selected');
+				$(this).parent('.mui-input-row').addClass('selected');
+			})
+			/*$(".save-btn").click(function(){
+				var payhref = $(".box-paystyle .selected #type").val();
+				window.location.href = payhref;
+			});*/
+			
+        	//弹框
+        	document.getElementById("confirmBtn").addEventListener('tap', function() {
+				var btnArray = ['稍后再支付', '再想想'];
+				mui.confirm('<p>确定要放弃付款吗？</p><p>商品可能会被抢走哦！</p>', '<img src="images/cry.jpg"/>', btnArray, function(e) {
+					if (e.index == 1) {
+						//在想想
+					} else {
+						window.location.href = "index.html";
+					}
+				})
+			});
+			
+			function check() {
+					var pay_amount = $.trim($("#pay_amount").val());
+					if (pay_amount == '' || parseFloat(pay_amount)==0) {
+						msg("请填写充值金额");return false;
+					}
+					$(".zhifu-box").show();
+					$("#pay_amount").attr("readonly",true).css({"background-color":"transparent",'border': 'none'});
+					return true;
+					$(this).remove();
+			};
+			$("#pay_amount").change(function(){
+				if($("#pay_amount").val()!=""){
+					$("#save-btn").removeClass("btn-grey");
+				}else{
+					$("#save-btn").addClass("btn-grey");
+				}
+			});
+		</script>
+	</body>
+</html>

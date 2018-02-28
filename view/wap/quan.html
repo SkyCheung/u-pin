@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>领券中心 - {$ym_endtitle}</title>
+		<meta name="keywords" content="{$ym_keywords}" />
+		<meta name="description" content="{$ym_description}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/phone.css" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="myquan.html" class="mui-pull-left mui-icon mui-icon-left-nav"></a>
+			<h1 class="mui-title">优惠券中心</h1>
+		</header>
+		<div id="muibd" style="margin-bottom: 50px;">
+			<ul class="mui-content-top margin10 quan-ul couponlist"></ul>
+		</div>
+		
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		
+		<script type="text/javascript">
+      
+      	var page =1, totalpage=0, is_count =1,isLoading=false;
+		$(function () {
+			loadLayer();
+			$("#muibd").height(window.innerHeight);
+			get_coupon_list();			
+		});
+		
+		function get_coupon_list() {
+			isLoading=true;
+			$.getJSON("quan.html", {act: "get_coupon", page:page,is_count:is_count}, function(res) {	
+				isLoading = false;
+				if(res.err) {
+					msg("加载失败");return;
+				}
+
+				var html ='';
+				$.each(res.data, function(k, v) {
+					html +='<li class="quannow" id="'+v.id+'"><div class="lside">';
+					html +='<div class="title">￥<b>'+v.amount+'</b>';
+					html +='<span>满'+v.amount_reached+'元可用</span></div>';
+					html +='<div class="txt">'+v.date_start+'-'+v.date_end+'</div>';
+					html +='<div class="txt">'+v.name+'</div></div>';
+					html +='<div class="rside opbtn">';
+					if(v.receive_status == '') {
+						html +='<a href="javascript:void(0);" class="btn getcoupon" data-id="'+v.id+'">立即领取</a>';
+					} 
+					/*if(v.receive_status == 'geted') {
+						html +='<a href="list.html?qid='+v.id+'" class="btn" data-id="'+v.id+'"><i class="quan-ico quan-'+ v.receive_status +'"></i>立即使用</a>';
+					}*/
+					else
+					{
+						html +='<i class="quan-ico quan-'+ v.receive_status +'"></i>';
+					}
+				    html +='</div></li>';
+
+				});
+				
+				if(is_count == 1) {
+					totalpage = res.total;
+					is_count = 0;
+				}
+				page++;
+				
+				$(".couponlist").append(html);
+			});			
+		}
+		
+		var sc_up=0,sc_down=0;//判断向上/下滚
+		$(window).scroll(function() {
+			sc_up = $(this).scrollTop();  
+			if($(this).scrollTop()+$(this).height()+368 > $(document).height() && sc_down <= sc_up && page<=totalpage && isLoading==false) {
+				get_coupon_list(page);
+			}
+			setTimeout(function(){sc_down = sc_up;},0); 
+		});
+				
+      </script>
+	</body>
+</html>

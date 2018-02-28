@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>我的评价 - {$ym_endtitle}</title>
+	<link rel="stylesheet" href="css/common.css" />
+	<link rel="stylesheet" href="css/center.css" />
+	 
+</head>
+<body>
+<!--{tpl header}-->	
+<div class="center-body">
+	<div class="nb">
+		<div class="center-lside">
+			<!--{tpl usermenu}-->
+		</div>
+		
+		<div class="center-rside pages-style">
+			<div class="appraise-box">
+				<div class="nb appraise-box-nb">
+					<form name="comment" enctype="multipart/form-data" onsubmit="return check();">
+					<h3 class="title">评价订单<b style="margin-left: 50px;color: #666;font-size: 13px;">订单号：{$oid}</b></h3>	
+					{if !$goods}<p style="text-align: center;"><br><br><br>您的订单已评价</p>{/if}
+					<!--{loop $goods $p}-->
+					<div class="pro-appr box-appr">
+						<input type="hidden" name="item_id[]" value="{$p['goods_id']}">
+						<input type="hidden" name="spec[]" value="{$p['spec']}">
+						<div class="goods-appr">
+							<div class="pic-box"><a href="{$p['url']}" target="_blank"><img src="{$p['thumb']}" alt="" /></a></div>
+							<div class="pro-describ">
+								<h3><a href="#" target="_blank">{$p['name']}</a></h3>
+								<p>{$p['spec']}</p>
+							</div>
+						</div>
+						<div class="appr-nr">
+							<div class="babyms baby">
+								<p><span>*</span>满意度</p>
+								<div class="stars" id="star"> </div>
+								<div class="hint"> </div>
+								<div class="baby">
+									<p><span>*</span>商品评价</p>
+									<div class="gossip"> <textarea name="content[]" rows="" cols="" maxlength="500" placeholder="分享你的购买心得~"></textarea> </div>
+								</div>
+								<div class="baby">
+									<p>晒单</p>
+									<div class="saipic imglist">
+										<ul>
+											<li class="picker">
+												<div class="fileListPicker addimgbefore" id="picker_{$p['goods_id']}" data-uploaddir="comment" data-isthumb="1" data-suffix="{$p['goods_id']}" data-numlimit='{$ym_comment_imglimit}'><a href="javascript:void(0);">+</a></div>												
+											</li>											
+										</ul>
+										<span class="tip" style="display: inline-block;margin-top: 10px;">最多可上传<b class="red"> {$ym_comment_imglimit} </b>张图片</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--{/loop}-->
+					 
+					<div class="sub-div" style="text-align: center;">
+						<input type="submit" name="ok" id="ok" value="提交" class="tjpj" style="display: inline-block;margin-right: 10px;"/><span><input type="checkbox" name="is_anon" value="1" class="cbk"> 匿名评价</span>
+						<input type="hidden" name="action" value="comment" />
+						<input type="hidden" name="act" value="add" />
+						<input type="hidden" name="oid" value="{$oid}" />
+						<input type="hidden" name="type" value="0" />
+					</div>
+				 </form>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{tpl footer}-->	
+<!--{tpl toolbar}-->
+
+<style type="text/css">
+	.hint{background-image:none;}
+</style>
+
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="./static/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="./static/webuploader/uploader.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/jquery.raty.min.js"></script>
+<script type="text/javascript" src="js/jquery.raty.js"></script>
+<script type="text/javascript">
+	$('.stars').raty({
+		iconRange: [{
+			range: 1,
+			on: 'images/star-red.png',
+			off: 'images/star-grey-empyt.png'
+		}, {
+			range: 2,
+			on: 'images/star-red.png',
+			off: 'images/star-grey-empyt.png'
+		}, {
+			range: 3,
+			on: 'images/star-red.png',
+			off: 'images/star-grey-empyt.png'
+		}, {
+			range: 4,
+			on: 'images/star-red.png',
+			off: 'images/star-grey-empyt.png'
+		}, {
+			range: 5,
+			on: 'images/star-red.png',
+			off: 'images/star-grey-empyt.png'
+		}],
+		hints: ['1分 非常不满意', '2分 不满意', '3分 一般', '4分 比较满意', '5分 非常满意'],
+		target: '.hint'
+	});
+ 
+	$(function() {
+		loadLayer();
+		var imgNumLimit = {$ym_comment_imglimit};
+		$(".fileListPicker").each(function() {
+			upFileList($(this),68,68,imgNumLimit);
+		});
+		$("#star img").each(function() {
+			$(this).click(function () {
+				var hint= $(this).parent().siblings(".hint");
+			    hint.css("background-image", hint.html() == ''? "none" : "url(images/star-desc.png)");
+			})
+		});		
+	});
+	
+	function check() {		
+		if ($(".pro-appr").length>1) {
+			var is_fill= false;
+			$(".pro-appr").each(function() {
+				var star = $(this).find("input[name='star[]']").val();
+				var content = $(this).find("textarea[name='content[]']").val();
+				if (star!='' && $.trim(content)!='') {
+					is_fill = true;
+					return false;;
+				}
+			});
+			if (is_fill == false) {
+				msg("请至少对一件商品评价");
+				return false;
+			}
+		} else{
+			var star = $("input[name='star[]']").val();
+			var content = $("textarea[name='content[]']").val();
+			if (star =='') {
+				msg("请为商品满意度打分");
+				return false;
+			}
+			if ($.trim(content) =='') {
+				msg("请填写评价内容");
+				return false;
+			}			
+		}
+		
+		return true;
+	}
+	
+</script>
+</body>
+</html>

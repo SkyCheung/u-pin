@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+		<title>限时秒杀 - {$ym_title}</title>
+		<link href="css/common.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="css/item.css" />
+		<link rel="stylesheet" href="css/ie.css" />
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<!--{loop $timebanner $p}-->
+		<div class="nybanner" style="background:url({$p[img]}) no-repeat top center;height: 350px;"></div>
+		<!--{/loop}-->
+		<div class=" mblist3">
+			<div class="nb">
+				<div class="mblist-hd3">
+					<ul>
+						<li class="on">
+							<a href="javascript:void(0);">抢购中</a><i class="arrow"></i></li>
+						<li>
+							<a href="javascript:void(0);">下期预告</a><i class="arrow"></i></li>
+					</ul>
+				</div>
+				<div class="mblist-bd3">
+					<!--抢购中-->
+					<div class="mb-bd-block nowlimit" style="display: block;">
+						<ul>
+							<!--{if $diy_timespike}-->
+							<!--{loop $spike['goods'] $k $p}-->
+							<li>
+								<a href="{$p[url]}" class="lside">
+									<img src="{$p[thumb]}" alt="" />
+								</a>
+								<div class="rside">
+									<div class="time" id="time{$k}" data-time="{$nowtime}">距结束：<span id="v_day{$k}">0</span>天<span id="v_hour{$k}">0</span>时<span id="v_minute{$k}">0</span>分<span id="v_second{$k}">0</span>秒</div>
+									<div class="nr">
+										<a href="{$p[url]}" class="title">{$p[cat_name]}</a>
+										<a href="{$p[url]}" class="txt">{$p[name]}</a>
+										<p class="price">￥<span>{$p[price]}</span></p>
+									</div>
+									<div class="mb-bottom">
+										<span class="buyer"><span>{if $p[salenum]}{$p[salenum]}{else}0{/if}</span>人已经购买</span>
+										<a href="javascript:void(0);" onclick="addCart({$p[goods_id]},0,1,0);" class="btn">加入购物车</a>
+									</div>
+								</div>
+								<i class="mask"></i>
+								<a href="{$p[url]}" class="justlook btn">先去看看...</a>
+								<script>
+									InterValObj1 = window.setInterval(function() {
+										SetRemainTime({$k});
+									}, 1000);
+								</script>
+							</li>
+							<!--{/loop}-->
+							<!--{/if}-->
+						</ul>
+						<div class="pages">
+						</div>
+					</div>
+					<!--下期预告-->
+					<div class="mb-bd-block nextlimit">
+						<ul>
+						<!--{if $diy_timespike}-->
+						<!--{loop $nextspike['goods'] $y $p}-->
+							<li>
+								<a href="{$p[url]}" class="lside">
+									<img src="{$p[thumb]}" alt="" />
+								</a>
+								<div class="rside">
+									<div class="time" id="time5{$y}" data-time="{$nexttime}">距开始：<span id="v_day5{$y}">0</span>天<span id="v_hour5{$y}">0</span>时<span id="v_minute5{$y}">0</span>分<span id="v_second5{$y}">0</span>秒</div>
+									<div class="nr">
+										<a href="{$p[url]}" class="title">{$p[cat_name]}</a>
+										<a href="{$p[url]}" class="txt">{$p[name]}</a>
+										<p class="price">￥<span>{$p[price]}</span></p>
+									</div>
+									<div class="mb-bottom">
+										<span class="buyer"><span>{if $p[salenum]}{$p[salenum]}{else}0{/if}</span>人已经购买</span>
+										<a href="#" class="btn">加入购物车</a>
+									</div>
+								</div>
+								<i class="mask"></i>
+								<a href="{$p[url]}" class="justlook btn">先去看看...</a>
+								<script>
+									InterValObj1 = window.setInterval(function() {
+										SetRemainTime(5{$y});
+									}, 1000);
+								</script>
+							</li>
+						<!--{/loop}-->
+						<!--{/if}-->
+						</ul>
+						<div class="pages">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<p class="clear"></p>
+		<!--{tpl footer}-->
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/jquery.SuperSlide.2.1.1.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script>
+			$(".mblist-bd3 li:nth-child(odd)").css("margin-right", "1%");
+			$(".mblist-hd3 li").each(function() {
+				$(this).click(function() {
+					$(".mblist-bd3 .mb-bd-block").eq($(this).index()).show().siblings().hide();
+					$(this).addClass("on").siblings().removeClass("on");
+				});
+			});
+			$(function () {
+ 				loadLayer();
+ 			});
+		</script>
+	</body>
+
+</html>

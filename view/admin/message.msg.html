@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>站内信息</title>
+		<link href="{adm_tpl}/css/css.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="{adm_tpl}/js/jquery.js"></script>
+		<script src="{adm_tpl}/js/main.js" type="text/javascript"></script>		
+	</head>
+
+	<body>
+		<div id="maintop">
+			<div>你的位置：<span>系统设置 -> 站内信息</span></div>
+		</div>
+		
+		<h3 style="margin-left: 200px;padding-top: 100px;min-height: 300px; clear: both;">尚未开放，敬请期待</h3>
+		<div class="maincon base" style="min-height: 800px;display: none;">
+			<form action="" method="post" id="form1" enctype="multipart/form-data" name="form1" onsubmit="return check();">
+				<div class="row"><label class="row-name">SMTP 服务器：</label>
+					<div class="column"><input name="host" id="host" type="text" value="{$host}" size="50" maxlength="50" /><span>填写SMTP 服务器，如smtp.163.com</span></div>
+				</div>
+				<div class="row"><label class="row-name">SMTP 端口：</label>
+					<div class="column"><input name="port" id="port" type="text" value="{$port}" size="50" maxlength="255" value="25"/><span>默认为 25</span></div>
+				</div>
+				 				
+				<div class="row"><label class="row-name"></label>
+					<div class="column">
+						<input type="submit" class="sub" value="提交 " />
+						<input type="button" class="sub back" value="返回" onclick="window.location.href='./admin.html?do=message'"/>
+						<input name="action" type="hidden" id="action" value="message">
+						<input name="code" type="hidden" value="email">
+						<input name="act" type="hidden" id="act" value="email">
+					</div>
+				</div>
+			</form>
+		</div>
+ 
+		<script type="text/javascript"> 
+			function sendtestmail (m) {		 
+				if ($.trim($("#emailtest").val())=='') {
+					msg('先填写收件邮箱')
+					return;
+				}
+				
+				$.ajax({
+					type: "post",
+					url: "./admin.html",
+					data: {
+						action: "message",
+						act: 'sendtestmail',
+						val: $.trim($("#emailtest").val())
+					},
+					dataType: "json",
+					success: function(data) {
+						if (data.err != '') {
+							msg(data.err);
+						}
+						else{
+							msg(data.res);
+						}
+					},
+					error:function(data,t){
+						msg('操作失败');
+					} ,
+					complete: function(XMLHttpRequest, textStatus){}
+				});
+			}
+ 
+		    function check () {
+		     	if ($.trim($("#host").val())=='') {
+		     		msg("请填写SMTP服务器");return false;
+		     	}
+		     	if ($.trim($("#port").val())=='') {
+		     		msg("请填写SMTP端口");return false;
+		     	}
+		     	if ($.trim($("#email").val())=='') {
+		     		msg("请填写邮箱账号");return false;
+		     	}
+		      
+		        return true;
+		     }
+		   
+			 
+		</script>
+	</body>
+
+</html>

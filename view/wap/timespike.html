@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>限时秒杀 - {$ym_title}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/phone.css" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a href="javascript:void(0);" class="mui-icon mui-icon-left-nav" onclick="javascript:history.go(-1);"></a>
+			<h1 class="mui-title">限时秒杀</h1>
+			<a href="javascript:void(0);" class="closeadd btn-arrow-behind" style="display: none;">关闭</a>
+		</header>
+		<!--{loop $mobiletimebanner $p}-->
+		<div class="nybanner mui-content-top">
+			<img src="{$p[img]}" alt=""/>
+		</div>
+		<!--{/loop}-->
+		<div class="timep-hd">
+			<ul class="flex">
+				<li class="flex1 on">
+					<p class="status">抢购中</p>
+					<p class="time" id="time1" data-time="{$nowtime}">还剩：<span id="v_day1">0</span>天<span id="v_hour1">0</span>:<span id="v_minute1">0</span>:<span id="v_second1">0</span></p>
+					<script>InterValObj1 = window.setInterval(function(){SetRemainTime(1);},1000);</script>
+				</li>
+				<li class="flex1">
+					<p class="status">下次预告</p>
+					<p class="time" id="time2" data-time="{$nexttime}"><span id="v_day2">0</span>天<span id="v_hour2">0</span>:<span id="v_minute2">0</span>:<span id="v_second2">0</span>后开始</p>
+					<script>InterValObj2 = window.setInterval(function(){SetRemainTime(2);},1000);</script>
+				</li>
+			</ul>
+		</div>
+		<div class="mui-content-bot" style="margin-top:10px;">
+			<div class="scroll-timep">
+				<div class="timep-bd">
+					<!--抢购中-->
+					<ul class="newfirst">
+						<!--{if $diy_timespike}-->
+						<!--{loop $spike['goods'] $p}-->
+						<li>
+							<a href="{$p[url]}" class="picbox"><img src="{$p[thumb]}" alt="300*300"/></a>
+							<div class="newfirst-nr">
+								<div class="nntitle">
+									<a href="{$p[url]}" class="maintitle">{$p[cat_name]}</a>
+									<a class="describ single-elli">{$p[name]}</a>
+									<div class="price"><span class="discount-p">￥<span>{$p[price]}</span></span><del>{$p[marketprice]}</del></div>
+								</div>
+								<a href="javascript:void(0);" onclick="addCart({$p[goods_id]},1,1,0);" class="gobuy">立即抢购</a>
+							</div>
+						</li>
+						<!--{/loop}-->
+						<!--{/if}-->
+					</ul>
+					<!--下次预告-->
+					<ul class="newfirst hide">
+						<!--{if $diy_timespike}-->
+						<!--{loop $nextspike['goods'] $p}-->
+						<li>
+							<a href="{$p[url]}" class="picbox"><img src="{$p[thumb]}" alt="300*300"/></a>
+							<div class="newfirst-nr">
+								<div class="nntitle">
+									<a href="{$p[url]}" class="maintitle">{$p[cat_name]}</a>
+									<a class="describ single-elli">{$p[name]}</a>
+									<div class="price"><span class="discount-p">￥<span>{$p[price]}</span></span><del>{$p[marketprice]}</del></div>
+								</div>
+								<a href="javascript:void(0);" class="gobuy greybg">立即抢购</a>
+							</div>
+						</li>
+						<!--{/loop}-->
+						<!--{/if}-->
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--<div id="totop" class="totop"><img src="images/totop.png" alt="" style="width: 40px;"/></div>-->
+		<!--{tpl fixnavbar}-->
+		<script type="text/javascript" src="js/mui.min.js" ></script>
+		<script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+		<script>
+			mui('.timep-hd').on('tap', 'li', function() {
+				$(this).addClass("on").siblings().removeClass("on");
+				$(".timep-bd .newfirst").eq($(this).index()).removeClass("hide").siblings().addClass("hide");
+			});
+			$(window).scroll(function(){
+				var scrollFixH=$(".nybanner").height();
+				if($(window).scrollTop()>scrollFixH){
+					$(".timep-hd").addClass("fix");
+				}else{
+					$(".timep-hd").removeClass("fix");
+				}
+			});
+		</script>
+	</body>
+</html>

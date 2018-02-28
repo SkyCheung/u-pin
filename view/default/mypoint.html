@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的积分 - {$ym_title}</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/center.css" />		
+	</head>
+
+	<body>
+		<!--{tpl header}-->
+		<div class="center-body">
+			<div class="nb">
+				<div class="center-lside">
+					<!--{tpl usermenu}-->
+				</div>
+				<div class="center-rside pages-style">
+					<div class="center6">						
+					<div class="center-title-sig">
+						   <h3>我的积分<a href="n-point.html" class="vivi-blue" style="display: none;">积分使用规则</a></h3>
+					</div>
+					<div class="my-jifen">
+						<div class="my-jifen1">
+							可用积分<b class="red"> {$user['point']} </b>个
+						</div>
+						<div class="my-jifen2">
+							{$year}-12-31将过期积分<span class="red">{$expire_point}</span>个
+						</div>
+						<div class="my-jifen3" style="display: none;">
+							<a href="#">兑换超值商品与优惠券</a>
+						</div>
+					</div>
+					<div class="my-jifen-detail">
+						<div class="jifen-table">
+							<div class="jf-th3">
+								日期
+							</div>							
+							<div class="jf-th2">
+								积分变化
+							</div>
+							<div class="jf-th1">
+								详细说明
+							</div>
+						</div>
+						<ul>
+							<!--{loop $row $p}-->
+							<li>
+								<div class="jf-th3">
+								  {$p['addtime']}
+							    </div>
+							    <div class="jf-th2 {if $p['val']>0}out{else}in{/if}">
+								    {if $p['val']>0}+{/if}{$p['val']}
+							    </div>
+								<div class="jf-th1">
+								    {$p['description']}
+							  </div>
+							</li>
+							<!--{/loop}-->
+						</ul>
+					</div>
+					</div>
+					<div class="pages"><!--{$pages['pages']}--></div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<!--{tpl footer}-->	
+		<!--{tpl toolbar}-->
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="js/main.js" ></script>
+      <script>
+    
+      </script>
+
+	</body>
+
+</html>
