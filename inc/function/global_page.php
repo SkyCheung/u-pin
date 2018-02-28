@@ -10,6 +10,7 @@ $tp=explode("/",$p);
 $p=count($tp)>1?$tp[count($tp)-1]:$p;
 $pp=explode("-",$p);
 
+
 $p= $ym_cats[$p] ? $p : str_replace('-'.$pp[count($pp)-1],'',$p);
 
 if (file_exists(cache_data."diy".Ext)) {
@@ -76,13 +77,13 @@ if (count($pp)>1 && $page==0 && !$ym_cats_kv[$p]){
 			exit($exitcon);
 	    break;
 	}
-}
-else{	
+}else{	
+	
 	$cid = $ym_cats_kv[$p]['id'];		
 	$type= isset($type) ? trim($type) : 'list';
 	$page = $page==0 ? 1: $page;
 	$distmp = trim($ym_cats[$cid]['tpl'])==''? $type:$ym_cats[$cid]['tpl'];
-	  
+	
 	if (file_exists("./inc/module/".$p.Ext)) {
 		require("./inc/module/".$p.Ext); //引入模块程序
 	}
@@ -99,6 +100,7 @@ else{
 	if (file_exists("./inc/module/".$type.Ext) && $p!=$type) {
 		require("./inc/module/".$type.Ext); //引入模块程序
 	}
+	
 	@include template($distmp, $ym_tpl."/");
 } 
 

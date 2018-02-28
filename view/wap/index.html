@@ -33,36 +33,22 @@
 			    </div>
 			</div>
 
+
 			<div class="indfun">
-<div class="nb"><ul class="fundisplay flex"><li class="flex1">
-<a href="#">
-<i class="icon-display1 yunicon" style="background-image: url(upload/img/banner/532ebfe2e14e581590ff24d6e258edb9_b.png);"></i>
-<span>安桌</span>
-</a>
-</li><li class="flex1">
-<a href="#">
-<i class="icon-display1 yunicon" style="background-image: url(upload/img/banner/fd4bff9d05d1a712bcb062d6acdb21f6_b.png);"></i>
-<span>苹果</span>
-</a>
-</li><li class="flex1">
-<a href="#">
-<i class="icon-display1 yunicon" style="background-image: url(upload/img/banner/454867754c35290d6f7a830fcf345bf7_b.png);"></i>
-<span>笔记本</span>
-</a>
-</li><li class="flex1">
-<a href="#">
-<i class="icon-display1 yunicon" style="background-image: url(upload/img/banner/14ab009f9b94266365ce65e3e37e9a2a_b.png);"></i>
-<span>配件</span>
-</a>
-</li></ul>
-
-</div>
-
-            <!--
-			<div class="martb15 ind-prolist">
-				{$diy_mobileindexhuo}
-			</div> -->
-            <!--{if $new_goods}-->
+				<div class="nb">
+					<ul class="fundisplay flex">
+						<!--{loop $indexicon $p}-->
+						<li class="flex1">
+							<a href="{$p[url]}">
+								<i class="icon-display1 yunicon" style="background-image: url({$p[img]});"></i>
+								<span>{$p[txt]}</span>
+							</a>
+						</li>
+					    <!--{/loop}-->
+					</ul>
+				</div>
+			</div>
+            
 			<div class="indguesslike prostyleall">
 				<div class="title-cen">
 					<h3>最新上架</h3>
@@ -81,7 +67,6 @@
 					<!--{/loop}-->
 				</ul>
 			</div>
-			<!--{/if}-->
 
 			<!--{if $remmend_goods}-->
 			<div class="indguesslike prostyleall">
