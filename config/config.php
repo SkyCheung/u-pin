@@ -31,13 +31,13 @@ const HTTP="http://";
 const HTTPS="https://";
 const authCodeLen=6; //验证码长度
 const cookiedomain = ''; //COOKIE作用域
-const ym_token = 'cdvhrykkjbb4x12x'; //安全令牌，用于加密解密，请数字与字母！！ 
+const ym_token = 'u-cdvhrykkjbb4x12x-pin'; //安全令牌，用于加密解密，请数字与字母！！ 
 $dbhost = 'localhost';			// 数据库服务器
 $dbport = '3306';  //数据库端口
-$dbuser = 'skynet';			// 数据库用户名
-$dbpw = '5t4r3e2w';				// 数据库密码 
+$dbuser = '123456789';			// 数据库用户名
+$dbpw = '123456789';				// 数据库密码 
 $dbname = 'shopx';			// 数据库名
-$tablepre ="ec_";     //表前缀
+$tablepre ="ec2_";     //表前缀
 $pconnect = 0;				// 数据库持久连接 0=关闭, 1=打开
 $tplrefresh = 1;	// 模板自动刷新开关 0=关闭, 1=打开
 $dbcharset='utf8';  //数据库编码
