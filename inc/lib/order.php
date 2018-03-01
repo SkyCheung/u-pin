@@ -712,28 +712,28 @@ function check_return($order_sn, $refund_no)
 function cancel_other_order($order_sn)
 {
 	global $db;
-
     $rs = get_order_goods($order_sn);
 
-
     foreach ($rs as $v){
-    	echo $v['goods_id'] ;
+    	$res = get_orders_by_goods_id($v['goods_id'],$v['order_id']);
 
-    	$res = get_orders_by_goods_id($v['goods_id']);
+        foreach ($res as $v2){
+            $order['status'] = order_void;
 
-    	var_dump($res);
+            $where['id'] = $v2['order_id'];
+            $where['status'] = order_paying;//待支付
 
+            $db->update('order', $order, $where);
+        }
 	}
-
-    return$rs;
 }
 
 
-function get_orders_by_goods_id($goods_id, $status=order_paying)
+function get_orders_by_goods_id($goods_id, $order_id)
 {
     global $db;
 
-    return $db->queryall("select id,order_id,goods_id,status from ".$db->table('order_goods')."  where goods_id=".$goods_id." and status=".$status);
+    return $db->queryall("select id,order_id,goods_id from ".$db->table('order_goods')."  where goods_id=".$goods_id." and order_id!=".$order_id);
 
 }
 
