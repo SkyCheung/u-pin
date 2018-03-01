@@ -703,4 +703,38 @@ function check_return($order_sn, $refund_no)
 	
 }
 
+
+/**
+ * 根据订单SN(必须为已经支付成功订单)取消与订单相同商品的其他待支付的订单(没有库存了)
+ * @param $order_sn
+ * @return mixed
+ */
+function cancel_other_order($order_sn)
+{
+	global $db;
+
+    $rs = get_order_goods($order_sn);
+
+
+    foreach ($rs as $v){
+    	echo $v['goods_id'] ;
+
+    	$res = get_orders_by_goods_id($v['goods_id']);
+
+    	var_dump($res);
+
+	}
+
+    return$rs;
+}
+
+
+function get_orders_by_goods_id($goods_id, $status=order_paying)
+{
+    global $db;
+
+    return $db->queryall("select id,order_id,goods_id,status from ".$db->table('order_goods')."  where goods_id=".$goods_id." and status=".$status);
+
+}
+
 ?>
