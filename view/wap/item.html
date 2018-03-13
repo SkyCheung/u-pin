@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="css/swiper.css" />
 		<link rel="stylesheet" href="css/common.css" />
 		<link rel="stylesheet" href="css/phone.css" />
+		<link rel="stylesheet" href="css/mui.previewimage.css" />
 		<style>
 			body{width: 100%;max-width: 100%;}
 			.mui-bar{z-index: 99999999;}
@@ -29,6 +30,13 @@
 			.mui-segmented-control .mui-control-item.mui-active{color:#007cc3 !important;}
 			.mui-pull-top-pocket{top: 0px !important;}
 			.mui-navigate-right:after, .mui-push-right:after {right: 15px;content: '';}
+			.title-det{}
+			.goods-icons{float: left;height: 18px;line-height: 18px;padding: 0 3px;margin-right: 3px;overflow: hidden;text-align: center;font-style: normal;font-size: 12px;background: #f56161;color: #FFF;cursor: default;border-radius: 2px;}
+			.goods-name{font-size: 19px;}
+			#ym-price{font-size: 18px;}
+
+			.detailFixBox .left-btn a{padding: 30px 0 0 12px;}
+			.fix-navbar .fix-btn{line-height: 50px;}
 		</style>
 	</head>
 	<body>
@@ -56,9 +64,9 @@
 				<div class="slide-detail-pic" id="slide-detail-pic">
 					<div class="slide-detail-pic swiper-container" id="slide-detail-pic">
 						<ul class="swiper-wrapper swiperimgauto">
-							<li class="swiper-slide"><a href="javascript:void(0);"><img src="{$goods['img']}" alt=""/></a></li>
+							<li class="swiper-slide"><a href="javascript:void(0);"><img src="{$image_server_host}{$goods['img']}" data-preview-src="{$image_server_host}{$goods['img']}" data-preview-group="1"/></a></li>
 							<!--{loop $imgs $p}-->
-							<li class="swiper-slide"><a href="javascript:void(0);"><img src="{$p['img']}" alt=""/></a></li>
+							<li class="swiper-slide"><a href="javascript:void(0);"><img src="{$image_server_host}{$p['img']}" data-preview-src="{$image_server_host}{$p['img']}" data-preview-group="1"/></a></li>
 							<!--{/loop}-->
 						</ul>
 						<div class="swiper-pagination"></div>
@@ -66,47 +74,26 @@
 				</div>
 		<!--图片轮播-->
 		<!--文字介绍-->
+
 				<div class="word-detail bgw">
 					<div class="title-det">
-						<h3 class="title"><a href="javascript:void(0);">{$goods[name]}</a></h3>
+						<h3 class="title"><i class="goods-icons">自营</i><a class="goods-name" href="javascript:void(0);">{$goods[name]}</a></h3>
 					</div>
 					<div class="price-det">
-						<!-- <span class="grey-td">售价：</span> -->
 						<div class="pd-nr">
-							<p><span class="now"><span id="ym-price">￥{$goods['price']}</span></span><del>￥<span>{$goods[marketprice]}</span></del></p>
+							<p><span class="now"><span id="ym-price">￥{$goods['price']}</span></span><!--<del>￥<span>{$goods[marketprice]}</span></del>--></p>
 						</div>
-					</div>
-					<div class="choose-size spec" id="goods-spec">
-					<!--{loop $spec $p}-->
-						<div class="it">
-							<h4 class="spec-name">{$p[name]}</h4>
-							<span class="select-mod">
-								<ul class="choose-size-ul">
-									<!--{loop $p['val'] $v}-->
-										<!--{if $p['is_img']==1}-->
-											<li style="margin:3px"><a href="javascript:void(0);" id="{$v['name']}">{$v['name']}</a><i class="arrow-checked"></i></li>
-											<!--{else}-->
-											<li style="margin:3px"><a href="javascript:void(0);" id="{$v}">{$v}</a><i class="arrow-checked"></i></li>
-										<!--{/if}-->
-									<!--{/loop}-->
-								</ul>
-							</span>
-						</div>
-					<!--{/loop}-->
-					</div>
-					<div class="barnum-det">
-						<p>品牌：<span>{$goods['brand_name']}</span></p>
-						<!-- <p class="num">最近售出：<span>{$goods['salenum']}</span></p> -->
 					</div>
 				</div>
+
 				<ul class="function-det flex bgw">
 					<li class="flex1">
 						<i class="icon-fun1"></i>
-						正品行贷
+						正规渠道
 					</li>
 					<li class="flex1">
 						<i class="icon-fun2"></i>
-						免息分期
+						全面检测
 					</li>
 					<li class="flex1">
 						<i class="icon-fun3"></i>
@@ -114,7 +101,7 @@
 					</li>
 					<li class="flex1">
 						<i class="icon-fun4"></i>
-						金牌客服
+						180天保修
 					</li>
 				</ul>
 		<!--文字介绍-->
@@ -134,7 +121,7 @@
 							</ul>
 						</div>
 						{$goods[details_m]}
-						<br /><br /><br />
+						<br />
 						{$goods['service']}
 					</div>	
 		        <!--商品参数 -->
@@ -163,7 +150,7 @@
 							   	     		<div class="sc_bd">
 							   	     			<dl>
 							   	     			<!--{loop $p['thumb'] $i $t}-->
-							   	     			<dd><a data-src="{$p['img'][$i]}"><img src="{$t}" width="80" height="80"/></a></dd>
+							   	     			<dd><a data-src="{$p['img'][$i]}"><img src="{$t}" width="80" height="80" data-preview-src="{$t}" data-preview-group="2"/></a></dd>
 							   	     			<!--{/loop}-->   	        	     												 
    	     						   	     		</dl>
 							   	     		</div>
@@ -218,10 +205,10 @@
 		</div>
 		</div>
 			<!--评价输入框-->
-			<div class="fix-navbar detailFixBox">
+			<div class="fix-navbar detailFixBox" style="height: 52px;">
 				<div class="left-btn">
-					<a href='javascript:;' onclick='easemobim.bind()' class="btn-mess"></a>
-					<a href="brand.html" class="btn-like" onclick="javascript:addfavs({$goods['goods_id']},'');"></a>
+					<a href='javascript:;' onclick='easemobim.bind()' class="btn-mess">客服</a>
+					<a href="brand.html" class="btn-like" onclick="javascript:addfavs({$goods['goods_id']},'');">收藏</a>
 				</div>
 				<div class="right-btn">
 					<span href="javascript:void(0)" onclick="addCart({$goods[goods_id]},0,1);" class="addcart fix-btn" id="addcart">加入购物车</span>
@@ -278,6 +265,8 @@
 		<script type="text/javascript" src="js/swiper.min.js" ></script>
 		<script type="text/javascript" src="js/main.js" ></script>
 		<script type="text/javascript" src="js/cart.js" ></script>
+		<script type="text/javascript" src="js/mui.zoom.js" ></script>
+		<script type="text/javascript" src="js/mui.previewimage.js" ></script>
 		
 		<script>
 		mui("body").on("tap",".gocart",function(){
@@ -308,6 +297,7 @@
 		</script>
 		<script>
 		var swiper = new Swiper('.swiper-container', {
+			    //zoom: true,
 		        pagination: '.swiper-pagination',
 		        paginationClickable: true,
 		        autoplay: 2000
@@ -446,6 +436,9 @@
 				}
 			  }
 			});
+
+            mui.previewImage();
+
 			var count = 0;
 			/* 上拉加载具体业务实现*/
 			function pullupRefresh() {
@@ -523,7 +516,7 @@
                 configId:'ee6e6e9e-47e8-4114-b38c-15cee8e04b25',
                 hide: true,
                 autoConnect: true,
-                hideKeyboard: true,
+                hideKeyboard: false,
                 dialogPosition: { x: '10px', y: '50px' },
                 //聊天窗口加载成功回调
                 onready: function () {                  
@@ -537,7 +530,7 @@
                                     "title":"我正在看:",
                                     "price":"¥: {$goods['price']}",
                                     "desc":"{$goods[name]}",
-                                    "img_url":"http://120.78.177.179/{$goods['img']}",
+                                    "img_url":"{$image_server_host}{$goods['img']}",
                                     "item_url":window.location.href
                                 }
                             }
@@ -546,5 +539,6 @@
                 },
             };
         </script>
+
 	</body>
 </html>
